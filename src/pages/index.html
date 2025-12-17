@@ -4,52 +4,68 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beranda | Business Law Community</title>
+  <link rel="stylesheet" href="../styles/tokens.css" />
   <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/components.css" />
-  <link rel="stylesheet" href="../styles/beranda.css" />
+  <link rel="stylesheet" href="../styles/home.css" />
 </head>
 <body>
-  <div id="site-header"></div>
+  <div id="topbar-root"></div>
+  <header id="navbar-root"></header>
   <main id="main-content">
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero__grid">
         <div>
-          <p class="eyebrow">Kampus Fakultas Hukum</p>
+          <p class="tag" id="hero-tag">Komunitas BLC</p>
           <h1 id="hero-title">Business Law Community</h1>
-          <p class="lead">Kolaborasi akademisi dan praktisi dalam kajian hukum bisnis, publikasi berkualitas, serta advokasi kebijakan.</p>
+          <p>
+            Menyatukan praktisi, akademisi, dan mahasiswa untuk membangun ekosistem hukum bisnis
+            Indonesia yang adaptif melalui edukasi, konsultasi, riset, dan kolaborasi jejaring.
+          </p>
           <div class="hero__actions">
-            <a class="btn btn--accent" href="https://news.meoww.my.id/">Baca Publikasi Terbaru</a>
-            <a class="btn btn--ghost" href="../pages/about.html">Tentang BLC</a>
+            <a class="btn btn--primary" href="#program">Lihat Program</a>
+            <a class="btn btn--ghost" href="#berita">Publikasi Terbaru</a>
           </div>
         </div>
-        <div class="hero__highlights" aria-label="Sorotan cepat">
-          <div class="highlight-card">
-            <span class="highlight-label">Fokus</span>
-            <p>Regulasi bisnis, ekonomi digital, dan governance korporasi.</p>
+        <div class="hero__stats" aria-label="Sorotan singkat">
+          <div class="stat-card">
+            <div class="stat-icon">A</div>
+            <p class="stat-copy">Advokasi &amp; konsultasi bisnis lintas sektor</p>
           </div>
-          <div class="highlight-card">
-            <span class="highlight-label">Kolaborasi</span>
-            <p>Menghubungkan riset kampus dengan kebutuhan industri.</p>
+          <div class="stat-card">
+            <div class="stat-icon">R</div>
+            <p class="stat-copy">Riset terapan dengan mitra industri dan kampus</p>
           </div>
-          <div class="highlight-card">
-            <span class="highlight-label">Insight</span>
-            <p>Publikasi rutin dari dosen, mahasiswa, dan mitra profesional.</p>
+          <div class="stat-card">
+            <div class="stat-icon">N</div>
+            <p class="stat-copy">Newsroom hukum bisnis yang aktual</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="latest-updates" aria-labelledby="latest-updates-title">
+    <section class="section" id="program" aria-labelledby="program-title">
       <div class="container">
-        <div id="latest-updates-title"></div>
-        <div id="updates-grid" class="content-grid" aria-live="polite"></div>
+        <div class="section-header">
+          <p class="tag">Program &amp; Layanan</p>
+          <h2 id="program-title">Pendampingan Hukum Bisnis Terintegrasi</h2>
+          <p class="program-copy">Memastikan setiap anggota komunitas BLC mendapatkan dukungan pembelajaran,
+            konsultasi praktik, hingga kolaborasi riset yang dapat langsung diterapkan.</p>
+        </div>
+        <div id="service-grid" class="service-grid" aria-live="polite"></div>
       </div>
     </section>
 
-    <section class="focus-areas" aria-labelledby="focus-areas-title">
+    <section class="section" id="berita" aria-labelledby="news-title">
       <div class="container">
-        <div id="focus-areas-title"></div>
-        <div id="focus-areas-grid" class="focus-grid"></div>
+        <div class="news-header">
+          <div>
+            <p class="tag">News &amp; Event</p>
+            <h2 id="news-title">Aktivitas Terbaru Business Law Community</h2>
+          </div>
+          <a class="btn btn--ghost" href="#berita">Selengkapnya</a>
+        </div>
+        <div id="news-grid" class="cards-grid" aria-live="polite"></div>
       </div>
     </section>
   </main>

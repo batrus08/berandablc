@@ -6,25 +6,15 @@ export async function loadJSON(path) {
   return response.json();
 }
 
-export function mergeAndSortContent(news = [], articles = [], limit = 6) {
-  const combined = [...news, ...articles].map((item) => ({
-    ...item,
-    date: item.date,
-  }));
-
-  combined.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return combined.slice(0, limit);
+export function sortByDateDesc(items = []) {
+  return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
-export function renderFocusCategories(categories = []) {
-  return categories
-    .map(
-      (category) => `
-        <div class="focus-card">
-          <h3>${category.title}</h3>
-          <p>${category.description}</p>
-        </div>
-      `
-    )
-    .join('');
+export function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
 }

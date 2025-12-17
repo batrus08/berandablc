@@ -1,75 +1,96 @@
-import { renderHeader } from '../components/Header.js';
+import { renderTopbar } from '../components/Topbar.js';
+import { renderNavbar, bindDropdowns } from '../components/Navbar.js';
 import { renderFooter } from '../components/Footer.js';
-import { renderSectionTitle } from '../components/SectionTitle.js';
-import { renderNewsCard } from '../components/NewsCard.js';
-import { renderArticleCard } from '../components/ArticleCard.js';
-import { bindNavbarToggle } from '../components/Navbar.js';
-import { loadJSON, mergeAndSortContent, renderFocusCategories } from '../utils/helpers.js';
+import { renderServiceCard } from '../components/ServiceCard.js';
+import { renderPostCard } from '../components/PostCard.js';
+import { loadJSON, sortByDateDesc } from '../utils/helpers.js';
+import { qs, setHTML } from '../utils/dom.js';
+
+const services = [
+  {
+    title: 'Edukasi Hukum Bisnis',
+    description: 'Kurikulum singkat, kelas tematik, dan modul praktik yang disusun bersama praktisi.',
+    href: '#edukasi',
+    icon: svgBook(),
+  },
+  {
+    title: 'Klinik & Konsultasi',
+    description: 'Pendampingan kasus dan advisory cepat untuk kebutuhan bisnis serta startup.',
+    href: '#klinik',
+    icon: svgChat(),
+  },
+  {
+    title: 'Riset, Publikasi & Jejaring',
+    description: 'Kolaborasi riset terapan, penerbitan insight, dan koneksi ke mitra strategis.',
+    href: '#riset',
+    icon: svgNetwork(),
+  },
+];
 
 document.addEventListener('DOMContentLoaded', async () => {
-  injectChrome();
-  await renderLatestUpdates();
-  renderFocusAreas();
-  bindNavbarToggle(document);
+  mountChrome();
+  renderServices();
+  await renderNewsEvents();
+  bindDropdowns(document);
 });
 
-function injectChrome() {
-  const headerContainer = document.getElementById('site-header');
-  const footerContainer = document.getElementById('site-footer');
-
-  headerContainer.innerHTML = renderHeader();
-  footerContainer.innerHTML = renderFooter();
+function mountChrome() {
+  setHTML(qs('#topbar-root'), renderTopbar());
+  setHTML(qs('#navbar-root'), renderNavbar());
+  setHTML(qs('#site-footer'), renderFooter());
 }
 
-async function renderLatestUpdates() {
-  const updatesTitle = document.getElementById('latest-updates-title');
-  const updatesGrid = document.getElementById('updates-grid');
+function renderServices() {
+  const grid = qs('#service-grid');
+  const markup = services.map((service) => renderServiceCard(service)).join('');
+  setHTML(grid, markup);
+}
 
-  updatesTitle.innerHTML = renderSectionTitle({
-    eyebrow: 'Publikasi Terbaru',
-    title: 'Sorotan Hukum Bisnis',
-    subtitle: 'Update terbaru dari news dan artikel komunitas hukum bisnis.',
-  });
-
+async function renderNewsEvents() {
+  const grid = qs('#news-grid');
   try {
-    const [news, articles] = await Promise.all([
+    const [news, events] = await Promise.all([
       loadJSON('../data/news.json'),
-      loadJSON('../data/articles.json'),
+      loadJSON('../data/events.json'),
     ]);
 
-    const newsWithType = news.map((item) => ({ ...item, type: 'news' }));
-    const articlesWithType = articles.map((item) => ({ ...item, type: 'article' }));
-    const combined = mergeAndSortContent(newsWithType, articlesWithType, 6);
+    const combined = sortByDateDesc([
+      ...news.map((item) => ({ ...item, category: item.category || 'News' })),
+      ...events.map((item) => ({ ...item, category: item.category || 'Event' })),
+    ]).slice(0, 6);
 
-    if (!combined.length) {
-      updatesGrid.innerHTML = '<p class="empty-state">Belum ada pembaruan terbaru.</p>';
-      return;
-    }
-
-    updatesGrid.innerHTML = combined
-      .map((item) => (item.type === 'news' ? renderNewsCard(item) : renderArticleCard(item)))
-      .join('');
+    const markup = combined.map((item) => renderPostCard(item)).join('');
+    setHTML(grid, markup);
   } catch (error) {
-    updatesGrid.innerHTML = `<p class="empty-state">Gagal memuat data: ${error.message}</p>`;
+    setHTML(grid, `<p>Gagal memuat data: ${error.message}</p>`);
   }
 }
 
-function renderFocusAreas() {
-  const focusTitle = document.getElementById('focus-areas-title');
-  const focusGrid = document.getElementById('focus-areas-grid');
+function svgBook() {
+  return `
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 4h9a3 3 0 013 3v11H7a2 2 0 00-2 2V4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+      <path d="M7 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  `;
+}
 
-  focusTitle.innerHTML = renderSectionTitle({
-    eyebrow: 'Fokus Kajian',
-    title: 'Kategori & Fokus Area',
-    subtitle: 'Pilihan topik terkurasi untuk memperdalam literasi hukum bisnis.',
-  });
+function svgChat() {
+  return `
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 5h14v9a2 2 0 01-2 2H9l-4 3V7a2 2 0 012-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+      <path d="M9 10h6M9 13h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  `;
+}
 
-  const categories = [
-    { title: 'Edukasi Hukum', description: 'Materi pengayaan dan primer bagi mahasiswa hukum bisnis.' },
-    { title: 'Analisis', description: 'Pembahasan mendalam kasus dan implikasi regulasi.' },
-    { title: 'Berita', description: 'Update singkat regulasi, kebijakan, dan agenda penting.' },
-    { title: 'Opini', description: 'Perspektif komunitas tentang isu-isu strategis ekonomi digital.' },
-  ];
-
-  focusGrid.innerHTML = renderFocusCategories(categories);
+function svgNetwork() {
+  return `
+    <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2" fill="none" />
+      <circle cx="7" cy="17" r="3" stroke="currentColor" stroke-width="2" fill="none" />
+      <circle cx="17" cy="17" r="3" stroke="currentColor" stroke-width="2" fill="none" />
+      <path d="M9 15l2-3m2-3 2 3M9 9l-2 6m8-6 2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  `;
 }
