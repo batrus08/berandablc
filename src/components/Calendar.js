@@ -11,7 +11,10 @@ export function renderCalendar(events = []) {
   const cells = [];
   for (let i = 0; i < startDay; i++) cells.push('<div class="calendar__cell"></div>');
   for (let date = 1; date <= daysInMonth; date++) {
-    const eventList = events.filter((e) => new Date(e.dateStart).getDate() === date && new Date(e.dateStart).getMonth() === month);
+    const eventList = events.filter((event) => {
+      const eventDate = new Date(event.dateStart);
+      return eventDate.getDate() === date && eventDate.getMonth() === month && eventDate.getFullYear() === year;
+    });
     cells.push(`
       <div class="calendar__cell ${eventList.length ? 'has-event' : ''}">
         <div>${date}</div>
