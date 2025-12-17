@@ -6,15 +6,39 @@ export async function loadJSON(path) {
   return response.json();
 }
 
-export function sortByDateDesc(items = []) {
-  return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
-}
+export const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
 export function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('id-ID', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
+  return `${date.getDate().toString().padStart(2, '0')} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+export function sortByDateDesc(items = [], key = 'date') {
+  return [...items].sort((a, b) => new Date(b[key]) - new Date(a[key]));
+}
+
+export function currentMonthItems(items = [], key = 'date') {
+  const now = new Date();
+  return items.filter((item) => {
+    const d = new Date(item[key]);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   });
+}
+
+export function nextUpcoming(items = [], key = 'dateStart') {
+  const now = new Date();
+  const upcoming = items
+    .filter((item) => new Date(item[key]) >= now)
+    .sort((a, b) => new Date(a[key]) - new Date(b[key]));
+  return upcoming[0];
+}
+
+export function groupByMonthYear(items = [], key = 'date') {
+  return items.reduce((acc, item) => {
+    const date = new Date(item[key]);
+    const label = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+    if (!acc[label]) acc[label] = [];
+    acc[label].push(item);
+    return acc;
+  }, {});
 }

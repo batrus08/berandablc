@@ -1,28 +1,14 @@
 export function renderTopbar() {
-  const socials = [
-    { name: 'Facebook', href: '#', label: 'Facebook' },
-    { name: 'X', href: '#', label: 'X' },
-    { name: 'Instagram', href: '#', label: 'Instagram' },
-    { name: 'LinkedIn', href: '#', label: 'LinkedIn' },
-    { name: 'YouTube', href: '#', label: 'YouTube' },
-  ];
-
-  const socialLinks = socials
-    .map(
-      (item) => `
-        <a class="social-link" href="${item.href}" aria-label="${item.label}">
-          ${item.name[0]}
-        </a>
-      `
-    )
-    .join('');
-
   return `
-    <div class="topbar" aria-label="Follow us">
-      <div class="container topbar__inner">
-        <div class="topbar__label">Follow us</div>
-        <div class="topbar__social" aria-label="Social media">
-          ${socialLinks}
+    <div class="topbar" aria-label="Topbar">
+      <div class="topbar__inner container">
+        <span>Law Community FH &bull; Fokus Hukum Bisnis</span>
+        <div class="topbar__social">
+          <span>Ikuti kami</span>
+          <a href="https://facebook.com" aria-label="Facebook">fb</a>
+          <a href="https://instagram.com" aria-label="Instagram">ig</a>
+          <a href="https://linkedin.com" aria-label="LinkedIn">in</a>
+          <a href="https://youtube.com" aria-label="YouTube">yt</a>
         </div>
       </div>
     </div>

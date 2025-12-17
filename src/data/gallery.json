@@ -1,0 +1,15 @@
+{
+  "photos": [
+    {"title": "Seminar Kemitraan", "url": "https://via.placeholder.com/600x400.png?text=Seminar"},
+    {"title": "Diskusi ESG", "url": "https://via.placeholder.com/600x400.png?text=Diskusi"},
+    {"title": "Pelatihan Kontrak", "url": "https://via.placeholder.com/600x400.png?text=Pelatihan"}
+  ],
+  "videos": [
+    {"title": "Highlight Webinar", "embed": "https://www.youtube.com/embed/dQw4w9WgXcQ"},
+    {"title": "Klinik UMKM", "embed": "https://www.youtube.com/embed/oHg5SJYRHA0"}
+  ],
+  "coverage": [
+    {"title": "Liputan Media: Kolaborasi Startup", "link": "https://news.example.com/kolaborasi-startup", "source": "HukumOnline"},
+    {"title": "Business Daily: Klinik Hukum Kampus", "link": "https://news.example.com/klinik-kampus", "source": "BusinessDaily"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "mitra": [
+    {"name": "Nusantara Capital Partners", "logo": "https://via.placeholder.com/120x60?text=NCP"},
+    {"name": "Lex & Co", "logo": "https://via.placeholder.com/120x60?text=Lex"},
+    {"name": "Startup Hub", "logo": "https://via.placeholder.com/120x60?text=Hub"}
+  ],
+  "sponsor": [
+    {"name": "Bank Mandala", "logo": "https://via.placeholder.com/120x60?text=Mandala"},
+    {"name": "Alpha Insurance", "logo": "https://via.placeholder.com/120x60?text=Alpha"}
+  ],
+  "media": [
+    {"name": "HukumOnline", "logo": "https://via.placeholder.com/120x60?text=HO"},
+    {"name": "BusinessDaily", "logo": "https://via.placeholder.com/120x60?text=BD"}
+  ],
+  "proposalPdf": "https://example.com/proposal-kerjasama.pdf"
+}

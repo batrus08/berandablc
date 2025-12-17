@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Artikel & Publikasi | Law Community FH</title>
+    <title>Kegiatan & Event | Law Community FH</title>
     <link rel="stylesheet" href="../styles/tokens.css" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/components.css" />
@@ -12,15 +12,21 @@
     <div id="topbar-root"></div>
     <div id="navbar-root"></div>
     <main class="section">
-      <div class="container" id="article-root"></div>
-      <div class="section" id="arsip">
+      <div class="container" id="event-root"></div>
+      <div class="section section-alt">
         <div class="container">
-          <h2 class="section__title">Arsip Artikel</h2>
-          <div id="archive-list" class="archive-list"></div>
+          <h2 class="section__title">Kalender Kegiatan</h2>
+          <div id="calendar"></div>
+        </div>
+      </div>
+      <div class="section" id="dokumentasi">
+        <div class="container">
+          <h2 class="section__title">Dokumentasi Kegiatan</h2>
+          <div id="documentation" class="grid grid-3"></div>
         </div>
       </div>
     </main>
     <div id="footer-root"></div>
-    <script type="module" src="./articles.js"></script>
+    <script type="module" src="./events.js"></script>
   </body>
 </html>
