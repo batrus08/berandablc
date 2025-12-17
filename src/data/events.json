@@ -1,26 +1,61 @@
 [
   {
     "id": 1,
-    "title": "Forum Diskusi: Regulasi Investasi Hijau",
-    "slug": "https://news.meoww.my.id/forum-regulasi-investasi-hijau",
-    "date": "2024-06-18",
-    "category": "Event",
-    "excerpt": "Sesi panel bersama regulator dan praktisi untuk memetakan kebutuhan regulasi investasi hijau di Indonesia."
+    "title": "Seminar Strategi Kemitraan Startup",
+    "slug": "seminar-kemitraan-startup",
+    "dateStart": "2024-05-18",
+    "dateEnd": "2024-05-18",
+    "type": "Seminar & Webinar",
+    "location": "Auditorium FH",
+    "excerpt": "Bahas model perjanjian investasi tahap awal bersama mitra venture capital.",
+    "description": "<p>Seminar menghadirkan praktisi VC dan konsultan hukum bisnis. Peserta memperoleh template term sheet serta tips negosiasi.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Poster+Seminar",
+    "minutesPdf": "https://example.com/notulensi-seminar.pdf",
+    "reportPdf": "https://example.com/laporan-seminar.pdf"
   },
   {
     "id": 2,
-    "title": "Webinar: Perlindungan Konsumen Digital",
-    "slug": "https://news.meoww.my.id/webinar-perlindungan-konsumen-digital",
-    "date": "2024-06-08",
-    "category": "Webinar",
-    "excerpt": "Paparan kasus terkini dan kerangka mitigasi sengketa konsumen dalam ekonomi digital."
+    "title": "Diskusi Hukum: Klausul ESG di Kontrak Vendor",
+    "slug": "diskusi-esg-vendor",
+    "dateStart": "2024-05-27",
+    "type": "Diskusi Hukum",
+    "location": "Zoom Meeting",
+    "excerpt": "Forum roundtable mengenai integrasi ESG dalam supply chain.",
+    "description": "<p>Diskusi panel dengan studi kasus tender pemerintah dan standar audit vendor.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Diskusi+ESG"
   },
   {
     "id": 3,
-    "title": "Lokakarya Penyusunan Kontrak Startup",
-    "slug": "https://news.meoww.my.id/lokakarya-kontrak-startup",
-    "date": "2024-05-30",
-    "category": "Workshop",
-    "excerpt": "Pendampingan praktis menyusun klausul utama untuk pendanaan awal dan kerja sama produk."
+    "title": "Pelatihan Legal Skill: Penyusunan Kontrak Teknologi",
+    "slug": "pelatihan-kontrak-teknologi",
+    "dateStart": "2024-06-10",
+    "type": "Pelatihan Legal Skill",
+    "location": "Lab Komputer FH",
+    "excerpt": "Workshop penyusunan kontrak SaaS dan lisensi perangkat lunak.",
+    "description": "<p>Materi meliputi klausul SLA, hak kekayaan intelektual, dan mitigasi risiko data breach.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Pelatihan+Legal+Skill",
+    "reportPdf": "https://example.com/report-pelatihan.pdf"
+  },
+  {
+    "id": 4,
+    "title": "Call for Paper: Kompetisi Analisis Kasus Bisnis",
+    "slug": "call-for-paper-bisnis",
+    "dateStart": "2024-07-01",
+    "type": "Kompetisi / Call for Paper",
+    "location": "Nasional (daring)",
+    "excerpt": "Undangan menulis analisis kasus merger & acquisition.",
+    "description": "<p>Karya terbaik akan dimuat di prosiding nasional dan mendapat mentoring publikasi.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Call+for+Paper"
+  },
+  {
+    "id": 5,
+    "title": "Jejaring Bisnis & Klinik UMKM",
+    "slug": "jejaring-bisnis-umkm",
+    "dateStart": "2024-05-20",
+    "type": "Program & Aktivitas Lainnya",
+    "location": "Co-Working Space FH",
+    "excerpt": "Pendampingan kontrak sederhana dan konsultasi legal untuk UMKM kampus.",
+    "description": "<p>Program klinik berkala dengan mentor dari Divisi Bisnis & Kemitraan.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Program+UMKM"
   }
 ]

@@ -1,36 +1,125 @@
-import { renderHeader } from '../components/Header.js';
-import { renderFooter } from '../components/Footer.js';
-import { renderSectionTitle } from '../components/SectionTitle.js';
+import { mountLayout } from '../components/Layout.js';
+import { loadJSON, sortByDateDesc, formatDate, groupByMonthYear } from '../utils/helpers.js';
+import { qs, setHTML } from '../utils/dom.js';
 import { renderArticleCard } from '../components/ArticleCard.js';
-import { bindNavbarToggle } from '../components/Navbar.js';
-import { loadJSON } from '../utils/helpers.js';
+import { renderPDFViewer } from '../components/PDFViewer.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  document.getElementById('site-header').innerHTML = renderHeader();
-  document.getElementById('site-footer').innerHTML = renderFooter();
-  bindNavbarToggle(document);
-  await renderArticlesList();
-});
+const search = new URLSearchParams(window.location.search);
+const slug = search.get('slug');
+const filterCategory = search.get('category');
 
-async function renderArticlesList() {
-  const titleContainer = document.getElementById('articles-title');
-  const grid = document.getElementById('articles-grid');
-
-  titleContainer.innerHTML = renderSectionTitle({
-    eyebrow: 'Referensi',
-    title: 'Arsip Artikel',
-    subtitle: 'Kumpulan artikel analisis dan opini dari komunitas.',
-  });
-
-  try {
-    const articles = await loadJSON('../data/articles.json');
-    if (!articles.length) {
-      grid.innerHTML = '<p class="empty-state">Belum ada artikel untuk ditampilkan.</p>';
-      return;
-    }
-
-    grid.innerHTML = articles.map((item) => renderArticleCard(item)).join('');
-  } catch (error) {
-    grid.innerHTML = `<p class="empty-state">Gagal memuat artikel: ${error.message}</p>`;
+async function init() {
+  mountLayout();
+  const articles = await loadJSON('../data/articles.json');
+  if (slug) {
+    renderDetail(articles, slug);
+  } else {
+    renderList(articles);
   }
+  renderArchive(articles);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+function renderList(articles) {
+  const container = qs('#article-root');
+  const categories = [
+    'Artikel Bulanan',
+    'Opini & Esai Hukum',
+    'Kajian Hukum',
+    'Resensi Buku Hukum',
+  ];
+  const topics = [...new Set(articles.flatMap((a) => a.topics))];
+  const selectedCategory = filterCategory || 'Semua';
+
+  const markup = `
+    <div class="section__header">
+      <h1 class="section__title">Artikel & Publikasi</h1>
+      <p class="section__subtitle">Filter berdasarkan kategori dan topik</p>
+    </div>
+    <div class="card filter-card">
+      <div class="stacked-gaps flex-between">
+        <label>Kategori:
+          <select id="category-filter">
+            <option ${selectedCategory === 'Semua' ? 'selected' : ''}>Semua</option>
+            ${categories.map((c) => `<option ${selectedCategory === c ? 'selected' : ''}>${c}</option>`).join('')}
+          </select>
+        </label>
+        <label>Topik:
+          <select id="topic-filter">
+            <option value="Semua">Semua</option>
+            ${topics.map((t) => `<option>${t}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div id="article-list" class="grid grid-3"></div>
+  `;
+
+  setHTML(container, markup);
+  const filtered = articles.filter((a) => (selectedCategory === 'Semua' ? true : a.categoryType === selectedCategory));
+  renderListItems(filtered);
+
+  qs('#category-filter').addEventListener('change', (e) => {
+    const val = e.target.value;
+    window.location.href = val === 'Semua' ? './articles.html' : `./articles.html?category=${encodeURIComponent(val)}`;
+  });
+  qs('#topic-filter').addEventListener('change', (e) => {
+    const topic = e.target.value;
+    const scoped = topic === 'Semua' ? filtered : filtered.filter((a) => a.topics.includes(topic));
+    renderListItems(scoped);
+  });
+}
+
+function renderListItems(list) {
+  const target = qs('#article-list');
+  setHTML(target, list.map(renderArticleCard).join(''));
+}
+
+function renderDetail(articles, slugValue) {
+  const target = qs('#article-root');
+  const article = articles.find((a) => a.slug === slugValue);
+  if (!article) {
+    setHTML(target, '<p>Artikel tidak ditemukan.</p>');
+    return;
+  }
+  setHTML(
+    target,
+    `
+    <article class="card">
+      <div class="badge">${article.categoryType}</div>
+      <h1>${article.title}</h1>
+      <div class="card__meta">
+        <span>${formatDate(article.date)}</span>
+        <span>• ${article.author.name} (${article.author.affiliation})</span>
+      </div>
+      <div class="list-inline topic-list">${article.topics.map((t) => `<span class="tag">${t}</span>`).join('')}</div>
+      <div>${article.content}</div>
+      ${article.doi ? `<p><strong>DOI:</strong> ${article.doi}</p>` : ''}
+      ${article.issn ? `<p><strong>ISSN:</strong> ${article.issn}</p>` : ''}
+      ${renderPDFViewer(article.pdfUrl)}
+      <a class="btn secondary" href="./articles.html">Kembali ke daftar</a>
+    </article>
+  `
+  );
+}
+
+function renderArchive(articles) {
+  const grouped = groupByMonthYear(articles);
+  const target = qs('#archive-list');
+  const markup = Object.entries(grouped)
+    .map(
+      ([label, items]) => `
+      <div class="card">
+        <h3>${label}</h3>
+        <ul>
+          ${sortByDateDesc(items)
+            .map((item) => `<li><a href="./articles.html?slug=${item.slug}">${item.title}</a> – ${item.categoryType}</li>`)
+            .join('')}
+        </ul>
+      </div>
+    `
+    )
+    .join('');
+  setHTML(target, markup);
 }
