@@ -48,5 +48,19 @@
     "excerpt": "Mengajak perguruan tinggi memposisikan klinik hukum sebagai mitra bisnis dan pusat literasi hukum praktis.",
     "content": "<p>Opini ini menekankan perlunya klinik hukum bergerak dari pendekatan pro-bono tradisional ke model layanan strategis bagi startup dan UMKM.</p>",
     "pdfUrl": "https://example.com/opini-klinik.pdf"
+  },
+  {
+    "id": 5,
+    "title": "Studi Kasus: Negosiasi M&A di Sektor Teknologi",
+    "slug": "studi-kasus-negosiasi-ma",
+    "date": "2024-06-15",
+    "categoryType": "Studi Kasus",
+    "topics": ["M&A", "Teknologi", "Due diligence"],
+    "author": {"name": "Farhan Yusuf", "affiliation": "Divisi Riset"},
+    "excerpt": "Pembelajaran dari proses negosiasi akuisisi startup SaaS oleh korporasi telekomunikasi.",
+    "content": "<p>Artikel ini mengulas strategi negosiasi, struktur pembayaran bertahap, serta klausul earn-out yang disepakati kedua belah pihak. Disertai daftar risiko hukum yang perlu dipetakan sejak tahap term sheet.</p>",
+    "pdfUrl": "https://example.com/studi-kasus-ma.pdf",
+    "doi": "10.1234/ma-2024",
+    "issn": "1978-5678"
   }
 ]
