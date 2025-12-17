@@ -57,5 +57,17 @@
     "excerpt": "Pendampingan kontrak sederhana dan konsultasi legal untuk UMKM kampus.",
     "description": "<p>Program klinik berkala dengan mentor dari Divisi Bisnis & Kemitraan.</p>",
     "poster": "https://via.placeholder.com/400x220.png?text=Program+UMKM"
+  },
+  {
+    "id": 6,
+    "title": "Kuliah Umum: Etika AI dalam Layanan Finansial",
+    "slug": "kuliah-umum-etika-ai-finansial",
+    "dateStart": "2024-06-22",
+    "type": "Kuliah Umum",
+    "location": "Auditorium Pascasarjana",
+    "excerpt": "Membedah aspek hukum dan etika penggunaan AI pada proses kredit dan scoring.",
+    "description": "<p>Pembicara dari regulator dan industri akan memaparkan regulasi terkini, standar transparansi algoritma, serta tanggung jawab hukum penyedia layanan.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Kuliah+Umum+AI",
+    "minutesPdf": "https://example.com/notulensi-ai.pdf"
   }
 ]
