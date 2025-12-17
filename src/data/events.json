@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Forum Diskusi: Regulasi Investasi Hijau",
+    "slug": "https://news.meoww.my.id/forum-regulasi-investasi-hijau",
+    "date": "2024-06-18",
+    "category": "Event",
+    "excerpt": "Sesi panel bersama regulator dan praktisi untuk memetakan kebutuhan regulasi investasi hijau di Indonesia."
+  },
+  {
+    "id": 2,
+    "title": "Webinar: Perlindungan Konsumen Digital",
+    "slug": "https://news.meoww.my.id/webinar-perlindungan-konsumen-digital",
+    "date": "2024-06-08",
+    "category": "Webinar",
+    "excerpt": "Paparan kasus terkini dan kerangka mitigasi sengketa konsumen dalam ekonomi digital."
+  },
+  {
+    "id": 3,
+    "title": "Lokakarya Penyusunan Kontrak Startup",
+    "slug": "https://news.meoww.my.id/lokakarya-kontrak-startup",
+    "date": "2024-05-30",
+    "category": "Workshop",
+    "excerpt": "Pendampingan praktis menyusun klausul utama untuk pendanaan awal dan kerja sama produk."
+  }
+]
