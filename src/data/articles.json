@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Panduan Praktis Kontrak Teknologi",
+    "slug": "https://news.meoww.my.id/panduan-praktis-kontrak-teknologi",
+    "date": "2024-06-10",
+    "excerpt": "Checklist klausul penting untuk kontrak pengembangan software dan layanan cloud.",
+    "category": "Edukasi Hukum",
+    "author": "Aditia Rahman"
+  },
+  {
+    "id": 2,
+    "title": "Metode Uji Kepatuhan Anti Pencucian Uang",
+    "slug": "https://news.meoww.my.id/metode-uji-kepatuhan-apu-ppt",
+    "date": "2024-05-30",
+    "excerpt": "Kerangka praktis untuk memvalidasi program APU-PPT bagi startup fintech.",
+    "category": "Opini",
+    "author": "Laras Wibowo"
+  },
+  {
+    "id": 3,
+    "title": "Model Tata Kelola Data untuk Perusahaan Publik",
+    "slug": "https://news.meoww.my.id/model-tata-kelola-data",
+    "date": "2024-05-24",
+    "excerpt": "Strategi implementasi tata kelola data yang sejalan dengan regulasi OJK.",
+    "category": "Analisis",
+    "author": "Sonia Lestari"
+  },
+  {
+    "id": 4,
+    "title": "Mengukur Dampak Regulasi Ekonomi Digital",
+    "slug": "https://news.meoww.my.id/dampak-regulasi-ekonomi-digital",
+    "date": "2024-05-14",
+    "excerpt": "Pendekatan kuantitatif untuk membaca implikasi kebijakan digital economy.",
+    "category": "Opini",
+    "author": "Bima Saputra"
+  }
+]
