@@ -150,7 +150,8 @@ async function renderLatestUpdates() {
     const markup = latest.map((item) => renderContentCard(item)).join('');
     setHTML(target, markup);
   } catch (error) {
-    setHTML(target, `<p>${error.message}</p>`);
+    console.error('Failed to load updates:', error);
+    setHTML(target, `<p class="error-message">Gagal memuat berita terbaru. Silakan coba muat ulang halaman.</p>`);
   }
 }
 
