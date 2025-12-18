@@ -60,7 +60,7 @@ export function renderNavbar() {
       if (menu.items) {
         return renderDropdownMenu(menu.label, menu.items);
       }
-      return `<li class="nav-item"><a class="nav-trigger" href="${menu.href}">${menu.label}</a></li>`;
+      return `<li class="nav-item"><a class="nav-link" href="${menu.href}">${menu.label}</a></li>`;
     })
     .join('');
 
@@ -74,38 +74,59 @@ export function renderNavbar() {
             <span class="brand__subtitle">Hukum Bisnis & Kemitraan</span>
           </span>
         </a>
+        <button class="navbar__toggle" aria-expanded="false" aria-label="Toggle navigasi"><span></span></button>
         <div class="navbar__menu" role="menubar">
           <ul class="nav-list">
             ${navItems}
           </ul>
-          <div class="navbar__actions">
-            <span class="badge">Business Law</span>
-          </div>
         </div>
       </div>
+      <div class="navbar__backdrop" data-nav-backdrop></div>
     </nav>
   `;
 }
 
-export function bindDropdowns(scope = document) {
+export function bindNavigation(scope = document) {
   const triggers = qsa('[data-dropdown]', scope);
+  const navbar = scope.querySelector('.navbar');
+  const toggle = navbar?.querySelector('.navbar__toggle');
+  const menu = navbar?.querySelector('.navbar__menu');
+  const backdrop = navbar?.querySelector('[data-nav-backdrop]');
+  const navLinks = qsa('.nav-link', navbar);
+  const dropdownLinks = qsa('.dropdown__item', navbar);
 
-  function closeAll() {
+  function closeAllDropdowns() {
     triggers.forEach((trigger) => {
       trigger.setAttribute('aria-expanded', 'false');
-      const menu = trigger.nextElementSibling;
-      if (menu) menu.classList.remove('open');
+      trigger.closest('.nav-item')?.classList.remove('expanded');
+      const menuEl = trigger.nextElementSibling;
+      if (menuEl) menuEl.classList.remove('open');
     });
   }
 
+  function closeMenu() {
+    if (toggle && menu) {
+      toggle.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('open');
+      backdrop?.classList.remove('active');
+      closeAllDropdowns();
+    }
+  }
+
   triggers.forEach((trigger) => {
-    const menu = trigger.nextElementSibling;
+    const menuEl = trigger.nextElementSibling;
     trigger.addEventListener('click', (event) => {
       event.preventDefault();
       const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      closeAll();
-      trigger.setAttribute('aria-expanded', String(!isOpen));
-      menu?.classList.toggle('open', !isOpen);
+      const isMobile = window.matchMedia('(max-width: 960px)').matches;
+
+      closeAllDropdowns();
+      const willOpen = !isOpen;
+      trigger.setAttribute('aria-expanded', String(willOpen));
+      trigger.closest('.nav-item')?.classList.toggle('expanded', willOpen);
+      if (!isMobile) {
+        menuEl?.classList.toggle('open', willOpen);
+      }
     });
 
     trigger.addEventListener('keydown', (event) => {
@@ -114,19 +135,54 @@ export function bindDropdowns(scope = document) {
         trigger.click();
       }
       if (event.key === 'Escape') {
-        closeAll();
+        closeAllDropdowns();
         trigger.focus();
       }
     });
   });
 
   document.addEventListener('click', (event) => {
-    if (!event.target.closest('.nav-item')) {
-      closeAll();
+    if (!event.target.closest('.nav-item') && !event.target.closest('.navbar__toggle')) {
+      closeAllDropdowns();
     }
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeAll();
+    if (event.key === 'Escape') {
+      closeMenu();
+    }
+  });
+
+  toggle?.addEventListener('click', () => {
+    if (!menu) return;
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    menu.classList.toggle('open', !isOpen);
+    backdrop?.classList.toggle('active', !isOpen);
+    if (!isOpen) {
+      closeAllDropdowns();
+    }
+  });
+
+  backdrop?.addEventListener('click', closeMenu);
+
+  navLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 960) closeMenu();
+    });
+  });
+
+  dropdownLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 960) closeMenu();
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 960) {
+      backdrop?.classList.remove('active');
+      menu?.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
   });
 }

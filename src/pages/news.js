@@ -1,14 +1,10 @@
-import { renderHeader } from '../components/Header.js';
-import { renderFooter } from '../components/Footer.js';
+import { mountLayout } from '../components/Layout.js';
 import { renderSectionTitle } from '../components/SectionTitle.js';
 import { renderNewsCard } from '../components/NewsCard.js';
-import { bindNavbarToggle } from '../components/Navbar.js';
 import { loadJSON } from '../utils/helpers.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  document.getElementById('site-header').innerHTML = renderHeader();
-  document.getElementById('site-footer').innerHTML = renderFooter();
-  bindNavbarToggle(document);
+  mountLayout();
   await renderNewsList();
 });
 
