@@ -28,7 +28,18 @@ function getDictionaryUrls(lang) {
     new URL('../src/i18n/', window.location.href)
   ];
 
-  return candidateBases.map((base) => new URL(`${lang}.json`, base).href);
+  const seen = new Set();
+  const uniqueUrls = [];
+
+  candidateBases.forEach((base) => {
+    const href = new URL(`${lang}.json`, base).href;
+    if (!seen.has(href)) {
+      seen.add(href);
+      uniqueUrls.push(href);
+    }
+  });
+
+  return uniqueUrls;
 }
 const HUMAN_FALLBACK = {
   id: 'Teks belum tersedia',
