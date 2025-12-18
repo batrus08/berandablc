@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../styles/tokens.css" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/components.css" />
+    <link rel="stylesheet" href="../styles/home.css" />
   </head>
   <body>
     <div id="topbar-root"></div>
@@ -14,36 +15,42 @@
     <main class="section">
       <div class="container">
         <div class="section__header">
-          <h1 class="section__title">Tentang Law Community FH</h1>
-          <p class="section__subtitle">Sejarah, visi, nilai, dan struktur organisasi</p>
+          <p class="badge">Tentang Kami</p>
+          <h1 class="section__title">Profil, sejarah, manajemen, dan arah BLC</h1>
+          <p class="section__subtitle">Setiap sub-halaman menyediakan detail berbeda agar informasi lebih terstruktur.</p>
         </div>
-        <section id="sejarah" class="card" tabindex="0">
-          <h2>Sejarah Law Community FH</h2>
-          <p class="muted">Berdiri dari inisiatif mahasiswa pada 2015 untuk menjembatani kajian hukum bisnis dengan praktik industri. Law Community FH telah menggelar ratusan kegiatan dan menjadi mitra riset kampus.</p>
+
+        <section class="card" tabindex="0">
+          <h2>Ringkasan Singkat</h2>
+          <p class="lead">
+            Business Law Community (BLC) Fakultas Hukum UGM adalah ruang kolaborasi mahasiswa, akademisi, dan praktisi
+            untuk menjembatani kajian hukum bisnis dengan kebutuhan industri melalui riset, publikasi, dan program
+            kemitraan.
+          </p>
+          <p class="muted">
+            Pilih sub-halaman di bawah ini untuk membaca profil organisasi, perjalanan sejarah, struktur manajemen,
+            serta visi dan misi yang menjadi kompas program kerja.
+          </p>
         </section>
-        <section id="visi-misi" class="card" tabindex="0">
-          <h2>Visi &amp; Misi</h2>
-          <ul>
-            <li>Visi: pusat kolaborasi hukum bisnis yang responsif terhadap inovasi ekonomi.</li>
-            <li>Misi: memajukan literasi kontrak, mendukung riset terapan, dan membuka kemitraan strategis.</li>
-          </ul>
-        </section>
-        <section id="nilai" class="card" tabindex="0">
-          <h2>Nilai dan Fokus Kajian</h2>
-          <p>Nilai utama: integritas, kolaborasi, dan keberlanjutan. Fokus kajian meliputi kontrak bisnis, ESG, merger & acquisition, dan tata kelola data.</p>
-        </section>
-        <section id="struktur" class="card" tabindex="0">
-          <h2>Struktur Organisasi / Pengurus</h2>
-          <div class="table-responsive">
-            <table class="table">
-              <tr><th>Jabatan</th><th>Nama</th><th>Kontak</th></tr>
-              <tr><td>Ketua</td><td>Alya Rachman</td><td>alya@fh.ac.id</td></tr>
-              <tr><td>Wakil</td><td>Dimas Wicaksono</td><td>dimas@fh.ac.id</td></tr>
-              <tr><td>Sekretaris</td><td>Nabila Sari</td><td>nabila@fh.ac.id</td></tr>
-              <tr><td>Bendahara</td><td>Reno Pratama</td><td>reno@fh.ac.id</td></tr>
-            </table>
-          </div>
-        </section>
+
+        <div class="section-grid" role="navigation" aria-label="Navigasi sub-halaman Tentang Kami">
+          <a class="card" href="./tentang-profile.html">
+            <h3>Profil</h3>
+            <p class="muted">Identitas, mandat, dan pilar aktivitas BLC sebagai komunitas hukum bisnis kampus.</p>
+          </a>
+          <a class="card" href="./tentang-sejarah.html">
+            <h3>Sejarah</h3>
+            <p class="muted">Tonggak pembentukan dan perkembangan program BLC sejak awal berdiri.</p>
+          </a>
+          <a class="card" href="./tentang-manajemen.html">
+            <h3>Manajemen</h3>
+            <p class="muted">Susunan pengurus, peran inti, dan koordinasi antar divisi.</p>
+          </a>
+          <a class="card" href="./tentang-visi-misi.html">
+            <h3>Visi &amp; Misi</h3>
+            <p class="muted">Arah strategis yang memandu pengembangan program dan kemitraan BLC.</p>
+          </a>
+        </div>
       </div>
     </main>
     <div id="footer-root"></div>

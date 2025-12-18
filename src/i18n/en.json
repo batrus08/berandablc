@@ -21,6 +21,13 @@
     "galeri": "Gallery",
     "kontak": "Contact"
   },
+  "aboutMenu": {
+    "overview": "Overview",
+    "profile": "Profile",
+    "sejarah": "History",
+    "manajemen": "Management",
+    "visiMisi": "Vision & Mission"
+  },
   "hero": {
     "ctaArticles": "Read Articles",
     "ctaContact": "Contact",
