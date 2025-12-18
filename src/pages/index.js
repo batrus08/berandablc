@@ -19,12 +19,6 @@ const heroSlides = [
   }
 ];
 
-const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-function getMonthNames() {
-  return getCurrentLanguage() === 'en' ? monthNamesEn : undefined;
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   setupPage(renderPage);
 });
