@@ -4,7 +4,7 @@ import { qs, setHTML } from '../utils/dom.js';
 
 async function renderContentPage() {
   const key = document.body.dataset.page;
-  const content = await loadJSON('../data/pages-content.json');
+  const content = await loadJSON(new URL('../data/pages-content.json', import.meta.url).href);
   const page = content.find((item) => item.key === key);
   if (!page) return;
   document.title = `${page.title} | Business Law Community FH UGM`;
