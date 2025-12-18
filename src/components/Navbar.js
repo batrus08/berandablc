@@ -7,11 +7,10 @@ const menuConfig = () => [
   {
     label: t('navbar.tentang'),
     items: [
-      { text: t('aboutMenu.overview'), href: './about.html' },
-      { text: t('aboutMenu.profile'), href: './tentang-profile.html' },
-      { text: t('aboutMenu.sejarah'), href: './tentang-sejarah.html' },
-      { text: t('aboutMenu.manajemen'), href: './tentang-manajemen.html' },
-      { text: t('aboutMenu.visiMisi'), href: './tentang-visi-misi.html' },
+      { text: t('aboutMenu.profile'), href: './tentang-kami/profil.html' },
+      { text: t('aboutMenu.sejarah'), href: './tentang-kami/sejarah.html' },
+      { text: t('aboutMenu.manajemen'), href: './tentang-kami/manajemen.html' },
+      { text: t('aboutMenu.visiMisi'), href: './tentang-kami/visi-misi.html' },
     ],
   },
   { label: t('navbar.artikel'), href: './articles.html' },
