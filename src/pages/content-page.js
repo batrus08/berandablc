@@ -7,6 +7,7 @@ async function renderContentPage() {
   const content = await loadJSON('../data/pages-content.json');
   const page = content.find((item) => item.key === key);
   if (!page) return;
+  document.title = `${page.title} | Business Law Community FH UGM`;
   renderHero(page);
   renderSections(page);
 }

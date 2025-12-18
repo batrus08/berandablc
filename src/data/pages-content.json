@@ -18,6 +18,17 @@
         ]
       },
       {
+ codex/add-subpages-to-about-us-section-lzmp43
+        "title": "Program Unggulan",
+        "list": [
+          "Business Law Clinic dengan pendampingan mentor praktisi",
+          "Rangkaian workshop negosiasi dan drafting kontrak",
+          "Program riset terapan yang dipublikasikan secara berkala"
+        ]
+      },
+      {
+=======
+ main
         "title": "Cara Kerja",
         "body": "Tim lintas divisi berkolaborasi dalam setiap program, memanfaatkan mentor praktisi serta dukungan fakultas untuk menjaga relevansi dan mutu output."
       }
@@ -68,6 +79,13 @@
           "Pertemuan koordinasi berkala antar divisi",
           "Pelibatan mentor akademik dan praktisi untuk quality assurance"
         ]
+ codex/add-subpages-to-about-us-section-lzmp43
+      },
+      {
+        "title": "Kanal Koordinasi",
+        "body": "Setiap pengurus memiliki jalur koordinasi jelas melalui rapat rutin, grup kerja khusus program, dan dokumentasi progres sehingga informasi tidak bercampur antar sub-halaman."
+=======
+ main
       }
     ]
   },
@@ -87,6 +105,14 @@
           "Mendorong publikasi hukum bisnis yang relevan dengan tren industri",
           "Membekali anggota dengan keterampilan negosiasi dan drafting kontrak",
           "Memperluas kemitraan dan program konsultasi bagi startup dan UMKM"
+        ]
+      },
+      {
+        "title": "Prioritas Strategis",
+        "list": [
+          "Digitalisasi materi klinik hukum bisnis agar mudah diakses",
+          "Penguatan jejaring alumni dan mitra industri",
+          "Pengembangan kurikulum pelatihan berbasis studi kasus"
         ]
       }
     ]
