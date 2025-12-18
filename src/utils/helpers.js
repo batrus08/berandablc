@@ -8,9 +8,10 @@ export async function loadJSON(path) {
 
 export const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-export function formatDate(dateString) {
+export function formatDate(dateString, localeMonthNames = monthNames) {
   const date = new Date(dateString);
-  return `${date.getDate().toString().padStart(2, '0')} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+  if (Number.isNaN(date.getTime())) return dateString;
+  return `${date.getDate().toString().padStart(2, '0')} ${localeMonthNames[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export function sortByDateDesc(items = [], key = 'date') {
@@ -31,6 +32,23 @@ export function nextUpcoming(items = [], key = 'dateStart') {
     .filter((item) => new Date(item[key]) >= now)
     .sort((a, b) => new Date(a[key]) - new Date(b[key]));
   return upcoming[0];
+}
+
+export function filterOngoingEvents(events = [], now = new Date()) {
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return events.filter((event) => {
+    const startDate = new Date(event.dateStart || event.startDate);
+    const endDate = event.dateEnd ? new Date(event.dateEnd) : event.endDate ? new Date(event.endDate) : null;
+
+    if (Number.isNaN(startDate.getTime())) return false;
+
+    if (endDate && !Number.isNaN(endDate.getTime())) {
+      return startDate <= now && now <= endDate;
+    }
+
+    return startDate.getTime() === startOfDay.getTime();
+  });
 }
 
 export function groupByMonthYear(items = [], key = 'date') {

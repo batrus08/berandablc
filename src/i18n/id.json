@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "homeTitle": "Business Law Community FH UGM | Beranda"
+  },
+  "brand": {
+    "name": "Business Law Community Fakultas Hukum Universitas Gadjah Mada"
+  },
+  "topbar": {
+    "language": "Bahasa Indonesia",
+    "languageAlt": "English"
+  },
+  "navbar": {
+    "kemitraan": "Hukum Bisnis & Kemitraan",
+    "beranda": "Beranda",
+    "tentang": "Tentang Kami",
+    "artikel": "Artikel",
+    "kegiatan": "Kegiatan",
+    "divisi": "Divisi",
+    "kerjaSama": "Kerja Sama",
+    "galeri": "Galeri",
+    "kontak": "Kontak"
+  },
+  "hero": {
+    "ctaArticles": "Baca Artikel",
+    "ctaContact": "Kontak",
+    "slides": [
+      {
+        "headline": "Kolaborasi hukum bisnis untuk dampak nyata",
+        "subheadline": "Riset, publikasi, pelatihan, dan kemitraan strategis bersama akademisi dan praktisi.",
+        "points": ["Kolaborasi riset terapan", "Publikasi & klinik hukum bisnis"]
+      },
+      {
+        "headline": "Kemitraan, kontrak, dan inovasi legal tech",
+        "subheadline": "Pendampingan kontrak, negosiasi, dan tata kelola digital untuk mitra kampus dan industri.",
+        "points": ["Konsultasi kontrak & kemitraan", "Eksplorasi inovasi digital"]
+      },
+      {
+        "headline": "Program unggulan untuk pengembangan talenta",
+        "subheadline": "Klinik hukum bisnis, riset terapan, dan pelatihan legal skill untuk mahasiswa dan mitra.",
+        "points": ["Klinik & mentoring", "Pelatihan keterampilan hukum"]
+      }
+    ]
+  },
+  "articles": {
+    "title": "Artikel & Berita",
+    "empty": "Belum ada pembaruan terbaru."
+  },
+  "events": {
+    "title": "Agenda Terdekat",
+    "ongoing": "Kegiatan berlangsung",
+    "empty": "Belum ada kegiatan yang sedang berlangsung."
+  },
+  "profile": {
+    "title": "Profil Singkat",
+    "description": "Business Law Community FH UGM adalah wadah kolaborasi mahasiswa, akademisi, dan praktisi untuk mengembangkan keahlian hukum bisnis melalui riset, publikasi, pelatihan, dan kemitraan strategis.",
+    "videoTitle": "Profil & Kegiatan"
+  },
+  "vision": {
+    "title": "Visi & Misi",
+    "missionTitle": "Misi",
+    "visi": "Menjadi pusat rujukan hukum bisnis kampus yang adaptif, kolaboratif, dan berdampak pada ekosistem bisnis.",
+    "misi": [
+      "Mendorong publikasi hukum bisnis yang relevan dengan dinamika industri.",
+      "Membekali anggota dengan keterampilan negosiasi dan drafting kontrak.",
+      "Memperkuat kemitraan strategis serta program konsultasi bagi inovator, startup, dan UMKM."
+    ]
+  },
+  "footer": {
+    "address": "Fakultas Hukum Universitas Gadjah Mada, Bulaksumur, Sleman, DI Yogyakarta, Indonesia",
+    "phone": "+62 811-0000-0000",
+    "copyright": "© 2026 Business Law Community FH UGM. Hak cipta dilindungi."
+  }
+}
