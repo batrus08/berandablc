@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Law Community FH | Beranda</title>
+    <title data-i18n="meta.homeTitle">Business Law Community FH | Beranda</title>
     <link rel="stylesheet" href="../styles/tokens.css" />
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/components.css" />
@@ -14,92 +14,63 @@
     <div id="navbar-root"></div>
     <main>
       <section class="hero">
-        <div class="container hero__grid">
-          <div class="hero__content">
-            <span class="chip hero__chip">Business Law Community</span>
-            <h1 class="hero__title">Law Community FH</h1>
-            <p class="lead">Kolaborasi mahasiswa dan profesional hukum bisnis untuk riset, publikasi, pelatihan, dan kemitraan.</p>
-            <div class="hero__cta">
-              <a class="btn primary" href="./articles.html">Baca Artikel</a>
-              <a class="btn secondary" href="./contact.html">Kontak</a>
-            </div>
-          </div>
-          <div class="card highlight-card">
-            <p class="eyebrow text-muted">Sorotan cepat</p>
-            <div class="stat-card">
-              <strong>Hukum Bisnis</strong>
-              <span>Fokus kajian kami: kemitraan, kontrak, dan inovasi digital</span>
-            </div>
-            <div class="stat-card">
-              <strong>Program Unggulan</strong>
-              <span>Klinik hukum bisnis, riset terapan, dan pelatihan legal skill</span>
-            </div>
-          </div>
-        </div>
+        <div id="hero-slider" class="hero__slider"></div>
       </section>
 
       <section class="section latest-updates" id="latest-updates">
         <div class="container">
-          <div id="latest-updates-header"></div>
-          <div class="muted">Gabungan berita dan artikel terbaru, disusun otomatis berdasarkan tanggal.</div>
-          <div id="latest-updates-list" class="grid grid-3"></div>
-        </div>
-      </section>
-
-      <section class="section focus-areas" id="fokus-konten">
-        <div class="container">
-          <div id="focus-areas-header"></div>
-          <div id="focus-area-grid" class="focus-grid"></div>
-        </div>
-      </section>
-
-      <section class="section section-alt" id="profil">
-        <div class="container">
           <div class="section__header">
-            <h2 class="section__title">Profil Singkat</h2>
-            <p class="section__subtitle">Ringkasan Law Community FH</p>
+            <h2 class="section__title" data-i18n="articles.title"></h2>
           </div>
-          <div class="card-grid-3">
-            <div class="card">
-              <h3>Identitas</h3>
-              <p class="muted">Komunitas hukum bisnis di lingkungan fakultas hukum yang memadukan akademisi, praktisi, dan mitra industri.</p>
-            </div>
-            <div class="card">
-              <h3>Mandat</h3>
-              <p class="muted">Menyalurkan minat riset, publikasi, dan advokasi hukum bisnis melalui program berbasis data.</p>
-            </div>
-            <div class="card">
-              <h3>Aktivitas</h3>
-              <p class="muted">Artikel bulanan, diskusi, pelatihan legal skill, dan kolaborasi kemitraan bisnis.</p>
-            </div>
-          </div>
+          <div id="latest-updates-list" class="grid grid-3"></div>
         </div>
       </section>
 
       <section class="section section-alt" id="agenda">
         <div class="container">
-          <div class="section__header flex-between">
-            <div>
-              <h2 class="section__title">Agenda Terdekat</h2>
-              <p class="section__subtitle">Events diambil dari events.json</p>
-            </div>
-            <a class="btn secondary" href="./events.html">Semua Kegiatan</a>
+          <div class="section__header">
+            <h2 class="section__title" data-i18n="events.title"></h2>
+            <p class="section__subtitle" data-i18n="events.ongoing"></p>
           </div>
-          <div id="upcoming-event" class="card"></div>
+          <div id="agenda-list" class="agenda-list"></div>
         </div>
       </section>
 
-      <section class="section" id="visi">
+      <section class="section" id="profil">
         <div class="container">
           <div class="section__header">
-            <h2 class="section__title">Visi & Misi</h2>
+            <h2 class="section__title" data-i18n="profile.title"></h2>
+            <p class="section__subtitle" data-i18n="profile.description"></p>
           </div>
-          <p class="quote">"Menjadi pusat rujukan hukum bisnis kampus yang adaptif, kolaboratif, dan berdampak pada ekosistem bisnis."</p>
-          <ul class="timeline">
-            <li>Mendorong publikasi hukum bisnis yang relevan dengan tren industri.</li>
-            <li>Membekali anggota dengan keterampilan negosiasi dan drafting kontrak.</li>
-            <li>Memperluas kemitraan dan program konsultasi bagi startup dan UMKM.</li>
-          </ul>
+          <div class="card profile-card">
+            <p class="muted" data-i18n="profile.description"></p>
+          </div>
+          <div class="video-embed" aria-label="Video profile">
+            <iframe
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="YouTube video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="visi">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title" data-i18n="vision.title"></h2>
+          </div>
+          <div class="vision-grid">
+            <div class="card">
+              <h3 data-i18n="vision.title"></h3>
+              <p class="muted" data-i18n="vision.visi"></p>
+            </div>
+            <div class="card">
+              <h3 data-i18n="vision.missionTitle"></h3>
+              <ul class="timeline" id="misi-list"></ul>
+            </div>
+          </div>
         </div>
       </section>
     </main>

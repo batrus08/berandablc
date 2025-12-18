@@ -26,6 +26,10 @@
   --shadow-float: 0 16px 40px rgba(17, 24, 39, 0.12);
   --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-heading: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --nav-font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --nav-font-size: 0.98rem;
+  --nav-font-weight: 600;
+  --nav-line-height: 1.4;
   --container-width: 1200px;
   --text-h1: clamp(2.25rem, 3vw + 1.2rem, 3.25rem);
   --text-h2: clamp(1.75rem, 2vw + 1rem, 2.35rem);

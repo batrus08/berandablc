@@ -1,139 +1,200 @@
 import { mountLayout } from '../components/Layout.js';
-import { renderArticleCard } from '../components/ArticleCard.js';
-import { renderNewsCard } from '../components/NewsCard.js';
-import { renderSectionTitle } from '../components/SectionTitle.js';
-import { loadJSON, sortByDateDesc, formatDate, nextUpcoming } from '../utils/helpers.js';
+import { renderContentCard } from '../components/ContentCard.js';
+import { loadJSON, sortByDateDesc, filterOngoingEvents, formatDate } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
+import { applyTranslations, getCurrentLanguage, initI18n, onLanguageChange, t } from '../utils/i18n.js';
 
-const focusAreas = [
+const heroSlides = [
   {
-    label: 'Edukasi Hukum',
-    title: 'Edukasi & Klinik',
-    description: 'Toolkit dasar compliance dan praktik kontrak untuk anggota baru.',
-    items: ['Modul pemula', 'Workshop drafting', 'Klinik konsultasi'],
+    className: 'hero__slide--1',
+    translationKey: 'hero.slides.0'
   },
   {
-    label: 'Analisis',
-    title: 'Analisis Regulasi',
-    description: 'Insight berkala atas kebijakan bisnis, ESG, dan data governance.',
-    items: ['Analisis regulasi', 'Update kebijakan ESG', 'Riset tematik'],
+    className: 'hero__slide--2',
+    translationKey: 'hero.slides.1'
   },
   {
-    label: 'Berita',
-    title: 'Berita & Agenda',
-    description: 'Kumpulan kabar komunitas, kemitraan, serta agenda legal terbaru.',
-    items: ['Sorotan kasus', 'Update acara', 'Kemitraan kampus'],
-  },
-  {
-    label: 'Opini',
-    title: 'Opini & Kolaborasi',
-    description: 'Ruang opini, resensi, dan kolaborasi lintas divisi untuk publikasi.',
-    items: ['Forum diskusi', 'Resensi buku', 'Kolaborasi riset'],
-  },
+    className: 'hero__slide--3',
+    translationKey: 'hero.slides.2'
+  }
 ];
+
+const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+function getMonthNames() {
+  return getCurrentLanguage() === 'en' ? monthNamesEn : undefined;
+}
 
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+  await initI18n('id');
   mountLayout();
-  renderSectionHeaders();
-  renderFocusAreas();
-  await renderLatestUpdates();
-  await renderUpcomingEvent();
+  await renderPage();
+  onLanguageChange(async () => {
+    mountLayout();
+    await renderPage();
+  });
 }
 
-function renderSectionHeaders() {
-  setHTML(
-    qs('#latest-updates-header'),
-    renderSectionTitle({
-      eyebrow: 'Gabungan news & artikel',
-      title: 'Latest Updates',
-      subtitle: 'Urut berdasarkan tanggal terbaru dari data JSON.',
+async function renderPage() {
+  document.title = t('meta.homeTitle');
+  renderHeroSlider();
+  await renderLatestUpdates();
+  await renderAgenda();
+  renderVisionMission();
+  applyTranslations();
+}
+
+function renderHeroSlider(activeIndex = 0) {
+  const sliderRoot = qs('#hero-slider');
+  const slides = heroSlides
+    .map((slide) => {
+      const copy = getSlideCopy(slide.translationKey);
+      return `
+        <div class="hero__slide ${slide.className}">
+          <div class="hero__media"></div>
+          <div class="hero__overlay"></div>
+          <div class="hero__content">
+            <div class="hero__content-inner">
+              <div class="hero__eyebrow">
+                <span>${t('brand.name')}</span>
+                <span>${t('navbar.kemitraan')}</span>
+              </div>
+              <h1 class="hero__title">${copy.headline}</h1>
+              <p class="hero__subtitle">${copy.subheadline}</p>
+              <div class="hero__tags">
+                ${copy.points.map((point) => `<span class="hero__tag">${point}</span>`).join('')}
+              </div>
+              <div class="hero__cta">
+                <a class="btn primary" href="./articles.html">${t('hero.ctaArticles')}</a>
+                <a class="btn secondary" href="./contact.html">${t('hero.ctaContact')}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     })
-  );
+    .join('');
+
+  const dots = heroSlides
+    .map(
+      (_, idx) => `<button class="hero__dot${idx === activeIndex ? ' is-active' : ''}" data-index="${idx}" aria-label="Slide ${idx + 1}"></button>`
+    )
+    .join('');
 
   setHTML(
-    qs('#focus-areas-header'),
-    renderSectionTitle({
-      eyebrow: 'Kategori konten',
-      title: 'Fokus Kajian',
-      subtitle: 'Edukasi hukum, analisis, berita, dan opini dalam format modular.',
-    })
+    sliderRoot,
+    `
+    <div class="hero__slides" style="transform: translateX(-${activeIndex * 100}%);">
+      ${slides}
+    </div>
+    <div class="hero__controls">
+      <div class="hero__dots">${dots}</div>
+      <div class="hero__nav">
+        <button type="button" data-hero-prev aria-label="Sebelumnya">‹</button>
+        <button type="button" data-hero-next aria-label="Berikutnya">›</button>
+      </div>
+    </div>
+  `
   );
+
+  bindHeroControls(activeIndex);
+}
+
+function bindHeroControls(activeIndex) {
+  const slidesContainer = qs('.hero__slides');
+  let current = activeIndex;
+
+  const goTo = (index) => {
+    current = (index + heroSlides.length) % heroSlides.length;
+    slidesContainer.style.transform = `translateX(-${current * 100}%)`;
+    document.querySelectorAll('.hero__dot').forEach((dot) => {
+      dot.classList.toggle('is-active', Number(dot.dataset.index) === current);
+    });
+  };
+
+  qs('[data-hero-prev]')?.addEventListener('click', () => goTo(current - 1));
+  qs('[data-hero-next]')?.addEventListener('click', () => goTo(current + 1));
+  document.querySelectorAll('.hero__dot').forEach((dot) => {
+    dot.addEventListener('click', () => goTo(Number(dot.dataset.index)));
+  });
+}
+
+function getSlideCopy(key) {
+  const copy = t(key);
+  if (copy && typeof copy === 'object') return copy;
+  return { headline: '', subheadline: '', points: [] };
 }
 
 async function renderLatestUpdates() {
   const target = qs('#latest-updates-list');
-
   try {
     const [news, articles] = await Promise.all([
       loadJSON('../data/news.json'),
-      loadJSON('../data/articles.json'),
+      loadJSON('../data/articles.json')
     ]);
 
     const normalized = [
       ...news.map((item) => ({ ...item, type: 'news' })),
-      ...articles.map((item) => ({ ...item, type: 'article' })),
+      ...articles.map((item) => ({ ...item, type: 'article' }))
     ];
 
     const latest = sortByDateDesc(normalized, 'date').slice(0, 6);
 
     if (!latest.length) {
-      setHTML(target, '<p>Tidak ada pembaruan terbaru.</p>');
+      setHTML(target, `<p data-i18n="articles.empty">${t('articles.empty')}</p>`);
       return;
     }
 
-    const markup = latest
-      .map((item) => (item.type === 'news' ? renderNewsCard(item) : renderArticleCard(item)))
-      .join('');
-
+    const markup = latest.map((item) => renderContentCard(item)).join('');
     setHTML(target, markup);
   } catch (error) {
     setHTML(target, `<p>${error.message}</p>`);
   }
 }
 
-function renderFocusAreas() {
-  const container = qs('#focus-area-grid');
-  const markup = focusAreas
-    .map(
-      (area) => `
-      <article class="card focus-card">
-        <p class="eyebrow">${area.label}</p>
-        <h3>${area.title}</h3>
-        <p class="muted">${area.description}</p>
-        <ul class="list-inline">${area.items.map((item) => `<li class="tag">${item}</li>`).join('')}</ul>
-      </article>
-    `
-    )
-    .join('');
-
-  setHTML(container, markup);
-}
-
-async function renderUpcomingEvent() {
+async function renderAgenda() {
+  const target = qs('#agenda-list');
   try {
     const events = await loadJSON('../data/events.json');
-    const upcoming = nextUpcoming(events);
-    const target = qs('#upcoming-event');
-    if (!upcoming) {
-      setHTML(target, '<p>Belum ada jadwal acara mendatang.</p>');
+    const ongoing = filterOngoingEvents(events).slice(0, 3);
+
+    if (!ongoing.length) {
+      setHTML(target, `<p data-i18n="events.empty">${t('events.empty')}</p>`);
       return;
     }
-    setHTML(
-      target,
+
+    const monthNames = getMonthNames();
+    const cards = ongoing
+      .map(
+        (event) => `
+        <article class="card agenda-card">
+          <div class="agenda-meta">
+            <span class="badge">${event.type}</span>
+            <span>${formatDate(event.dateStart, monthNames)}${
+          event.dateEnd ? ' - ' + formatDate(event.dateEnd, monthNames) : ''
+        }</span>
+            ${event.location ? `<span>${event.location}</span>` : ''}
+          </div>
+          <h3>${event.title}</h3>
+          <p class="muted">${event.excerpt || ''}</p>
+        </article>
       `
-      <div class="meta-row">
-        <span class="badge">${upcoming.type}</span>
-        <span>${formatDate(upcoming.dateStart)}${upcoming.dateEnd ? ' - ' + formatDate(upcoming.dateEnd) : ''}</span>
-        <span>${upcoming.location}</span>
-      </div>
-      <h3>${upcoming.title}</h3>
-      <p class="muted">${upcoming.excerpt}</p>
-      <a class="btn primary" href="./events.html?slug=${upcoming.slug}">Detail Agenda</a>
-    `
-    );
+      )
+      .join('');
+
+    setHTML(target, cards);
   } catch (error) {
-    setHTML(qs('#upcoming-event'), `<p>${error.message}</p>`);
+    setHTML(target, `<p>${error.message}</p>`);
   }
+}
+
+function renderVisionMission() {
+  const list = qs('#misi-list');
+  const missions = t('vision.misi') || [];
+  setHTML(
+    list,
+    missions.map((item) => `<li>${item}</li>`).join('')
+  );
 }
