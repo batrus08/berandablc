@@ -3,7 +3,6 @@ import { qsa } from '../utils/dom.js';
 import { t } from '../utils/i18n.js';
 
 const menuConfig = () => [
-  { label: t('navbar.kemitraan'), href: './partnership.html' },
   { label: t('navbar.beranda'), href: './index.html' },
   {
     label: t('navbar.tentang'),
