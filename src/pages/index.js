@@ -1,6 +1,6 @@
 import { setupPage } from '../utils/page.js';
 import { renderContentCard } from '../components/ContentCard.js';
-import { loadJSON, sortByDateDesc, filterOngoingEvents, formatDate } from '../utils/helpers.js';
+import { loadJSON, sortByDateDesc, filterUpcomingEvents, formatDate } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 import { getCurrentLanguage, t } from '../utils/i18n.js';
 
@@ -150,15 +150,15 @@ async function renderAgenda() {
   const target = qs('#agenda-list');
   try {
     const events = await loadJSON('../data/events.json');
-    const ongoing = filterOngoingEvents(events).slice(0, 3);
+    const upcoming = filterUpcomingEvents(events).slice(0, 3);
 
-    if (!ongoing.length) {
+    if (!upcoming.length) {
       setHTML(target, `<p data-i18n="events.empty">${t('events.empty')}</p>`);
       return;
     }
 
     const monthNames = getMonthNames();
-    const cards = ongoing
+    const cards = upcoming
       .map(
         (event) => `
         <article class="card agenda-card">
