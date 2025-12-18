@@ -38,8 +38,27 @@ export function filterOngoingEvents(events = [], now = new Date()) {
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   return events.filter((event) => {
-    const startDate = new Date(event.dateStart || event.startDate);
-    const endDate = event.dateEnd ? new Date(event.dateEnd) : event.endDate ? new Date(event.endDate) : null;
+    const rawStart = event.dateStart || event.startDate;
+    let startDate;
+
+    if (typeof rawStart === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawStart)) {
+      const [y, m, d] = rawStart.split('-').map(Number);
+      startDate = new Date(y, m - 1, d);
+    } else {
+      startDate = new Date(rawStart);
+    }
+
+    const rawEnd = event.dateEnd || event.endDate;
+    let endDate = null;
+
+    if (rawEnd) {
+      if (typeof rawEnd === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawEnd)) {
+        const [y, m, d] = rawEnd.split('-').map(Number);
+        endDate = new Date(y, m - 1, d);
+      } else {
+        endDate = new Date(rawEnd);
+      }
+    }
 
     if (Number.isNaN(startDate.getTime())) return false;
 
