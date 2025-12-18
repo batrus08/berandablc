@@ -1,8 +1,8 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { renderContentCard } from '../components/ContentCard.js';
 import { loadJSON, sortByDateDesc, filterOngoingEvents, formatDate } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
-import { applyTranslations, getCurrentLanguage, initI18n, onLanguageChange, t } from '../utils/i18n.js';
+import { getCurrentLanguage, t } from '../utils/i18n.js';
 
 const heroSlides = [
   {
@@ -25,17 +25,9 @@ function getMonthNames() {
   return getCurrentLanguage() === 'en' ? monthNamesEn : undefined;
 }
 
-document.addEventListener('DOMContentLoaded', init);
-
-async function init() {
-  await initI18n('id');
-  mountLayout();
-  await renderPage();
-  onLanguageChange(async () => {
-    mountLayout();
-    await renderPage();
-  });
-}
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderPage);
+});
 
 async function renderPage() {
   document.title = t('meta.homeTitle');
@@ -43,7 +35,6 @@ async function renderPage() {
   await renderLatestUpdates();
   await renderAgenda();
   renderVisionMission();
-  applyTranslations();
 }
 
 function renderHeroSlider(activeIndex = 0) {

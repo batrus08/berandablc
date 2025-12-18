@@ -1,4 +1,4 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON, formatDate, sortByDateDesc } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 import { renderCalendar } from '../components/Calendar.js';
@@ -11,8 +11,7 @@ const datasetTaxonomy = document.body.dataset.taxonomy || null;
 const pageTitle = document.body.dataset.title || 'Kegiatan & Event';
 const pageSubtitle = document.body.dataset.subtitle || 'Semua agenda komunitas';
 
-async function init() {
-  mountLayout();
+async function renderPage() {
   const events = await loadJSON('../data/events.json');
   if (slug) {
     renderDetail(events, slug);
@@ -23,7 +22,9 @@ async function init() {
   renderDocumentation(events);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderPage);
+});
 
 function renderList(events) {
   const container = qs('#event-root');

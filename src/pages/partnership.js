@@ -1,10 +1,9 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 import { renderPDFViewer } from '../components/PDFViewer.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  mountLayout();
+async function renderPartnership() {
   const data = await loadJSON('../data/partners.json');
   const target = qs('#partnership-root');
   setHTML(
@@ -44,4 +43,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     </section>
   `
   );
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderPartnership);
 });

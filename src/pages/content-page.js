@@ -1,9 +1,8 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 
-async function init() {
-  mountLayout();
+async function renderContentPage() {
   const key = document.body.dataset.page;
   const content = await loadJSON('../data/pages-content.json');
   const page = content.find((item) => item.key === key);
@@ -12,7 +11,9 @@ async function init() {
   renderSections(page);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderContentPage);
+});
 
 function renderHero(page) {
   setHTML(

@@ -1,5 +1,5 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  mountLayout();
+  setupPage();
 });
