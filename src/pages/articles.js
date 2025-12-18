@@ -1,4 +1,4 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON, sortByDateDesc, formatDate, groupByMonthYear } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 import { renderArticleCard } from '../components/ArticleCard.js';
@@ -12,8 +12,7 @@ const pageTitle = document.body.dataset.title || 'Artikel & Publikasi';
 const pageSubtitle = document.body.dataset.subtitle || 'Filter berdasarkan kategori dan topik';
 const viewMode = document.body.dataset.view || 'list';
 
-async function init() {
-  mountLayout();
+async function renderPage() {
   const articles = await loadJSON('../data/articles.json');
   if (slug) {
     renderDetail(articles, slug);
@@ -23,7 +22,9 @@ async function init() {
   renderArchive(articles);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderPage);
+});
 
 function renderList(articles) {
   const container = qs('#article-root');

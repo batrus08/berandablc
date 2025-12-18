@@ -1,8 +1,11 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { qs, setHTML } from '../utils/dom.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  mountLayout();
+  setupPage(renderContact);
+});
+
+function renderContact() {
   const target = qs('#contact-root');
   setHTML(
     target,
@@ -24,10 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
       </section>
       <section class="card">
         <h3>Form Kontak</h3>
-        <form action="https://formspree.io/f/moqgjwyj" method="POST">
-          <label>Nama<br /><input name="name" required /></label><br />
-          <label>Email<br /><input type="email" name="email" required /></label><br />
-          <label>Pesan<br /><textarea name="message" rows="4" required></textarea></label><br />
+        <form action="https://formspree.io/f/moqgjwyj" method="POST" class="stacked-gaps">
+          <label>Nama<br /><input name="name" required /></label>
+          <label>Email<br /><input type="email" name="email" required /></label>
+          <label>Pesan<br /><textarea name="message" rows="4" required></textarea></label>
           <button class="btn primary" type="submit">Kirim</button>
         </form>
       </section>
@@ -44,4 +47,4 @@ document.addEventListener('DOMContentLoaded', () => {
     </section>
   `
   );
-});
+}

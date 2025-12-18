@@ -1,9 +1,8 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  mountLayout();
+async function renderDivisions() {
   const divisions = await loadJSON('../data/divisions.json');
   const target = qs('#division-list');
   setHTML(
@@ -23,4 +22,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       )
       .join('')
   );
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderDivisions);
 });

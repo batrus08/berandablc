@@ -262,3 +262,17 @@ main {
     padding: var(--section-space-mobile) 0;
   }
 }
+
+@media (max-width: 720px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  main {
+    padding-top: var(--spacing-md);
+  }
+
+  .section {
+    padding: var(--section-space-mobile) 0;
+  }
+}

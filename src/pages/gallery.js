@@ -1,13 +1,16 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  mountLayout();
+async function renderGallery() {
   const data = await loadJSON('../data/gallery.json');
   renderPhotos(data.photos);
   renderVideos(data.videos);
   renderCoverage(data.coverage);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderGallery);
 });
 
 function renderPhotos(photos) {

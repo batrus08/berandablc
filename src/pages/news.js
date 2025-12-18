@@ -1,11 +1,10 @@
-import { mountLayout } from '../components/Layout.js';
+import { setupPage } from '../utils/page.js';
 import { renderSectionTitle } from '../components/SectionTitle.js';
 import { renderNewsCard } from '../components/NewsCard.js';
 import { loadJSON } from '../utils/helpers.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  mountLayout();
-  await renderNewsList();
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderNewsList);
 });
 
 async function renderNewsList() {
