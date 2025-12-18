@@ -1,5 +1,37 @@
 [
   {
+    "key": "tentang-profile",
+    "title": "Profil",
+    "category": "Tentang Kami",
+    "intro": "Ikhtisar mandat, fokus program, dan peran Business Law Community di lingkungan Fakultas Hukum UGM.",
+    "sections": [
+      {
+        "title": "Mandat & Fokus",
+        "body": "Menghubungkan kajian hukum bisnis kampus dengan kebutuhan praktis industri melalui riset, publikasi, dan kemitraan strategis."
+      },
+      {
+        "title": "Pilar Aktivitas",
+        "list": [
+          "Riset terapan dan publikasi hukum bisnis",
+          "Pelatihan legal skill dan klinik kontrak",
+          "Advokasi kebijakan dan kemitraan dengan startup, UMKM, serta korporasi"
+        ]
+      },
+      {
+        "title": "Program Unggulan",
+        "list": [
+          "Business Law Clinic dengan pendampingan mentor praktisi",
+          "Rangkaian workshop negosiasi dan drafting kontrak",
+          "Program riset terapan yang dipublikasikan secara berkala"
+        ]
+      },
+      {
+        "title": "Cara Kerja",
+        "body": "Tim lintas divisi berkolaborasi dalam setiap program, memanfaatkan mentor praktisi serta dukungan fakultas untuk menjaga relevansi dan mutu output."
+      }
+    ]
+  },
+  {
     "key": "tentang-sejarah",
     "title": "Sejarah",
     "category": "Tentang Kami",
@@ -7,7 +39,7 @@
     "sections": [
       {
         "title": "Awal Pembentukan",
-        "body": "BLC bermula sebagai forum studi hukum bisnis kampus yang menghimpun minat mahasiswa pada kemitraan dan kontrak teknologi."
+        "body": "BLC bermula sebagai forum studi hukum bisnis kampus yang menghimpun minat mahasiswa pada kemitraan dan kontrakteknologi."
       },
       {
         "title": "Tonggak Penting",
@@ -16,6 +48,38 @@
           "Kolaborasi perdana dengan firma hukum mitra",
           "Publikasi seri artikel hukum bisnis daring"
         ]
+      }
+    ]
+  },
+  {
+    "key": "tentang-manajemen",
+    "title": "Manajemen",
+    "category": "Tentang Kami",
+    "intro": "Struktur pengurus yang memastikan koordinasi program, komunikasi publik, dan tata kelola kemitraan.",
+    "sections": [
+      {
+        "title": "Struktur Inti",
+        "list": [
+          "Ketua & Wakil: mengarahkan strategi dan memastikan kesinambungan program",
+          "Sekretaris & Bendahara: mengelola administrasi, dokumentasi, dan pengelolaan anggaran",
+          "Koordinator Divisi: memastikan program divisi selaras dengan roadmap tahunan"
+        ]
+      },
+      {
+        "title": "Peran Pendukung",
+        "body": "Tim media, riset, dan kemitraan bekerja lintas divisi untuk produksi konten, penjajakan kolaborasi, serta pendampingan kegiatan mahasiswa."
+      },
+      {
+        "title": "Prinsip Tata Kelola",
+        "list": [
+          "Transparansi progres dan laporan kegiatan",
+          "Pertemuan koordinasi berkala antar divisi",
+          "Pelibatan mentor akademik dan praktisi untuk quality assurance"
+        ]
+      },
+      {
+        "title": "Kanal Koordinasi",
+        "body": "Setiap pengurus memiliki jalur koordinasi jelas melalui rapat rutin, grup kerja khusus program, dan dokumentasi progres sehingga informasi tidak bercampur antar sub-halaman."
       }
     ]
   },
@@ -36,6 +100,14 @@
           "Membekali anggota dengan keterampilan negosiasi dan drafting kontrak",
           "Memperluas kemitraan dan program konsultasi bagi startup dan UMKM"
         ]
+      },
+      {
+        "title": "Prioritas Strategis",
+        "list": [
+          "Digitalisasi materi klinik hukum bisnis agar mudah diakses",
+          "Penguatan jejaring alumni dan mitra industri",
+          "Pengembangan kurikulum pelatihan berbasis studi kasus"
+        ]
       }
     ]
   },
@@ -47,11 +119,21 @@
     "sections": [
       {
         "title": "Nilai",
-        "list": ["Kolaborasi", "Integritas", "Keberlanjutan", "Eksperimen bertanggung jawab"]
+        "list": [
+          "Kolaborasi",
+          "Integritas",
+          "Keberlanjutan",
+          "Eksperimen bertanggung jawab"
+        ]
       },
       {
         "title": "Fokus Kajian",
-        "list": ["Hukum kemitraan bisnis", "Kontrak dan negosiasi", "Inovasi digital dan perlindungan data", "ESG dan keberlanjutan"]
+        "list": [
+          "Hukum kemitraan bisnis",
+          "Kontrak dan negosiasi",
+          "Inovasi digital dan perlindungan data",
+          "ESG dan keberlanjutan"
+        ]
       }
     ]
   },
