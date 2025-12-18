@@ -38,6 +38,7 @@ const PLACEHOLDER_SRC =
   `);
 
 const slugify = (value = '') => value.toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
+const PERSON_PLACEHOLDER = new URL('../../../assets/images/placeholder-person.jpg', import.meta.url).href;
 
 const pageCopy = {
   'management-overview': {
@@ -121,6 +122,18 @@ function renderMainContent(type) {
   renderStructureCard(side);
 }
 
+function personCard({ name, role, photo = PERSON_PLACEHOLDER }) {
+  return `
+    <article class="card person-card">
+      <img src="${photo}" alt="${name}" loading="lazy" />
+      <div>
+        <p class="person-card__name">${name}</p>
+        <p class="person-card__role">${role}</p>
+      </div>
+    </article>
+  `;
+}
+
 function renderOverview(target) {
   setHTML(
     target,
@@ -152,123 +165,137 @@ function renderLinkCard(title, description, href) {
 }
 
 function renderBph(target) {
-  const roles = [
-    {
-      title: 'Direktur Utama',
-      body: 'Memimpin arah strategis, menetapkan prioritas, dan memastikan kolaborasi lintas direktorat tetap sinkron.',
-    },
-    {
-      title: 'Sekretaris',
-      body: 'Menjaga administrasi, penjadwalan rapat, dan dokumentasi keputusan agar seluruh pengurus memiliki satu sumber kebenaran.',
-    },
-    {
-      title: 'Bendahara',
-      body: 'Mengelola perencanaan anggaran, arus kas, serta kepatuhan pelaporan keuangan untuk setiap program.',
-    },
-  ];
-
-  const cards = roles
-    .map(
-      (role) => `
-        <article class="card role-card">
-          <h3>${role.title}</h3>
-          <p>${role.body}</p>
-        </article>
-      `
-    )
-    .join('');
+  const hierarchy = {
+    leader: { name: 'Nama Pengurus', role: 'Direktur Utama' },
+    supports: [
+      { name: 'Nama Pengurus', role: 'Sekretaris' },
+      { name: 'Nama Pengurus', role: 'Bendahara' },
+    ],
+    directors: [
+      { name: 'Nama Pengurus', role: 'Direktur Operasional' },
+      { name: 'Nama Pengurus', role: 'Direktur Akademik' },
+    ],
+  };
 
   setHTML(
     target,
     `
-      <article class="card management-summary">
-        <h2>Struktur BPH</h2>
-        <p class="lead">BPH bertugas menjaga tata kelola harian, menyambungkan arahan strategis dengan kebutuhan operasional, dan memastikan laporan siap disampaikan kapan pun dibutuhkan.</p>
-      </article>
-      <div class="management-card-grid">${cards}</div>
+      <section class="org-tree" aria-label="Struktur BPH">
+        <header class="tree-header">
+          <h2>Struktur BPH</h2>
+          <p class="muted">Lima peran inti yang memegang arah strategis dan koordinasi utama organisasi.</p>
+        </header>
+        <div class="tree-level" style="--columns: 1">
+          ${personCard(hierarchy.leader)}
+        </div>
+        <div class="tree-level" data-connect="true" style="--columns: 2">
+          ${hierarchy.supports.map(personCard).join('')}
+        </div>
+        <div class="tree-level" data-connect="true" style="--columns: 2">
+          ${hierarchy.directors.map(personCard).join('')}
+        </div>
+      </section>
     `
   );
 }
 
 function renderDivisi(target) {
-  const divisions = [
-    {
-      title: 'Direktorat Operasional',
-      description: 'Mengelola operasional inti organisasi dan memastikan eksekusi program berjalan efisien.',
-      roles: [
-        {
-          title: 'Direktur Operasional',
-          note: 'Mengawal ritme harian, koordinasi antar divisi, dan kesiapan program.',
-        },
-        {
-          title: 'Wakil Direktur Internal',
-          note: 'Koordinator: akan diperbarui. Fokus pada kepatuhan proses dan dukungan keanggotaan.',
-        },
-        {
-          title: 'Wakil Direktur Relasi Media',
-          note: 'Koordinator: akan diperbarui. Menjaga pesan organisasi dan hubungan media.',
-        },
-        {
-          title: 'Wakil Direktur Eksternal',
-          note: 'Koordinator: akan diperbarui. Menjembatani kemitraan dan kolaborasi luar kampus.',
-        },
-      ],
-    },
-    {
-      title: 'Direktorat Akademik',
-      description: 'Mengarahkan kurikulum, riset, serta program pengembangan keilmuan di BLC.',
-      roles: [
-        {
-          title: 'Direktur Akademik',
-          note: 'Memastikan roadmap akademik berjalan sesuai kalender pembelajaran.',
-        },
-        {
-          title: 'Wakil Direktur Keilmuan',
-          note: 'Koordinator: akan diperbarui. Mengawal pengembangan materi kajian.',
-        },
-        {
-          title: 'Wakil Direktur Perlombaan',
-          note: 'Koordinator: akan diperbarui. Menyiapkan delegasi dan kesiapan kompetisi.',
-        },
-      ],
-    },
-  ];
+  const operasional = {
+    title: 'Operasional',
+    description: 'Tata kelola kegiatan internal dan relasi publik.',
+    director: { name: 'Nama Pengurus', role: 'Direktur Operasional' },
+    deputies: [
+      {
+        person: { name: 'Nama Pengurus', role: 'Wakil Direktur Internal' },
+        children: [
+          { name: 'Nama Pengurus', role: 'Koordinator Personalia' },
+          { name: 'Nama Pengurus', role: 'Koordinator HRD' },
+        ],
+      },
+      {
+        person: { name: 'Nama Pengurus', role: 'Wakil Direktur Relasi Media' },
+        children: [
+          { name: 'Nama Pengurus', role: 'Koordinator Manajemen IT' },
+          { name: 'Nama Pengurus', role: 'Koordinator Media Sosial' },
+        ],
+      },
+      {
+        person: { name: 'Nama Pengurus', role: 'Wakil Direktur Eksternal' },
+        children: [
+          { name: 'Nama Pengurus', role: 'Koordinator Hubungan Klien & Sponsorship' },
+          { name: 'Nama Pengurus', role: 'Koordinator Alumni Network' },
+        ],
+      },
+    ],
+  };
 
-  const divisionCards = divisions
-    .map(
-      (division) => `
-        <article class="card division-card" id="${slugify(division.title)}">
-          <div>
-            <p class="chip">${division.title}</p>
-            <p class="muted">${division.description}</p>
-          </div>
-          <div class="division-card__roles">
-            ${division.roles
-              .map(
-                (role) => `
-                  <div class="division-card__role">
-                    <h4>${role.title}</h4>
-                    <p>${role.note}</p>
-                  </div>
-                `
-              )
-              .join('')}
-          </div>
-        </article>
-      `
-    )
-    .join('');
+  const akademik = {
+    title: 'Akademik',
+    description: 'Pengembangan kurikulum, kompetisi, dan kajian hukum bisnis.',
+    director: { name: 'Nama Pengurus', role: 'Direktur Akademik' },
+    deputies: [
+      {
+        person: { name: 'Nama Pengurus', role: 'Wakil Direktur Keilmuan' },
+        children: [
+          { name: 'Nama Pengurus', role: 'Pasar Modal' },
+          { name: 'Nama Pengurus', role: 'ESDM' },
+          { name: 'Nama Pengurus', role: 'Perusahaan dan Anti Monopoli' },
+          { name: 'Nama Pengurus', role: 'HKI' },
+          { name: 'Nama Pengurus', role: 'Pembiayaan dan Perbankan' },
+          { name: 'Nama Pengurus', role: 'Perdagangan Internasional' },
+        ],
+      },
+      {
+        person: { name: 'Nama Pengurus', role: 'Wakil Direktur Perlombaan' },
+        children: [
+          { name: 'Nama Pengurus', role: 'Koordinator Delegasi' },
+          { name: 'Nama Pengurus', role: 'Koordinator Managerial' },
+        ],
+      },
+    ],
+  };
 
   setHTML(
     target,
     `
-      <article class="card management-summary">
-        <h2>Struktur Divisi</h2>
-        <p class="lead">Pembagian peran dibatasi sampai Koordinator agar jalur eskalasi jelas tanpa menampilkan level staf atau detail cabang.</p>
-      </article>
-      <div class="management-card-grid">${divisionCards}</div>
+      <div class="division-layout">
+        ${renderDivisionSection(operasional)}
+        ${renderDivisionSection(akademik)}
+      </div>
     `
   );
+}
+
+function renderDivisionSection(division) {
+  return `
+    <section class="division-tree" id="${slugify(division.title)}" aria-label="Divisi ${division.title}">
+      <header class="tree-header">
+        <div class="chip">${division.title}</div>
+        <p class="muted">${division.description}</p>
+      </header>
+      <div class="org-tree">
+        <div class="tree-level" style="--columns: 1">
+          ${personCard(division.director)}
+        </div>
+        <div class="tree-level" data-connect="true" style="--columns: ${division.deputies.length}">
+          ${division.deputies.map((item) => personCard(item.person)).join('')}
+        </div>
+        <div class="branch-grid" style="--columns: ${division.deputies.length}">
+          ${division.deputies
+            .map(
+              (item) => `
+                <div class="branch" data-connect="true">
+                  <div class="branch__children" style="--columns: ${item.children.length}">
+                    ${item.children.map(personCard).join('')}
+                  </div>
+                </div>
+              `
+            )
+            .join('')}
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderStructureCard(target) {

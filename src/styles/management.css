@@ -39,6 +39,106 @@
   color: var(--color-muted);
 }
 
+.division-layout {
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+.tree-header {
+  display: grid;
+  gap: var(--spacing-xs);
+}
+
+.person-card {
+  display: grid;
+  gap: var(--spacing-xs);
+  justify-items: center;
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.person-card img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: #f8fafc;
+}
+
+.person-card__name {
+  margin: 0;
+  font-weight: 700;
+}
+
+.person-card__role {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.org-tree {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.tree-level {
+  --columns: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(200px, 1fr));
+  justify-content: center;
+  gap: var(--spacing-md);
+  position: relative;
+  padding-top: var(--spacing-md);
+}
+
+.tree-level:first-child {
+  padding-top: 0;
+}
+
+.tree-level[data-connect='true']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: var(--spacing-md);
+  background: var(--color-border-strong);
+}
+
+.branch-grid {
+  --columns: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.branch {
+  position: relative;
+  padding-top: var(--spacing-md);
+  display: grid;
+}
+
+.branch[data-connect='true']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: var(--spacing-md);
+  background: var(--color-border-strong);
+}
+
+.branch__children {
+  --columns: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(200px, 1fr));
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
 .management-list {
   list-style: none;
   padding: 0;
@@ -184,5 +284,13 @@
 
   .structure-card__media img {
     height: 260px;
+  }
+}
+
+@media (max-width: 720px) {
+  .tree-level,
+  .branch-grid,
+  .branch__children {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
