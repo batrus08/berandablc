@@ -21,6 +21,13 @@
     "galeri": "Galeri",
     "kontak": "Kontak"
   },
+  "aboutMenu": {
+    "overview": "Ikhtisar",
+    "profile": "Profil",
+    "sejarah": "Sejarah",
+    "manajemen": "Manajemen",
+    "visiMisi": "Visi & Misi"
+  },
   "hero": {
     "ctaArticles": "Baca Artikel",
     "ctaContact": "Kontak",
