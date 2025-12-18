@@ -13,10 +13,14 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
-// Resolve dictionary files relative to the module location so deployments
-// under a subdirectory (e.g. WordPress uploads) can still find /i18n/*.json
-// even when the page is nested like /pages/tentang-kami/profil.html.
-const dictionaryBase = new URL('../i18n/', import.meta.url);
+// Resolve dictionary files from the public i18n folder using an absolute path
+// so nested pages (e.g. /pages/tentang-kami/profil.html) and Vite builds can
+// fetch translations from /i18n/*.json without additional configuration.
+const DICTIONARY_BASE = '/i18n/';
+const HUMAN_FALLBACK = {
+  id: 'Teks belum tersedia',
+  en: 'Text not available'
+};
 
 function hasEntries(obj) {
   return obj && typeof obj === 'object' && Object.keys(obj).length > 0;
@@ -25,8 +29,7 @@ function hasEntries(obj) {
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
   try {
-    const dictionaryUrl = new URL(`${lang}.json`, dictionaryBase);
-    const response = await fetch(dictionaryUrl);
+    const response = await fetch(`${DICTIONARY_BASE}${lang}.json`);
     if (!response.ok) throw new Error(`Gagal memuat terjemahan (${lang})`);
     cache[lang] = await response.json();
     return cache[lang];
@@ -39,17 +42,15 @@ async function fetchDictionary(lang) {
 export function t(key) {
   const dict = cache[currentLang];
   const fallbackDict = cache[defaultLanguage];
-  // If dict is not loaded yet, return key.
-  if (!dict) return key;
 
   const value = resolveKey(dict, key);
   if (value !== undefined && value !== null) return value;
 
   const fallbackValue = resolveKey(fallbackDict, key);
   if (fallbackValue !== undefined && fallbackValue !== null) return fallbackValue;
-  // If value is null/undefined, return key.
-  // If it's an empty string, we return it (as it might be intentional).
-  return key;
+  // If value is null/undefined, return a human-friendly fallback instead of the raw key.
+  const readableFallback = HUMAN_FALLBACK[currentLang] || HUMAN_FALLBACK[defaultLanguage];
+  return readableFallback || 'Text unavailable';
 }
 
 export function getCurrentLanguage() {
