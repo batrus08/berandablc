@@ -12,10 +12,15 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
+const dictionaryBase = new URL('../i18n/', import.meta.url);
+
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
   try {
-    const response = await fetch(`../i18n/${lang}.json`);
+    // Use an absolute URL based on the module location so nested pages
+    // (e.g. /pages/tentang-kami/profil.html) can always resolve the JSON.
+    const dictionaryUrl = new URL(`./${lang}.json`, dictionaryBase);
+    const response = await fetch(dictionaryUrl);
     if (!response.ok) throw new Error(`Gagal memuat terjemahan (${lang})`);
     cache[lang] = await response.json();
     return cache[lang];
