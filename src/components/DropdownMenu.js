@@ -1,8 +1,31 @@
-export function renderDropdownMenu(label, items = []) {
-  const id = `dropdown-${label.toLowerCase().replace(/\s+/g, '-')}`;
-  const links = items
-    .map((item) => `<a class="dropdown__item" href="${item.href}">${item.text}</a>`) // simple items
+const sanitizeId = (value) => value.toLowerCase().replace(/\s+/g, '-');
+
+function renderDropdownItems(items = []) {
+  return items
+    .map((item) => {
+      if (item.children?.length) {
+        const childItems = item.children
+          .map((child) => `<a class="dropdown__item dropdown__item--child" href="${child.href}">${child.text}</a>`)
+          .join('');
+
+        return `
+          <div class="dropdown__group">
+            <a class="dropdown__item dropdown__item--parent" href="${item.href}">${item.text}</a>
+            <div class="dropdown__submenu">
+              ${childItems}
+            </div>
+          </div>
+        `;
+      }
+
+      return `<a class="dropdown__item" href="${item.href}">${item.text}</a>`;
+    })
     .join('');
+}
+
+export function renderDropdownMenu(label, items = []) {
+  const id = `dropdown-${sanitizeId(label)}`;
+  const links = renderDropdownItems(items);
 
   return `
     <li class="nav-item">

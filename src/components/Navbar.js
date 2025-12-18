@@ -9,17 +9,59 @@ const menuConfig = () => [
     items: [
       { text: t('aboutMenu.profile'), href: './tentang-kami/profil.html' },
       { text: t('aboutMenu.sejarah'), href: './tentang-kami/sejarah.html' },
-      { text: t('aboutMenu.manajemen'), href: './tentang-kami/manajemen.html' },
-      { text: t('aboutMenu.visiMisi'), href: './tentang-kami/visi-misi.html' },
-    ],
+      {
+        text: t('aboutMenu.manajemen'),
+        href: './tentang-kami/manajemen/index.html',
+        children: [
+          { text: t('aboutMenu.bph'), href: './tentang-kami/manajemen/bph.html' },
+          { text: t('aboutMenu.divisi'), href: './tentang-kami/manajemen/divisi.html' }
+        ]
+      },
+      { text: t('aboutMenu.visiMisi'), href: './tentang-kami/visi-misi.html' }
+    ]
   },
   { label: t('navbar.artikel'), href: './articles.html' },
   { label: t('navbar.kegiatan'), href: './events.html' },
-  { label: t('navbar.divisi'), href: './divisions.html' },
   { label: t('navbar.kerjaSama'), href: './partnership.html#program' },
   { label: t('navbar.galeri'), href: './gallery.html' },
   { label: t('navbar.kontak'), href: './contact.html' }
 ];
+
+function normalizePath(url) {
+  try {
+    const { pathname } = new URL(url, window.location.origin);
+    const withoutIndex = pathname.replace(/index\.html$/, '');
+    if (withoutIndex.length > 1 && withoutIndex.endsWith('/')) {
+      return withoutIndex.slice(0, -1);
+    }
+    return withoutIndex || '/';
+  } catch (error) {
+    return url;
+  }
+}
+
+function markActiveNav(navbar) {
+  const currentPath = normalizePath(document.body.dataset.currentPath || window.location.pathname || '/');
+  const navItems = qsa('.nav-item', navbar);
+  const links = qsa('a.nav-link, a.dropdown__item', navbar);
+
+  links.forEach((link) => {
+    const linkPath = normalizePath(link.getAttribute('href') || link.href);
+    const isActive =
+      currentPath === linkPath ||
+      (linkPath !== '/' && currentPath.startsWith(linkPath));
+    link.classList.toggle('is-active', Boolean(isActive));
+  });
+
+  navItems.forEach((item) => {
+    const hasActiveLink = qsa('a', item).some((link) => link.classList.contains('is-active'));
+    item.classList.toggle('is-active', hasActiveLink);
+    const trigger = item.querySelector('.nav-trigger');
+    if (trigger) {
+      trigger.classList.toggle('is-active', hasActiveLink);
+    }
+  });
+}
 
 export function renderNavbar() {
   const navItems = menuConfig()
@@ -161,6 +203,8 @@ export function bindNavigation(scope = document) {
     }
   };
   window.addEventListener('resize', handleResize);
+
+  markActiveNav(navbar);
 
   globalNavCleanup = () => {
     document.removeEventListener('click', handleDocumentClick);
