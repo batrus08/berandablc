@@ -1,5 +1,6 @@
 const cache = {};
 let currentLang = 'id';
+let defaultLanguage = 'id';
 const listeners = [];
 
 export function resolveKey(obj, path) {
@@ -12,33 +13,42 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
-const dictionaryBase = new URL('../i18n/', import.meta.url);
+// Use an absolute base so nested routes (e.g. /tentang-kami/profil.html)
+// consistently resolve the locale JSON.
+const dictionaryBase = new URL('/i18n/', window.location.origin);
+
+function hasEntries(obj) {
+  return obj && typeof obj === 'object' && Object.keys(obj).length > 0;
+}
 
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
   try {
-    // Use an absolute URL based on the module location so nested pages
-    // (e.g. /pages/tentang-kami/profil.html) can always resolve the JSON.
-    const dictionaryUrl = new URL(`./${lang}.json`, dictionaryBase);
+    const dictionaryUrl = new URL(`${lang}.json`, dictionaryBase);
     const response = await fetch(dictionaryUrl);
     if (!response.ok) throw new Error(`Gagal memuat terjemahan (${lang})`);
     cache[lang] = await response.json();
     return cache[lang];
   } catch (error) {
     console.error(`Failed to load dictionary for ${lang}:`, error);
-    return {}; // Return empty object to prevent crashes
+    return null; // Return null so we can trigger a fallback instead of showing raw keys
   }
 }
 
 export function t(key) {
   const dict = cache[currentLang];
+  const fallbackDict = cache[defaultLanguage];
   // If dict is not loaded yet, return key.
   if (!dict) return key;
 
   const value = resolveKey(dict, key);
+  if (value !== undefined && value !== null) return value;
+
+  const fallbackValue = resolveKey(fallbackDict, key);
+  if (fallbackValue !== undefined && fallbackValue !== null) return fallbackValue;
   // If value is null/undefined, return key.
   // If it's an empty string, we return it (as it might be intentional).
-  return value !== undefined && value !== null ? value : key;
+  return key;
 }
 
 export function getCurrentLanguage() {
@@ -46,16 +56,28 @@ export function getCurrentLanguage() {
 }
 
 export async function setLanguage(lang) {
-  await fetchDictionary(lang);
-  currentLang = lang;
-  localStorage.setItem('language', lang);
+  const dictionary = await fetchDictionary(lang);
+
+  if (!hasEntries(dictionary)) {
+    console.warn(`Dictionary for ${lang} is missing or empty. Falling back to ${defaultLanguage}.`);
+    currentLang = defaultLanguage;
+    await fetchDictionary(defaultLanguage);
+  } else {
+    currentLang = lang;
+  }
+
+  localStorage.setItem('language', currentLang);
   applyTranslations();
   listeners.forEach((fn) => fn(lang));
 }
 
 export async function initI18n(defaultLang = 'id') {
+  defaultLanguage = defaultLang;
   const saved = localStorage.getItem('language');
   const lang = saved || defaultLang;
+
+  // Always ensure the default dictionary is ready so we can fall back gracefully.
+  await fetchDictionary(defaultLanguage);
   await setLanguage(lang);
 }
 
