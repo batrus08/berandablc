@@ -1,0 +1,51 @@
+{
+  "name": "Pengurus BLC 2025",
+  "role": "Pembina",
+  "photo": "../assets/images/placeholder-person.jpg",
+  "children": [
+    {
+      "name": "Ketua",
+      "role": "Ketua Umum",
+      "photo": "../assets/images/placeholder-person.jpg",
+      "children": [
+        {
+          "name": "Sekretaris",
+          "role": "Sekretaris Umum",
+          "photo": "../assets/images/placeholder-person.jpg"
+        },
+        {
+          "name": "Bendahara",
+          "role": "Bendahara Umum",
+          "photo": "../assets/images/placeholder-person.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Dewan Pakar",
+      "role": "Bidang Akademik",
+      "photo": "../assets/images/placeholder-person.jpg",
+      "children": [
+        {
+          "name": "Koordinator Riset",
+          "role": "Divisi Riset & Penulisan",
+          "photo": "../assets/images/placeholder-person.jpg"
+        },
+        {
+          "name": "Koordinator Pendidikan",
+          "role": "Divisi Pendidikan & Pelatihan",
+          "photo": "../assets/images/placeholder-person.jpg"
+        },
+        {
+          "name": "Koordinator Bisnis",
+          "role": "Divisi Bisnis & Kemitraan",
+          "photo": "../assets/images/placeholder-person.jpg"
+        },
+        {
+          "name": "Koordinator Media",
+          "role": "Divisi Media & Publikasi",
+          "photo": "../assets/images/placeholder-person.jpg"
+        }
+      ]
+    }
+  ]
+}
