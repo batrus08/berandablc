@@ -1,0 +1,184 @@
+[
+  {
+    "key": "tentang-sejarah",
+    "title": "Sejarah",
+    "category": "Tentang Kami",
+    "intro": "Ringkasan terbentuknya Business Law Community FH dan tonggak perkembangannya.",
+    "sections": [
+      {
+        "title": "Awal Pembentukan",
+        "body": "BLC bermula sebagai forum studi hukum bisnis kampus yang menghimpun minat mahasiswa pada kemitraan dan kontrak teknologi."
+      },
+      {
+        "title": "Tonggak Penting",
+        "list": [
+          "Peluncuran klinik kontrak bisnis kampus",
+          "Kolaborasi perdana dengan firma hukum mitra",
+          "Publikasi seri artikel hukum bisnis daring"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "tentang-visi-misi",
+    "title": "Visi & Misi",
+    "category": "Tentang Kami",
+    "intro": "Arah pengembangan komunitas sesuai Booklet BLC 2025.",
+    "sections": [
+      {
+        "title": "Visi",
+        "body": "Menjadi pusat rujukan hukum bisnis kampus yang adaptif, kolaboratif, dan berdampak bagi ekosistem bisnis."
+      },
+      {
+        "title": "Misi",
+        "list": [
+          "Mendorong publikasi hukum bisnis yang relevan dengan tren industri",
+          "Membekali anggota dengan keterampilan negosiasi dan drafting kontrak",
+          "Memperluas kemitraan dan program konsultasi bagi startup dan UMKM"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "tentang-nilai-fokus",
+    "title": "Nilai & Fokus Kajian",
+    "category": "Tentang Kami",
+    "intro": "Nilai kerja kolaboratif dengan fokus pada hukum bisnis dan kemitraan.",
+    "sections": [
+      {
+        "title": "Nilai",
+        "list": ["Kolaborasi", "Integritas", "Keberlanjutan", "Eksperimen bertanggung jawab"]
+      },
+      {
+        "title": "Fokus Kajian",
+        "list": ["Hukum kemitraan bisnis", "Kontrak dan negosiasi", "Inovasi digital dan perlindungan data", "ESG dan keberlanjutan"]
+      }
+    ]
+  },
+  {
+    "key": "artikel-artikel-bulanan",
+    "title": "Artikel Bulanan",
+    "category": "Artikel",
+    "intro": "Kumpulan artikel bulanan yang dikurasi berdasarkan isu aktual hukum bisnis.",
+    "sections": []
+  },
+  {
+    "key": "artikel-opini-esai",
+    "title": "Opini & Esai",
+    "category": "Artikel",
+    "intro": "Opini anggota dan esai reflektif seputar praktik hukum bisnis.",
+    "sections": []
+  },
+  {
+    "key": "artikel-kajian-hukum",
+    "title": "Kajian Hukum",
+    "category": "Artikel",
+    "intro": "Analisis mendalam terhadap regulasi dan kebijakan bisnis.",
+    "sections": []
+  },
+  {
+    "key": "artikel-resensi-buku",
+    "title": "Resensi Buku",
+    "category": "Artikel",
+    "intro": "Ulasan literatur hukum bisnis pilihan.",
+    "sections": []
+  },
+  {
+    "key": "artikel-arsip",
+    "title": "Arsip Artikel",
+    "category": "Artikel",
+    "intro": "Telusuri artikel berdasarkan bulan dan tahun terbit.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-seminar-webinar",
+    "title": "Seminar & Webinar",
+    "category": "Kegiatan",
+    "intro": "Agenda seminar dan webinar hukum bisnis.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-diskusi-hukum",
+    "title": "Diskusi Hukum",
+    "category": "Kegiatan",
+    "intro": "Diskusi tematik dengan pendekatan kasus nyata.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-pelatihan-legal-skill",
+    "title": "Pelatihan Legal Skill",
+    "category": "Kegiatan",
+    "intro": "Pelatihan keterampilan praktis drafting dan negosiasi.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-kompetisi",
+    "title": "Kompetisi / Call for Paper",
+    "category": "Kegiatan",
+    "intro": "Kompetisi penulisan hukum bisnis dan call for paper.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-program-lain",
+    "title": "Program & Aktivitas Lainnya",
+    "category": "Kegiatan",
+    "intro": "Program internal, sosial, dan aktivitas lintas divisi.",
+    "sections": []
+  },
+  {
+    "key": "kegiatan-dokumentasi",
+    "title": "Dokumentasi",
+    "category": "Kegiatan",
+    "intro": "Rekaman foto/video kegiatan pilihan.",
+    "sections": []
+  },
+  {
+    "key": "divisi-riset-penulisan",
+    "title": "Riset & Penulisan",
+    "category": "Divisi",
+    "intro": "Mengelola riset tematik dan publikasi hukum bisnis.",
+    "sections": []
+  },
+  {
+    "key": "divisi-pendidikan-pelatihan",
+    "title": "Pendidikan & Pelatihan",
+    "category": "Divisi",
+    "intro": "Merancang kurikulum legal skill dan sesi pembelajaran.",
+    "sections": []
+  },
+  {
+    "key": "divisi-bisnis-kemitraan",
+    "title": "Bisnis & Kemitraan",
+    "category": "Divisi",
+    "intro": "Memimpin penjajakan kerja sama dan program kemitraan industri.",
+    "sections": []
+  },
+  {
+    "key": "divisi-media-publikasi",
+    "title": "Media & Publikasi",
+    "category": "Divisi",
+    "intro": "Menjaga kanal komunikasi, dokumentasi, dan kampanye komunitas.",
+    "sections": []
+  },
+  {
+    "key": "galeri-foto",
+    "title": "Galeri Foto",
+    "category": "Galeri",
+    "intro": "Kumpulan foto kegiatan dengan kategori hukum bisnis.",
+    "sections": []
+  },
+  {
+    "key": "galeri-video",
+    "title": "Galeri Video",
+    "category": "Galeri",
+    "intro": "Rekaman webinar, diskusi, dan dokumentasi kegiatan.",
+    "sections": []
+  },
+  {
+    "key": "galeri-media",
+    "title": "Media Coverage",
+    "category": "Galeri",
+    "intro": "Liputan media tentang program Business Law Community.",
+    "sections": []
+  }
+]

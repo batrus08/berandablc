@@ -7,6 +7,10 @@ import { renderPDFViewer } from '../components/PDFViewer.js';
 const search = new URLSearchParams(window.location.search);
 const slug = search.get('slug');
 const filterCategory = search.get('category');
+const pageCategory = document.body.dataset.category || null;
+const pageTitle = document.body.dataset.title || 'Artikel & Publikasi';
+const pageSubtitle = document.body.dataset.subtitle || 'Filter berdasarkan kategori dan topik';
+const viewMode = document.body.dataset.view || 'list';
 
 async function init() {
   mountLayout();
@@ -23,24 +27,19 @@ document.addEventListener('DOMContentLoaded', init);
 
 function renderList(articles) {
   const container = qs('#article-root');
-  const categories = [
-    'Artikel Bulanan',
-    'Opini & Esai Hukum',
-    'Kajian Hukum',
-    'Resensi Buku Hukum',
-  ];
+  const categories = [...new Set(articles.map((a) => a.categoryType))];
   const topics = [...new Set(articles.flatMap((a) => a.topics))];
-  const selectedCategory = filterCategory || 'Semua';
+  const selectedCategory = filterCategory || pageCategory || 'Semua';
 
   const markup = `
     <div class="section__header">
-      <h1 class="section__title">Artikel & Publikasi</h1>
-      <p class="section__subtitle">Filter berdasarkan kategori dan topik</p>
+      <h1 class="section__title">${pageTitle}</h1>
+      <p class="section__subtitle">${pageSubtitle}</p>
     </div>
     <div class="card filter-card">
       <div class="stacked-gaps flex-between">
         <label>Kategori:
-          <select id="category-filter">
+          <select id="category-filter" ${pageCategory ? 'disabled' : ''}>
             <option ${selectedCategory === 'Semua' ? 'selected' : ''}>Semua</option>
             ${categories.map((c) => `<option ${selectedCategory === c ? 'selected' : ''}>${c}</option>`).join('')}
           </select>
@@ -57,11 +56,12 @@ function renderList(articles) {
   `;
 
   setHTML(container, markup);
-  const filtered = articles.filter((a) => (selectedCategory === 'Semua' ? true : a.categoryType === selectedCategory));
+  const filtered = selectedCategory === 'Semua' ? articles : articles.filter((a) => a.categoryType === selectedCategory);
   renderListItems(filtered);
 
   qs('#category-filter').addEventListener('change', (e) => {
     const val = e.target.value;
+    if (pageCategory) return;
     window.location.href = val === 'Semua' ? './articles.html' : `./articles.html?category=${encodeURIComponent(val)}`;
   });
   qs('#topic-filter').addEventListener('change', (e) => {
@@ -105,6 +105,11 @@ function renderDetail(articles, slugValue) {
 }
 
 function renderArchive(articles) {
+  if (viewMode !== 'archive') {
+    const archive = qs('#archive-list');
+    if (archive) archive.classList.add('hidden');
+    return;
+  }
   const grouped = groupByMonthYear(articles);
   const target = qs('#archive-list');
   const markup = Object.entries(grouped)
@@ -121,5 +126,5 @@ function renderArchive(articles) {
     `
     )
     .join('');
-  setHTML(target, markup);
+  setHTML(target, `<div class="archive-grid">${markup}</div>`);
 }

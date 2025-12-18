@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Business Law Community FH",
+    "subtitle": "Kolaborasi riset, publikasi, dan kemitraan hukum bisnis.",
+    "ctaLabel": "Baca Artikel",
+    "ctaLink": "./articles.html",
+    "secondaryLabel": "Kontak",
+    "secondaryLink": "./contact.html",
+    "image": "../assets/slider/kolaborasi.jpg"
+  },
+  {
+    "title": "Pelatihan Legal Skill",
+    "subtitle": "Kurikulum praktis drafting kontrak dan negosiasi bisnis.",
+    "ctaLabel": "Jadwal Pelatihan",
+    "ctaLink": "./events/pelatihan-legal-skill.html",
+    "secondaryLabel": "Hubungi Kami",
+    "secondaryLink": "./contact.html",
+    "image": "../assets/slider/pelatihan.jpg"
+  },
+  {
+    "title": "Jaringan Kemitraan",
+    "subtitle": "Sinergi kampus, firma hukum, dan mitra industri untuk program bersama.",
+    "ctaLabel": "Lihat Program",
+    "ctaLink": "./partnership.html",
+    "secondaryLabel": "Ajukan Kolaborasi",
+    "secondaryLink": "./contact.html",
+    "image": "../assets/slider/kemitraan.jpg"
+  }
+]
