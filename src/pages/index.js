@@ -1,6 +1,6 @@
 import { setupPage } from '../utils/page.js';
 import { renderContentCard } from '../components/ContentCard.js';
-import { loadJSON, sortByDateDesc, filterUpcomingEvents, formatDate } from '../utils/helpers.js';
+import { loadJSON, sortByDateDesc, filterUpcomingEvents, formatDate, monthNames } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 import { getCurrentLanguage, t } from '../utils/i18n.js';
 
@@ -151,7 +151,6 @@ async function renderAgenda() {
       return;
     }
 
-    const monthNames = getMonthNames();
     const cards = upcoming
       .map(
         (event) => `

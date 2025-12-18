@@ -23,7 +23,8 @@ function getDictionaryUrls(lang) {
     new URL('/public/i18n/', window.location.origin),
     new URL('/i18n/', window.location.origin),
     new URL('./i18n/', window.location.href),
-    new URL('../i18n/', window.location.href)
+    new URL('../i18n/', window.location.href),
+    new URL('../i18n/', import.meta.url)
   ];
 
   return candidateBases.map((base) => new URL(`${lang}.json`, base).href);

@@ -17,10 +17,10 @@ export function renderFooter() {
         <div>
           <h4 data-i18n="navbar.beranda"></h4>
           <ul class="footer__nav">
-            <li><a href="./index.html" data-i18n="navbar.beranda"></a></li>
-            <li><a href="./articles.html" data-i18n="navbar.artikel"></a></li>
-            <li><a href="./events.html" data-i18n="navbar.kegiatan"></a></li>
-            <li><a href="./contact.html" data-i18n="navbar.kontak"></a></li>
+            <li><a href="/src/pages/index.html" data-i18n="navbar.beranda"></a></li>
+            <li><a href="/src/pages/articles.html" data-i18n="navbar.artikel"></a></li>
+            <li><a href="/src/pages/events.html" data-i18n="navbar.kegiatan"></a></li>
+            <li><a href="/src/pages/contact.html" data-i18n="navbar.kontak"></a></li>
           </ul>
         </div>
       </div>
