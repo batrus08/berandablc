@@ -13,9 +13,10 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
-// Use an absolute base so nested routes (e.g. /tentang-kami/profil.html)
-// consistently resolve the locale JSON.
-const dictionaryBase = new URL('/i18n/', window.location.origin);
+// Resolve dictionary files relative to the module location so deployments
+// under a subdirectory (e.g. WordPress uploads) can still find /i18n/*.json
+// even when the page is nested like /pages/tentang-kami/profil.html.
+const dictionaryBase = new URL('../i18n/', import.meta.url);
 
 function hasEntries(obj) {
   return obj && typeof obj === 'object' && Object.keys(obj).length > 0;
