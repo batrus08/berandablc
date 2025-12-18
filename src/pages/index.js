@@ -98,7 +98,7 @@ function renderFocusAreas() {
   const markup = focusAreas
     .map(
       (area) => `
-      <article class="focus-card">
+      <article class="card focus-card">
         <p class="eyebrow">${area.label}</p>
         <h3>${area.title}</h3>
         <p class="muted">${area.description}</p>
