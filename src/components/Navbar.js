@@ -9,10 +9,28 @@ const menuConfig = () => [
     items: [
       { text: t('aboutMenu.profile'), href: '/src/pages/tentang-kami/profil.html' },
       { text: t('aboutMenu.sejarah'), href: '/src/pages/tentang-kami/sejarah.html' },
-      { text: t('aboutMenu.manajemen'), href: '/src/pages/tentang-kami/manajemen/index.html' },
-      { text: t('aboutMenu.bph'), href: '/src/pages/tentang-kami/manajemen/bph.html' },
-      { text: t('aboutMenu.divisi'), href: '/src/pages/tentang-kami/manajemen/divisi.html' },
-      { text: t('aboutMenu.visiMisi'), href: '/src/pages/tentang-kami/visi-misi.html' }
+      { text: t('aboutMenu.visiMisi'), href: '/src/pages/tentang-kami/visi-misi.html' },
+      {
+        text: t('aboutMenu.manajemen'),
+        href: '/src/pages/tentang-kami/manajemen/index.html',
+        children: [
+          { text: t('aboutMenu.bph'), href: '/src/pages/tentang-kami/manajemen/bph.html' },
+          {
+            text: t('aboutMenu.divisi'),
+            href: '/src/pages/tentang-kami/manajemen/divisi.html',
+            children: [
+              {
+                text: t('aboutMenu.operasional'),
+                href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-operasional'
+              },
+              {
+                text: t('aboutMenu.akademik'),
+                href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-akademik'
+              }
+            ]
+          }
+        ]
+      }
     ]
   },
   { label: t('navbar.artikel'), href: '/src/pages/articles.html' },
