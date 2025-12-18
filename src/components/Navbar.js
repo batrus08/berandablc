@@ -37,7 +37,7 @@ export function renderNavbar() {
           <span class="brand__mark">LC</span>
           <span class="brand__text">
             <span class="brand__name">${t('brand.name')}</span>
-            <span class="brand__subtitle">Business Law Community FH UGM</span>
+            <span class="brand__subtitle">${t('brand.university')}</span>
           </span>
         </a>
         <button class="navbar__toggle" aria-expanded="false" aria-label="Toggle navigasi"><span></span></button>
