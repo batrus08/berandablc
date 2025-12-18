@@ -14,28 +14,44 @@ export function resolveKey(obj, path) {
 }
 
 // Resolve dictionary files while being resilient to different hosting layouts.
-// We try common static locations first (root-level /i18n or /public/i18n) and
-// then fall back to paths relative to the current page (./i18n, ../i18n) so the
-// site still works when embedded under a sub-path (e.g. inside WordPress
-// uploads).
+// We probe common static locations (root-level /i18n or /public/i18n) and also
+// climb up the current path to try sibling "public" or "src" folders so pages
+// served from nested directories (e.g. /src/pages) can still locate the JSON
+// dictionaries.
 function getDictionaryUrls(lang) {
-  const candidateBases = [
-    new URL('/i18n/', window.location.origin),
-    new URL('/public/i18n/', window.location.origin),
-    new URL('/src/i18n/', window.location.origin),
-    new URL('./i18n/', window.location.href),
-    new URL('../i18n/', window.location.href),
-    new URL('../src/i18n/', window.location.href)
-  ];
+  const { origin, pathname, href } = window.location;
+  const candidateBases = [];
+
+  // Always start with the origin-level fallbacks.
+  const absoluteBases = ['/i18n/', '/public/i18n/', '/src/i18n/'];
+  absoluteBases.forEach((base) => candidateBases.push(new URL(base, origin)));
+
+  // Walk up the current path (excluding the file name) and try common sibling
+  // folders at each level: i18n/, public/i18n/, src/i18n/.
+  const segments = pathname.split('/').filter(Boolean);
+  while (segments.length) {
+    const ancestor = `/${segments.join('/')}/`;
+    ['i18n/', 'public/i18n/', 'src/i18n/'].forEach((suffix) => {
+      candidateBases.push(new URL(suffix, `${origin}${ancestor}`));
+    });
+    segments.pop();
+  }
+
+  // Paths relative to the current page (covers static file viewing scenarios).
+  ['.', '..', '../..'].forEach((relativeBase) => {
+    ['i18n/', 'public/i18n/', 'src/i18n/'].forEach((suffix) => {
+      candidateBases.push(new URL(`${relativeBase}/${suffix}`, href));
+    });
+  });
 
   const seen = new Set();
   const uniqueUrls = [];
 
   candidateBases.forEach((base) => {
-    const href = new URL(`${lang}.json`, base).href;
-    if (!seen.has(href)) {
-      seen.add(href);
-      uniqueUrls.push(href);
+    const hrefWithFile = new URL(`${lang}.json`, base).href;
+    if (!seen.has(hrefWithFile)) {
+      seen.add(hrefWithFile);
+      uniqueUrls.push(hrefWithFile);
     }
   });
 
@@ -52,19 +68,29 @@ function hasEntries(obj) {
 
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
-  for (const url of getDictionaryUrls(lang)) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) continue;
-      cache[lang] = await response.json();
-      return cache[lang];
-    } catch (error) {
-      console.warn(`Failed to load dictionary for ${lang} from ${url}:`, error);
-    }
-  }
+  if (!fetchDictionary.inFlight) fetchDictionary.inFlight = {};
+  if (fetchDictionary.inFlight[lang]) return fetchDictionary.inFlight[lang];
 
-  console.error(`Dictionary for ${lang} is not reachable from any known path.`);
-  return null; // Return null so we can trigger a fallback instead of showing raw keys
+  const fetchPromise = (async () => {
+    for (const url of getDictionaryUrls(lang)) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) continue;
+        cache[lang] = await response.json();
+        return cache[lang];
+      } catch (error) {
+        console.warn(`Failed to load dictionary for ${lang} from ${url}:`, error);
+      }
+    }
+
+    console.error(`Dictionary for ${lang} is not reachable from any known path.`);
+    return null; // Return null so we can trigger a fallback instead of showing raw keys
+  })();
+
+  fetchDictionary.inFlight[lang] = fetchPromise;
+  const result = await fetchPromise;
+  delete fetchDictionary.inFlight[lang];
+  return result;
 }
 
 export function t(key) {
