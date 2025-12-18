@@ -235,10 +235,17 @@
   border-left: 1px dashed rgba(17, 24, 39, 0.2);
   margin-left: 0.5rem;
   padding-left: 0.65rem;
+  margin-top: 0.35rem;
 }
 
 .dropdown__item--child {
   font-weight: 600;
+}
+
+.dropdown__submenu .dropdown__submenu {
+  margin-top: 0.25rem;
+  margin-left: 0.85rem;
+  border-color: rgba(17, 24, 39, 0.12);
 }
 
 .dropdown__item:hover {

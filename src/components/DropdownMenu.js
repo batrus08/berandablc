@@ -1,24 +1,26 @@
 const sanitizeId = (value) => value.toLowerCase().replace(/\s+/g, '-');
 
-function renderDropdownItems(items = []) {
+function renderDropdownItems(items = [], depth = 0) {
   return items
     .map((item) => {
       if (item.children?.length) {
-        const childItems = item.children
-          .map((child) => `<a class="dropdown__item dropdown__item--child" href="${child.href}">${child.text}</a>`)
-          .join('');
+        const childItems = renderDropdownItems(item.children, depth + 1);
+        const parentClasses = ['dropdown__item', depth > 0 ? 'dropdown__item--child' : 'dropdown__item--parent']
+          .filter(Boolean)
+          .join(' ');
 
         return `
-          <div class="dropdown__group">
-            <a class="dropdown__item dropdown__item--parent" href="${item.href}">${item.text}</a>
-            <div class="dropdown__submenu">
+          <div class="dropdown__group dropdown__group--level-${depth}">
+            <a class="${parentClasses}" href="${item.href}">${item.text}</a>
+            <div class="dropdown__submenu dropdown__submenu--level-${depth}">
               ${childItems}
             </div>
           </div>
         `;
       }
 
-      return `<a class="dropdown__item" href="${item.href}">${item.text}</a>`;
+      const itemClass = depth > 0 ? 'dropdown__item dropdown__item--child' : 'dropdown__item';
+      return `<a class="${itemClass}" href="${item.href}">${item.text}</a>`;
     })
     .join('');
 }

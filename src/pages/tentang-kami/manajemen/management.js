@@ -37,6 +37,8 @@ const PLACEHOLDER_SRC =
     </svg>
   `);
 
+const slugify = (value = '') => value.toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
+
 const pageCopy = {
   'management-overview': {
     hero: {
@@ -235,7 +237,7 @@ function renderDivisi(target) {
   const divisionCards = divisions
     .map(
       (division) => `
-        <article class="card division-card">
+        <article class="card division-card" id="${slugify(division.title)}">
           <div>
             <p class="chip">${division.title}</p>
             <p class="muted">${division.description}</p>
