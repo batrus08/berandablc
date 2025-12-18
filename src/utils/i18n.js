@@ -13,10 +13,14 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
-// Resolve dictionary files from the public i18n folder using an absolute path
-// so nested pages (e.g. /pages/tentang-kami/profil.html) and Vite builds can
-// fetch translations from /i18n/*.json without additional configuration.
-const DICTIONARY_BASE = '/i18n/';
+// Resolve dictionary files relative to the current page so the site still works
+// when embedded under a sub-path (e.g. inside WordPress uploads). Using
+// window.location keeps the lookup portable for both local static servers and
+// nested directories.
+function getDictionaryUrl(lang) {
+  const base = new URL('../i18n/', window.location.href);
+  return new URL(`${lang}.json`, base).href;
+}
 const HUMAN_FALLBACK = {
   id: 'Teks belum tersedia',
   en: 'Text not available'
@@ -29,7 +33,7 @@ function hasEntries(obj) {
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
   try {
-    const response = await fetch(`${DICTIONARY_BASE}${lang}.json`);
+    const response = await fetch(getDictionaryUrl(lang));
     if (!response.ok) throw new Error(`Gagal memuat terjemahan (${lang})`);
     cache[lang] = await response.json();
     return cache[lang];
