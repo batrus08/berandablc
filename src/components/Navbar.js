@@ -3,28 +3,23 @@ import { qsa } from '../utils/dom.js';
 import { t } from '../utils/i18n.js';
 
 const menuConfig = () => [
-  { label: t('navbar.beranda'), href: './index.html' },
+  { label: t('navbar.beranda'), href: '/index.html' },
   {
     label: t('navbar.tentang'),
     items: [
-      { text: t('aboutMenu.profile'), href: './tentang-kami/profil.html' },
-      { text: t('aboutMenu.sejarah'), href: './tentang-kami/sejarah.html' },
-      {
-        text: t('aboutMenu.manajemen'),
-        href: './tentang-kami/manajemen/index.html',
-        children: [
-          { text: t('aboutMenu.bph'), href: './tentang-kami/manajemen/bph.html' },
-          { text: t('aboutMenu.divisi'), href: './tentang-kami/manajemen/divisi.html' }
-        ]
-      },
-      { text: t('aboutMenu.visiMisi'), href: './tentang-kami/visi-misi.html' }
+      { text: t('aboutMenu.profile'), href: '/tentang-kami/profil.html' },
+      { text: t('aboutMenu.sejarah'), href: '/tentang-kami/sejarah.html' },
+      { text: t('aboutMenu.manajemen'), href: '/tentang-kami/manajemen/index.html' },
+      { text: t('aboutMenu.bph'), href: '/tentang-kami/manajemen/bph.html' },
+      { text: t('aboutMenu.divisi'), href: '/tentang-kami/manajemen/divisi.html' },
+      { text: t('aboutMenu.visiMisi'), href: '/tentang-kami/visi-misi.html' }
     ]
   },
-  { label: t('navbar.artikel'), href: './articles.html' },
-  { label: t('navbar.kegiatan'), href: './events.html' },
-  { label: t('navbar.kerjaSama'), href: './partnership.html#program' },
-  { label: t('navbar.galeri'), href: './gallery.html' },
-  { label: t('navbar.kontak'), href: './contact.html' }
+  { label: t('navbar.artikel'), href: '/articles.html' },
+  { label: t('navbar.kegiatan'), href: '/events.html' },
+  { label: t('navbar.kerjaSama'), href: '/partnership.html#program' },
+  { label: t('navbar.galeri'), href: '/gallery.html' },
+  { label: t('navbar.kontak'), href: '/contact.html' }
 ];
 
 function normalizePath(url) {
@@ -76,7 +71,7 @@ export function renderNavbar() {
   return `
     <nav class="navbar" aria-label="Navigasi utama">
       <div class="container navbar__inner">
-        <a class="brand" href="./index.html">
+        <a class="brand" href="/index.html">
           <span class="brand__mark">LC</span>
           <span class="brand__text">
             <span class="brand__name">${t('brand.name')}</span>
