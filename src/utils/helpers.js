@@ -13,6 +13,8 @@ export const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni
  * Handles 'YYYY-MM-DD' as local time, avoiding UTC off-by-one errors.
  */
 export function parseLocalDate(dateInput) {
+  if (!dateInput) return new Date('Invalid Date'); // Return invalid date if input is null/undefined
+
   if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
     const [y, m, d] = dateInput.split('-').map(Number);
     return new Date(y, m - 1, d);
@@ -86,16 +88,13 @@ export function filterUpcomingEvents(events = [], now = new Date()) {
     .map(({ event }) => event);
 }
 
-export function groupByMonthYear(items = [], key = 'date') {
+export function groupByMonthYear(items = [], key = 'date', locale = 'id-ID') {
   return items.reduce((acc, item) => {
     const date = parseLocalDate(item[key]);
-    // Use Intl for the label or keep consistency?
-    // The original used monthNames index. Let's make it consistent with the monthNames array for now to match key expectations if any.
-    // Or just use Intl.
-    // The function returns an object with keys like "Januari 2023".
+    if (Number.isNaN(date.getTime())) return acc;
 
-    // We can use the exported monthNames to maintain compatibility with existing consumers relying on this format.
-    const label = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+    // Use Intl for localized label
+    const label = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
 
     if (!acc[label]) acc[label] = [];
     acc[label].push(item);
