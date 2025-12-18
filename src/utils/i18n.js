@@ -13,13 +13,22 @@ export function resolveKey(obj, path) {
   }, obj);
 }
 
-// Resolve dictionary files relative to the current page so the site still works
-// when embedded under a sub-path (e.g. inside WordPress uploads). Using
-// window.location keeps the lookup portable for both local static servers and
-// nested directories.
-function getDictionaryUrl(lang) {
-  const base = new URL('../i18n/', window.location.href);
-  return new URL(`${lang}.json`, base).href;
+// Resolve dictionary files while being resilient to different hosting layouts.
+// We try common static locations first (root-level /i18n or /public/i18n) and
+// then fall back to paths relative to the current page (./i18n, ../i18n) so the
+// site still works when embedded under a sub-path (e.g. inside WordPress
+// uploads).
+function getDictionaryUrls(lang) {
+  const candidateBases = [
+    new URL('/i18n/', window.location.origin),
+    new URL('/public/i18n/', window.location.origin),
+    new URL('/src/i18n/', window.location.origin),
+    new URL('./i18n/', window.location.href),
+    new URL('../i18n/', window.location.href),
+    new URL('../src/i18n/', window.location.href)
+  ];
+
+  return candidateBases.map((base) => new URL(`${lang}.json`, base).href);
 }
 const HUMAN_FALLBACK = {
   id: 'Teks belum tersedia',
@@ -32,15 +41,19 @@ function hasEntries(obj) {
 
 async function fetchDictionary(lang) {
   if (cache[lang]) return cache[lang];
-  try {
-    const response = await fetch(getDictionaryUrl(lang));
-    if (!response.ok) throw new Error(`Gagal memuat terjemahan (${lang})`);
-    cache[lang] = await response.json();
-    return cache[lang];
-  } catch (error) {
-    console.error(`Failed to load dictionary for ${lang}:`, error);
-    return null; // Return null so we can trigger a fallback instead of showing raw keys
+  for (const url of getDictionaryUrls(lang)) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      cache[lang] = await response.json();
+      return cache[lang];
+    } catch (error) {
+      console.warn(`Failed to load dictionary for ${lang} from ${url}:`, error);
+    }
   }
+
+  console.error(`Dictionary for ${lang} is not reachable from any known path.`);
+  return null; // Return null so we can trigger a fallback instead of showing raw keys
 }
 
 export function t(key) {
