@@ -65,35 +65,25 @@ export function nextUpcoming(items = [], key = 'dateStart') {
   return upcoming[0];
 }
 
-export function filterOngoingEvents(events = [], now = new Date()) {
+export function filterUpcomingEvents(events = [], now = new Date()) {
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  return events.filter((event) => {
-    const rawStart = event.dateStart || event.startDate;
-    const startDate = parseLocalDate(rawStart);
-
-    const rawEnd = event.dateEnd || event.endDate;
-    let endDate = null;
-
-    if (rawEnd) {
-       endDate = parseLocalDate(rawEnd);
-    }
-
-    if (Number.isNaN(startDate.getTime())) return false;
-
-    if (endDate && !Number.isNaN(endDate.getTime())) {
-      // Check if "now" is between start and end (inclusive)
-      // We normalize "now" to compare correctly with dates that might be 00:00:00
-      // Actually, if we want to check if TODAY is within the range:
-      // If start/end are 00:00:00, and now is 14:00:00, simple comparison works if start <= now <= end+1day?
-      // Usually "ongoing" means the event spans across today.
-      // Let's stick to the previous logic but using parsed dates.
-
-      return startDate <= now && now <= endDate;
-    }
-
-    return startDate.getTime() === startOfDay.getTime();
-  });
+  return events
+    .map((event) => {
+      const startDate = parseLocalDate(event.dateStart || event.startDate);
+      const endDate = event.dateEnd || event.endDate ? parseLocalDate(event.dateEnd || event.endDate) : null;
+      return { event, startDate, endDate };
+    })
+    .filter(({ startDate }) => !Number.isNaN(startDate.getTime()))
+    .filter(({ startDate, endDate }) => {
+      if (endDate && !Number.isNaN(endDate.getTime())) {
+        // Show events that are ongoing today or in the future
+        return endDate >= startOfDay;
+      }
+      return startDate >= startOfDay;
+    })
+    .sort((a, b) => a.startDate - b.startDate)
+    .map(({ event }) => event);
 }
 
 export function groupByMonthYear(items = [], key = 'date') {
