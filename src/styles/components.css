@@ -320,12 +320,25 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
+  row-gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
 }
 
 .section-subtitle {
   margin: 0.2rem 0 0;
   color: var(--color-muted);
+}
+
+@media (max-width: 960px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-header > * {
+    width: 100%;
+  }
 }
 
 .eyebrow {
