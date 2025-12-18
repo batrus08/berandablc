@@ -20,8 +20,8 @@ export function resolveKey(obj, path) {
 // uploads).
 function getDictionaryUrls(lang) {
   const candidateBases = [
-    new URL('/i18n/', window.location.origin),
     new URL('/public/i18n/', window.location.origin),
+    new URL('/i18n/', window.location.origin),
     new URL('./i18n/', window.location.href),
     new URL('../i18n/', window.location.href)
   ];
