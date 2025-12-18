@@ -52,7 +52,13 @@ export function renderNavbar() {
   `;
 }
 
+let globalNavCleanup;
+
 export function bindNavigation(scope = document) {
+  if (typeof globalNavCleanup === 'function') {
+    globalNavCleanup();
+  }
+
   const triggers = qsa('[data-dropdown]', scope);
   const navbar = scope.querySelector('.navbar');
   const toggle = navbar?.querySelector('.navbar__toggle');
@@ -107,17 +113,19 @@ export function bindNavigation(scope = document) {
     });
   });
 
-  document.addEventListener('click', (event) => {
+  const handleDocumentClick = (event) => {
     if (!event.target.closest('.nav-item') && !event.target.closest('.navbar__toggle')) {
       closeAllDropdowns();
     }
-  });
+  };
+  document.addEventListener('click', handleDocumentClick);
 
-  document.addEventListener('keydown', (event) => {
+  const handleDocumentKeydown = (event) => {
     if (event.key === 'Escape') {
       closeMenu();
     }
-  });
+  };
+  document.addEventListener('keydown', handleDocumentKeydown);
 
   toggle?.addEventListener('click', () => {
     if (!menu) return;
@@ -144,11 +152,18 @@ export function bindNavigation(scope = document) {
     });
   });
 
-  window.addEventListener('resize', () => {
+  const handleResize = () => {
     if (window.innerWidth > 960) {
       backdrop?.classList.remove('active');
       menu?.classList.remove('open');
       toggle?.setAttribute('aria-expanded', 'false');
     }
-  });
+  };
+  window.addEventListener('resize', handleResize);
+
+  globalNavCleanup = () => {
+    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('keydown', handleDocumentKeydown);
+    window.removeEventListener('resize', handleResize);
+  };
 }

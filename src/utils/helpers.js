@@ -30,16 +30,18 @@ export function formatDate(dateString, locale = 'id-ID') {
      return `${date.getDate().toString().padStart(2, '0')} ${locale[date.getMonth()]} ${date.getFullYear()}`;
   }
 
+  const effectiveLocale = locale || 'id-ID';
+
   // Use Intl for robust formatting
   try {
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat(effectiveLocale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
     }).format(date);
   } catch (e) {
     // Fallback if locale is invalid
-    return date.toLocaleDateString();
+    return date.toLocaleDateString(effectiveLocale);
   }
 }
 
