@@ -3,14 +3,15 @@
     "homeTitle": "Business Law Community FH UGM | Beranda"
   },
   "brand": {
-    "name": "Business Law Community Fakultas Hukum Universitas Gadjah Mada"
+    "name": "Business Law Community",
+    "university": "Universitas Gadjah Mada"
   },
   "topbar": {
     "language": "Bahasa Indonesia",
     "languageAlt": "English"
   },
   "navbar": {
-    "kemitraan": "Hukum Bisnis & Kemitraan",
+    "kemitraan": "Kemitraan",
     "beranda": "Beranda",
     "tentang": "Tentang Kami",
     "artikel": "Artikel",
