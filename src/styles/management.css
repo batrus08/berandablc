@@ -273,6 +273,9 @@
   display: grid;
   gap: var(--spacing-xs);
   max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: var(--spacing-xs);
 }
 
 .org-chart__controls {
@@ -315,6 +318,13 @@
 
 .org-chart__viewport {
   max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.org-chart__scroller {
+  min-width: max-content;
+  overflow: auto;
 }
 
 .org-chart__canvas {
@@ -322,4 +332,5 @@
   transform-origin: top left;
   --chart-scale: 1;
   transform: scale(var(--chart-scale));
+  min-width: max-content;
 }

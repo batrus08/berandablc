@@ -158,6 +158,7 @@
   white-space: nowrap;
   background: transparent;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .nav-link {
@@ -186,6 +187,15 @@
 
 .nav-item.expanded .nav-trigger__chevron {
   transform: rotate(90deg);
+}
+
+.nav-trigger[aria-expanded='true'] .nav-trigger__chevron {
+  transform: rotate(90deg);
+}
+
+.dropdown[hidden],
+.dropdown__submenu[hidden] {
+  display: none;
 }
 
 .dropdown {
@@ -270,6 +280,10 @@
 .dropdown__chevron {
   display: inline-flex;
   transition: transform 0.2s ease;
+}
+
+.dropdown__item--toggle[aria-expanded='true'] .dropdown__chevron {
+  transform: rotate(90deg);
 }
 
 .dropdown__group.expanded .dropdown__chevron {

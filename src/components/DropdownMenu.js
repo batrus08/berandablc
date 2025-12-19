@@ -52,7 +52,7 @@ export function renderDropdownMenu(label, items = []) {
         <span>${label}</span>
         <span class="nav-trigger__chevron" aria-hidden="true">›</span>
       </button>
-      <div class="dropdown" id="${id}" role="menu">
+      <div class="dropdown" id="${id}" role="menu" hidden>
         ${links}
       </div>
     </li>
