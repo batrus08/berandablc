@@ -48,19 +48,27 @@ function renderList(articles) {
 
   const markup = `
     ${headerMarkup}
-    <div class="card filter-card">
-      <div class="filter-card__header">
-        <div>
-          <p class="eyebrow">Kueri yang lebih terarah</p>
-          <h3 class="filter-card__title">Temukan artikel pilihan</h3>
-          <p class="muted">Pilih kategori, topik, atau ketik kata kunci untuk mempersempit daftar bacaan.</p>
+    <div class="card filter-card filter-card--compact">
+      <div class="filter-card__top">
+        <div class="filter-card__intro">
+          <span class="filter-chip">Koleksi BLC</span>
+          <div>
+            <h3 class="filter-card__title">Telusuri artikel terkurasi</h3>
+            <p class="filter-card__hint muted">Gunakan pencarian, kategori, atau topik untuk hasil paling relevan.</p>
+          </div>
         </div>
-        <div class="filter-card__badge">
-          <span id="result-count">${articles.length}</span>
-          <small>artikel tersedia</small>
+        <div class="filter-card__meta">
+          <div class="meta-stat">
+            <span class="meta-stat__value" id="result-count">${articles.length}</span>
+            <span class="meta-stat__label">artikel tersedia</span>
+          </div>
+          <button class="btn tertiary" type="button" id="reset-filters">
+            <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            Reset
+          </button>
         </div>
       </div>
-      <div class="filter-card__controls">
+      <div class="filter-card__controls filter-card__controls--condensed">
         <label class="filter-field">
           <span class="filter-field__label">Cari judul atau ringkasan</span>
           <div class="input-with-icon">
@@ -144,6 +152,32 @@ function renderList(articles) {
     state.query = e.target.value;
     applyFilters();
   });
+
+  const resetBtn = qs('#reset-filters');
+  if (resetBtn) {
+    const categorySelect = qs('#category-filter');
+    const topicSelect = qs('#topic-filter');
+    const searchInput = qs('#article-search');
+    const defaultCategory = pageCategory || 'Semua';
+
+    resetBtn.addEventListener('click', () => {
+      state.query = '';
+      state.topic = 'Semua';
+      state.category = defaultCategory;
+
+      searchInput.value = '';
+      topicSelect.value = 'Semua';
+      if (!pageCategory) {
+        categorySelect.value = 'Semua';
+        const newPath = window.location.pathname.split('/').pop();
+        window.history.replaceState({}, '', newPath);
+      } else {
+        categorySelect.value = defaultCategory;
+      }
+
+      applyFilters();
+    });
+  }
 }
 
 function renderListItems(list) {
