@@ -303,12 +303,24 @@ function setupOrgChartInteractions(scope = document) {
     const viewport = chart.querySelector('.org-chart__viewport');
     const canvas = chart.querySelector('[data-org-canvas]');
     const display = chart.querySelector('[data-zoom-display]');
+    const zoomInButton = chart.querySelector('[data-zoom="in"]');
+    const zoomOutButton = chart.querySelector('[data-zoom="out"]');
     if (!viewport || !canvas) return;
 
-    const clamp = (value, min = 0.6, max = 2) => Math.min(max, Math.max(min, value));
+    const MIN_SCALE = 0.2;
+    const MAX_SCALE = 2;
+    const clamp = (value, min = MIN_SCALE, max = MAX_SCALE) => Math.min(max, Math.max(min, value));
 
     const currentScale = () => Number(canvas.style.getPropertyValue('--chart-scale')) || 1;
     const scaledWidth = (scale = currentScale()) => canvas.offsetWidth * scale;
+
+    const syncControlsState = (scale = currentScale()) => {
+      const atMin = scale <= MIN_SCALE + 0.001;
+      const atMax = scale >= MAX_SCALE - 0.001;
+
+      if (zoomOutButton) zoomOutButton.disabled = atMin;
+      if (zoomInButton) zoomInButton.disabled = atMax;
+    };
 
     const applyScale = (value, options = {}) => {
       const prevScale = currentScale();
@@ -330,6 +342,8 @@ function setupOrgChartInteractions(scope = document) {
       if (display) {
         display.textContent = options.label ?? `${Math.round(nextScale * 100)}%`;
       }
+
+      syncControlsState(nextScale);
     };
 
     const fitToViewport = () => {
@@ -341,6 +355,8 @@ function setupOrgChartInteractions(scope = document) {
     };
 
     fitToViewport();
+
+    syncControlsState();
 
     chart.querySelectorAll('[data-zoom]').forEach((button) => {
       button.addEventListener('click', () => {
