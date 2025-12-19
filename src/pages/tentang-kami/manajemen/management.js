@@ -75,12 +75,24 @@ function renderMainContent(type) {
 }
 
 function personCard({ name, role, photo = PERSON_PLACEHOLDER }) {
+  const safeName = name ?? 'Pengurus';
+  const safeRole = role ?? '';
+  const safePhoto = photo || PERSON_PLACEHOLDER;
+
   return `
-    <article class="card person-card">
-      <img src="${photo}" alt="${name}" loading="lazy" />
+    <article
+      class="card person-card"
+      data-person-card
+      data-person-name="${safeName}"
+      data-person-role="${safeRole}"
+      data-person-photo="${safePhoto}"
+      role="button"
+      tabindex="0"
+    >
+      <img src="${safePhoto}" alt="${safeName}" loading="lazy" />
       <div>
-        <p class="person-card__name">${name}</p>
-        <p class="person-card__role">${role}</p>
+        <p class="person-card__name">${safeName}</p>
+        <p class="person-card__role">${safeRole}</p>
       </div>
     </article>
   `;
@@ -161,6 +173,7 @@ function renderBph(target) {
   );
 
   setupOrgChartInteractions(target);
+  setupPersonDetailOverlay(target);
 }
 
 function renderDivisi(target) {
@@ -230,6 +243,7 @@ function renderDivisi(target) {
   );
 
   setupOrgChartInteractions(target);
+  setupPersonDetailOverlay(target);
 }
 
 function renderDivisionSection(division) {
@@ -384,7 +398,103 @@ function setupOrgChartInteractions(scope = document) {
       });
     });
 
+    viewport.addEventListener(
+      'wheel',
+      (event) => {
+        if (!event.ctrlKey) return;
+        event.preventDefault();
+
+        const direction = event.deltaY < 0 ? 1 : -1;
+        applyScale(currentScale() + direction * 0.05);
+      },
+      { passive: false }
+    );
+
     const handleResize = () => fitToViewport();
     window.addEventListener('resize', handleResize);
+  });
+}
+
+function setupPersonDetailOverlay(scope = document) {
+  const cards = qsa('[data-person-card]', scope);
+  if (!cards.length) return;
+
+  let overlay = qs('[data-person-overlay]');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'person-overlay';
+    overlay.setAttribute('data-person-overlay', '');
+    overlay.innerHTML = `
+      <div class="person-overlay__backdrop" data-overlay-close></div>
+      <div class="person-overlay__dialog" role="dialog" aria-modal="true" aria-labelledby="person-overlay-name">
+        <button type="button" class="person-overlay__close" data-overlay-close aria-label="Tutup detail">
+          <span aria-hidden="true">×</span>
+        </button>
+        <div class="person-overlay__content">
+          <img src="" alt="" loading="lazy" data-overlay-photo />
+          <div>
+            <p id="person-overlay-name" class="person-overlay__name"></p>
+            <p class="person-overlay__role" data-overlay-role></p>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  const nameEl = overlay.querySelector('#person-overlay-name');
+  const roleEl = overlay.querySelector('[data-overlay-role]');
+  const photoEl = overlay.querySelector('[data-overlay-photo]');
+  const closeButtons = overlay.querySelectorAll('[data-overlay-close]');
+
+  const closeOverlay = () => {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+  };
+
+  const openOverlay = ({ name, role, photo }) => {
+    if (nameEl) nameEl.textContent = name;
+    if (roleEl) roleEl.textContent = role;
+    if (photoEl) {
+      photoEl.src = photo;
+      photoEl.alt = name;
+    }
+    overlay.classList.add('is-open');
+    overlay.removeAttribute('aria-hidden');
+    const closeBtn = overlay.querySelector('.person-overlay__close');
+    if (closeBtn) closeBtn.focus({ preventScroll: true });
+  };
+
+  closeButtons.forEach((button) => {
+    button.addEventListener('click', closeOverlay);
+  });
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      closeOverlay();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && overlay.classList.contains('is-open')) {
+      closeOverlay();
+    }
+  });
+
+  cards.forEach((card) => {
+    const handleOpen = () => {
+      const name = card.dataset.personName || card.querySelector('.person-card__name')?.textContent || 'Pengurus';
+      const role = card.dataset.personRole || card.querySelector('.person-card__role')?.textContent || '';
+      const photo = card.dataset.personPhoto || card.querySelector('img')?.src || PERSON_PLACEHOLDER;
+      openOverlay({ name, role, photo });
+    };
+
+    card.addEventListener('click', handleOpen);
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleOpen();
+      }
+    });
   });
 }
