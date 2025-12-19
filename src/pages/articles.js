@@ -40,11 +40,14 @@ function renderList(articles) {
   const categories = [...new Set(articles.map((a) => a.categoryType))];
   const selectedCategory = filterCategory || pageCategory || 'Semua';
 
-  const markup = `
+  const headerMarkup = qs('.page-hero') ? '' : `
     <div class="section__header">
       <h1 class="section__title">${pageTitle}</h1>
       <p class="section__subtitle">${pageSubtitle}</p>
-    </div>
+    </div>`;
+
+  const markup = `
+    ${headerMarkup}
     <div class="card filter-card">
       <div class="filter-card__header">
         <div>
@@ -127,7 +130,8 @@ function renderList(articles) {
     const val = e.target.value;
     if (pageCategory) return;
     state.category = val;
-    window.history.replaceState({}, '', val === 'Semua' ? './articles.html' : `./articles.html?category=${encodeURIComponent(val)}`);
+    const newPath = window.location.pathname.split('/').pop();
+    window.history.replaceState({}, '', val === 'Semua' ? newPath : `${newPath}?category=${encodeURIComponent(val)}`);
     applyFilters();
   });
 
@@ -176,13 +180,10 @@ function renderDetail(articles, slugValue) {
 }
 
 function renderArchive(articles) {
-  if (viewMode !== 'archive') {
-    const archive = qs('#archive-list');
-    if (archive) archive.classList.add('hidden');
-    return;
-  }
-  const grouped = groupByMonthYear(articles);
   const target = qs('#archive-list');
+  if (!target) return;
+
+  const grouped = groupByMonthYear(articles);
   const markup = Object.entries(grouped)
     .map(
       ([label, items]) => `
