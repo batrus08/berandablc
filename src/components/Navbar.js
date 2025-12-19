@@ -10,30 +10,32 @@ function resolveLabel(key, fallback) {
   return readableFallbacks.includes(value) ? fallback : value;
 }
 
+const p = (path) => new URL(path, import.meta.url).href;
+
 const menuConfig = () => [
-  { label: t('navbar.beranda'), href: '/src/pages/index.html' },
+  { label: t('navbar.beranda'), href: p('../pages/index.html') },
   {
     label: t('navbar.tentang'),
     items: [
-      { text: t('aboutMenu.profile'), href: '/src/pages/tentang-kami/profil.html' },
-      { text: t('aboutMenu.sejarah'), href: '/src/pages/tentang-kami/sejarah.html' },
-      { text: t('aboutMenu.visiMisi'), href: '/src/pages/tentang-kami/visi-misi.html' },
+      { text: t('aboutMenu.profile'), href: p('../pages/tentang-kami/profil.html') },
+      { text: t('aboutMenu.sejarah'), href: p('../pages/tentang-kami/sejarah.html') },
+      { text: t('aboutMenu.visiMisi'), href: p('../pages/tentang-kami/visi-misi.html') },
       {
         text: t('aboutMenu.manajemen'),
-        href: '/src/pages/tentang-kami/manajemen/index.html',
+        href: p('../pages/tentang-kami/manajemen/index.html'),
         children: [
-          { text: t('aboutMenu.bph'), href: '/src/pages/tentang-kami/manajemen/bph.html' },
+          { text: t('aboutMenu.bph'), href: p('../pages/tentang-kami/manajemen/bph.html') },
           {
             text: resolveLabel('aboutMenu.divisi', 'Divisi'),
-            href: '/src/pages/tentang-kami/manajemen/divisi.html',
+            href: p('../pages/tentang-kami/manajemen/divisi.html'),
             children: [
               {
                 text: resolveLabel('aboutMenu.operasional', 'Operasional'),
-                href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-operasional'
+                href: p('../pages/tentang-kami/manajemen/divisi.html#direktorat-operasional')
               },
               {
                 text: resolveLabel('aboutMenu.akademik', 'Akademik'),
-                href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-akademik'
+                href: p('../pages/tentang-kami/manajemen/divisi.html#direktorat-akademik')
               }
             ]
           }
@@ -41,11 +43,11 @@ const menuConfig = () => [
       }
     ]
   },
-  { label: t('navbar.artikel'), href: '/src/pages/articles.html' },
-  { label: t('navbar.kegiatan'), href: '/src/pages/events.html' },
-  { label: t('navbar.kerjaSama'), href: '/src/pages/partnership.html#program' },
-  { label: t('navbar.galeri'), href: '/src/pages/gallery.html' },
-  { label: t('navbar.kontak'), href: '/src/pages/contact.html' }
+  { label: t('navbar.artikel'), href: p('../pages/articles.html') },
+  { label: t('navbar.kegiatan'), href: p('../pages/events.html') },
+  { label: t('navbar.kerjaSama'), href: p('../pages/partnership.html#program') },
+  { label: t('navbar.galeri'), href: p('../pages/gallery.html') },
+  { label: t('navbar.kontak'), href: p('../pages/contact.html') }
 ];
 
 function normalizePath(url) {
@@ -62,7 +64,8 @@ function normalizePath(url) {
 }
 
 function markActiveNav(navbar) {
-  const currentPath = normalizePath(document.body.dataset.currentPath || window.location.pathname || '/');
+  // Use window.location.href to be robust against deployment paths
+  const currentPath = normalizePath(window.location.href);
   const navItems = qsa('.nav-item', navbar);
   const links = qsa('a.nav-link, a.dropdown__item', navbar);
 
@@ -97,7 +100,7 @@ export function renderNavbar() {
   return `
     <nav class="navbar" aria-label="Navigasi utama">
       <div class="container navbar__inner">
-        <a class="brand" href="/src/pages/index.html">
+        <a class="brand" href="${p('../pages/index.html')}">
           <span class="brand__mark">LC</span>
           <span class="brand__text">
             <span class="brand__name">${t('brand.name')}</span>
