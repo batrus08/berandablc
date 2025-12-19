@@ -313,6 +313,14 @@
   outline: none;
 }
 
+.chip--control:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f1f5f9;
+  border-color: rgba(148, 163, 184, 0.7);
+  color: #64748b;
+}
+
 .org-chart__scale {
   font-weight: 700;
   color: var(--color-primary);
