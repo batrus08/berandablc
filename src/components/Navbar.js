@@ -2,6 +2,14 @@ import { renderDropdownMenu } from './DropdownMenu.js';
 import { qsa } from '../utils/dom.js';
 import { t } from '../utils/i18n.js';
 
+const readableFallbacks = ['Teks belum tersedia', 'Text not available'];
+
+function resolveLabel(key, fallback) {
+  const value = t(key);
+  if (!value) return fallback;
+  return readableFallbacks.includes(value) ? fallback : value;
+}
+
 const menuConfig = () => [
   { label: t('navbar.beranda'), href: '/src/pages/index.html' },
   {
@@ -16,15 +24,15 @@ const menuConfig = () => [
         children: [
           { text: t('aboutMenu.bph'), href: '/src/pages/tentang-kami/manajemen/bph.html' },
           {
-            text: t('aboutMenu.divisi'),
+            text: resolveLabel('aboutMenu.divisi', 'Divisi'),
             href: '/src/pages/tentang-kami/manajemen/divisi.html',
             children: [
               {
-                text: t('aboutMenu.operasional'),
+                text: resolveLabel('aboutMenu.operasional', 'Operasional'),
                 href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-operasional'
               },
               {
-                text: t('aboutMenu.akademik'),
+                text: resolveLabel('aboutMenu.akademik', 'Akademik'),
                 href: '/src/pages/tentang-kami/manajemen/divisi.html#direktorat-akademik'
               }
             ]
