@@ -1,18 +1,34 @@
 const sanitizeId = (value) => value.toLowerCase().replace(/\s+/g, '-');
 
-function renderDropdownItems(items = [], depth = 0) {
+let globalSubmenuIndex = 0;
+
+function renderDropdownItems(items = [], depth = 0, parentId = 'root') {
   return items
     .map((item) => {
       if (item.children?.length) {
-        const childItems = renderDropdownItems(item.children, depth + 1);
-        const parentClasses = ['dropdown__item', depth > 0 ? 'dropdown__item--child' : 'dropdown__item--parent']
+        const submenuId = `${parentId}-submenu-${globalSubmenuIndex++}`;
+        const childItems = renderDropdownItems(item.children, depth + 1, submenuId);
+        const parentClasses = [
+          'dropdown__item',
+          'dropdown__item--toggle',
+          depth > 0 ? 'dropdown__item--child' : 'dropdown__item--parent',
+        ]
           .filter(Boolean)
           .join(' ');
 
         return `
-          <div class="dropdown__group dropdown__group--level-${depth}">
-            <a class="${parentClasses}" href="${item.href}">${item.text}</a>
-            <div class="dropdown__submenu dropdown__submenu--level-${depth}">
+          <div class="dropdown__group dropdown__group--level-${depth}" data-dropdown-level="${depth}">
+            <button
+              class="${parentClasses}"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${submenuId}"
+              data-submenu-trigger
+            >
+              <span class="dropdown__label">${item.text}</span>
+              <span class="dropdown__chevron" aria-hidden="true">›</span>
+            </button>
+            <div class="dropdown__submenu dropdown__submenu--level-${depth}" id="${submenuId}" hidden>
               ${childItems}
             </div>
           </div>
@@ -26,6 +42,7 @@ function renderDropdownItems(items = [], depth = 0) {
 }
 
 export function renderDropdownMenu(label, items = []) {
+  globalSubmenuIndex = 0;
   const id = `dropdown-${sanitizeId(label)}`;
   const links = renderDropdownItems(items);
 
@@ -33,9 +50,7 @@ export function renderDropdownMenu(label, items = []) {
     <li class="nav-item">
       <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="${id}" data-dropdown>
         <span>${label}</span>
-        <svg width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-          <path d="M5 7l5 6 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
+        <span class="nav-trigger__chevron" aria-hidden="true">›</span>
       </button>
       <div class="dropdown" id="${id}" role="menu">
         ${links}

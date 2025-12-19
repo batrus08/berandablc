@@ -1,5 +1,5 @@
 import { setupPage } from '../../../utils/page.js';
-import { qs, setHTML } from '../../../utils/dom.js';
+import { qs, qsa, setHTML } from '../../../utils/dom.js';
 
 const slugify = (value = '') => value.toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
 const PERSON_PLACEHOLDER = new URL('../../../assets/images/placeholder-person.jpg', import.meta.url).href;
@@ -139,23 +139,28 @@ function renderBph(target) {
           <p class="muted">Garis komando dari Direktur Utama hingga jajaran direktur untuk memastikan koordinasi harian.</p>
         </header>
         <div class="structure-diagram">
-          <div class="tree-scroller" aria-label="Bagan BPH">
-            <div class="org-tree">
-              <div class="tree-level" style="--columns: 1">
-                ${personCard(hierarchy.leader)}
+          ${renderOrgChart(
+            `
+              <div class="org-tree">
+                <div class="tree-level" style="--columns: 1">
+                  ${personCard(hierarchy.leader)}
+                </div>
+                <div class="tree-level" data-connect="true" style="--columns: 2">
+                  ${hierarchy.supports.map(personCard).join('')}
+                </div>
+                <div class="tree-level" data-connect="true" style="--columns: 2">
+                  ${hierarchy.directors.map(personCard).join('')}
+                </div>
               </div>
-              <div class="tree-level" data-connect="true" style="--columns: 2">
-                ${hierarchy.supports.map(personCard).join('')}
-              </div>
-              <div class="tree-level" data-connect="true" style="--columns: 2">
-                ${hierarchy.directors.map(personCard).join('')}
-              </div>
-            </div>
-          </div>
+            `,
+            'Bagan BPH'
+          )}
         </div>
       </section>
     `
   );
+
+  setupOrgChartInteractions(target);
 }
 
 function renderDivisi(target) {
@@ -223,6 +228,8 @@ function renderDivisi(target) {
       </div>
     `
   );
+
+  setupOrgChartInteractions(target);
 }
 
 function renderDivisionSection(division) {
@@ -233,30 +240,119 @@ function renderDivisionSection(division) {
         <p class="muted">${division.description}</p>
       </header>
       <div class="structure-diagram">
-        <div class="tree-scroller" aria-label="Bagan Divisi ${division.title}">
-          <div class="org-tree">
-            <div class="tree-level" style="--columns: 1">
-              ${personCard(division.director)}
-            </div>
-            <div class="tree-level" data-connect="true" style="--columns: ${division.deputies.length}">
-              ${division.deputies.map((item) => personCard(item.person)).join('')}
-            </div>
-            <div class="branch-grid" style="--columns: ${division.deputies.length}">
-              ${division.deputies
-                .map(
-                  (item) => `
-                    <div class="branch" data-connect="true">
-                      <div class="branch__children" style="--columns: ${item.children.length}">
-                        ${item.children.map(personCard).join('')}
+        ${renderOrgChart(
+          `
+            <div class="org-tree">
+              <div class="tree-level" style="--columns: 1">
+                ${personCard(division.director)}
+              </div>
+              <div class="tree-level" data-connect="true" style="--columns: ${division.deputies.length}">
+                ${division.deputies.map((item) => personCard(item.person)).join('')}
+              </div>
+              <div class="branch-grid" style="--columns: ${division.deputies.length}">
+                ${division.deputies
+                  .map(
+                    (item) => `
+                      <div class="branch" data-connect="true">
+                        <div class="branch__children" style="--columns: ${item.children.length}">
+                          ${item.children.map(personCard).join('')}
+                        </div>
                       </div>
-                    </div>
-                  `
-                )
-                .join('')}
+                    `
+                  )
+                  .join('')}
+              </div>
             </div>
-          </div>
-        </div>
+          `,
+          `Bagan Divisi ${division.title}`
+        )}
       </div>
     </section>
   `;
+}
+
+function renderOrgChart(treeMarkup, ariaLabel) {
+  return `
+    <div class="org-chart-wrap" data-org-chart>
+      <div class="org-chart__controls" aria-label="Kontrol tampilan bagan">
+        <div class="org-chart__controls-group">
+          <button type="button" class="chip chip--control" data-zoom="fit">Fit</button>
+          <button type="button" class="chip chip--control" data-zoom="reset">100%</button>
+        </div>
+        <div class="org-chart__controls-group">
+          <button type="button" class="chip chip--control" data-zoom="out" aria-label="Perkecil bagan">-</button>
+          <button type="button" class="chip chip--control" data-zoom="in" aria-label="Perbesar bagan">+</button>
+        </div>
+        <span class="org-chart__scale" data-zoom-display>Fit</span>
+      </div>
+      <p class="org-chart__hint">Geser untuk melihat keseluruhan</p>
+      <div class="org-chart__viewport" aria-label="${ariaLabel}">
+        <div class="tree-scroller org-chart__scroller">
+          <div class="org-chart__canvas" data-org-canvas>
+            ${treeMarkup}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function setupOrgChartInteractions(scope = document) {
+  const charts = qsa('[data-org-chart]', scope);
+  charts.forEach((chart) => {
+    const viewport = chart.querySelector('.org-chart__viewport');
+    const canvas = chart.querySelector('[data-org-canvas]');
+    const display = chart.querySelector('[data-zoom-display]');
+    if (!viewport || !canvas) return;
+
+    const clamp = (value, min = 0.6, max = 2) => Math.min(max, Math.max(min, value));
+
+    const applyScale = (value) => {
+      const nextScale = clamp(value);
+      canvas.style.setProperty('--chart-scale', nextScale);
+      canvas.style.transform = `scale(${nextScale})`;
+      if (display) {
+        display.textContent = `${Math.round(nextScale * 100)}%`;
+      }
+    };
+
+    const fitToViewport = () => {
+      const baseWidth = canvas.offsetWidth;
+      const available = viewport.clientWidth;
+      if (!baseWidth || !available) return;
+      const fitScale = clamp(available / baseWidth);
+      applyScale(fitScale);
+    };
+
+    fitToViewport();
+
+    chart.querySelectorAll('[data-zoom]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const currentScale = Number(canvas.style.getPropertyValue('--chart-scale')) || 1;
+        const action = button.dataset.zoom;
+
+        if (action === 'fit') {
+          fitToViewport();
+          return;
+        }
+
+        if (action === 'reset') {
+          applyScale(1);
+          return;
+        }
+
+        if (action === 'in') {
+          applyScale(currentScale + 0.1);
+          return;
+        }
+
+        if (action === 'out') {
+          applyScale(currentScale - 0.1);
+        }
+      });
+    });
+
+    const handleResize = () => fitToViewport();
+    window.addEventListener('resize', handleResize);
+  });
 }

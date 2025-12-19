@@ -85,8 +85,11 @@
 
 .tree-scroller {
   overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
+  max-width: 100%;
   padding-bottom: var(--spacing-sm);
+  -webkit-overflow-scrolling: touch;
 }
 
 .org-tree {
@@ -264,4 +267,59 @@
   .org-tree {
     min-width: 560px;
   }
+}
+
+.org-chart-wrap {
+  display: grid;
+  gap: var(--spacing-xs);
+  max-width: 100%;
+}
+
+.org-chart__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.org-chart__controls-group {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.chip--control {
+  border: 1px solid var(--color-border);
+  background: #f8fafc;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.chip--control:hover,
+.chip--control:focus-visible {
+  background: rgba(107, 30, 34, 0.08);
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.org-chart__scale {
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.org-chart__hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.org-chart__viewport {
+  max-width: 100%;
+}
+
+.org-chart__canvas {
+  display: inline-block;
+  transform-origin: top left;
+  --chart-scale: 1;
+  transform: scale(var(--chart-scale));
 }
