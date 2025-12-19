@@ -3,7 +3,7 @@ import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 
 async function renderDivisions() {
-  const divisions = await loadJSON('../data/divisions.json');
+  const divisions = await loadJSON(new URL('../data/divisions.json', import.meta.url).href);
   const target = qs('#division-list');
   setHTML(
     target,

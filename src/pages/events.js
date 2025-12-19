@@ -13,7 +13,7 @@ const pageTitle = document.body.dataset.title || 'Kegiatan & Event';
 const pageSubtitle = document.body.dataset.subtitle || 'Semua agenda komunitas';
 
 async function renderPage() {
-  const events = await loadJSON('../data/events.json');
+  const events = await loadJSON(new URL('../data/events.json', import.meta.url).href);
   if (slug) {
     renderDetail(events, slug);
   } else {

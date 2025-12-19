@@ -116,8 +116,8 @@ async function renderLatestUpdates() {
   const target = qs('#latest-updates-list');
   try {
     const [news, articles] = await Promise.all([
-      loadJSON('../data/news.json'),
-      loadJSON('../data/articles.json')
+      loadJSON(new URL('../data/news.json', import.meta.url).href),
+      loadJSON(new URL('../data/articles.json', import.meta.url).href)
     ]);
 
     const normalized = [
@@ -143,7 +143,7 @@ async function renderLatestUpdates() {
 async function renderAgenda() {
   const target = qs('#agenda-list');
   try {
-    const events = await loadJSON('../data/events.json');
+    const events = await loadJSON(new URL('../data/events.json', import.meta.url).href);
     const upcoming = filterUpcomingEvents(events).slice(0, 3);
 
     if (!upcoming.length) {
