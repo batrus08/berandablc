@@ -250,7 +250,8 @@ function renderDivisionSection(division) {
   return `
     <section class="division-tree" id="direktorat-${slugify(division.title)}" aria-label="Divisi ${division.title}">
       <header class="section-header tree-header">
-        <div class="chip">${division.title}</div>
+        <p class="eyebrow">Direktorat</p>
+        <h2 class="division-title">${division.title}</h2>
         <p class="muted">${division.description}</p>
       </header>
       <div class="structure-diagram">

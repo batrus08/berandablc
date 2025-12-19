@@ -34,16 +34,60 @@
 .org-section {
   display: grid;
   gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-border);
+  background: linear-gradient(180deg, rgba(249, 250, 251, 0.85) 0%, #fff 65%);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
 }
 
 .division-layout {
   display: grid;
   gap: var(--spacing-xl);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .tree-header {
   display: grid;
   gap: var(--spacing-xs);
+}
+
+.org-section .section-header,
+.division-tree .section-header {
+  display: grid;
+  gap: var(--spacing-2xs);
+  text-align: center;
+  justify-items: center;
+  margin-bottom: 0;
+}
+
+.org-section .section-header .muted,
+.division-tree .section-header .muted {
+  max-width: 760px;
+}
+
+.org-section h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 0.9vw + 1.6rem, 2.4rem);
+}
+
+.division-tree {
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: 1.25rem;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
+}
+
+.division-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 0.8vw + 1.4rem, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
 }
 
 .person-card {
