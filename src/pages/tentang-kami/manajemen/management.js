@@ -15,7 +15,7 @@ const pageCopy = {
   },
   'management-bph': {
     hero: {
-      title: 'Badan Pengurus Harian (BPH)',
+      title: 'Struktur Badan Pengurus Harian',
       intro:
         'BPH memastikan arah gerak organisasi tetap sejalan dengan roadmap tahunan, sekaligus menjaga ritme administrasi dan pengelolaan sumber daya.',
     },
@@ -23,7 +23,7 @@ const pageCopy = {
   },
   'management-divisi': {
     hero: {
-      title: 'Divisi',
+      title: 'Struktur Divisi BLC',
       intro:
         'Struktur divisi disusun sampai level koordinator untuk memastikan program berjalan terarah tanpa menampilkan rincian staf operasional.',
     },
@@ -308,31 +308,36 @@ function setupOrgChartInteractions(scope = document) {
     const clamp = (value, min = 0.6, max = 2) => Math.min(max, Math.max(min, value));
 
     const currentScale = () => Number(canvas.style.getPropertyValue('--chart-scale')) || 1;
+    const scaledWidth = (scale = currentScale()) => canvas.offsetWidth * scale;
 
-    const centerChart = () => {
-      const scaledWidth = canvas.offsetWidth * currentScale();
-      const available = viewport.clientWidth;
-      if (!scaledWidth || !available) return;
-      viewport.scrollLeft = Math.max(0, (scaledWidth - available) / 2);
-    };
-
-    const applyScale = (value) => {
+    const applyScale = (value, options = {}) => {
+      const prevScale = currentScale();
       const nextScale = clamp(value);
+      const widthBefore = scaledWidth(prevScale);
+      const centerRatio = widthBefore
+        ? (viewport.scrollLeft + viewport.clientWidth / 2) / widthBefore
+        : 0.5;
+
       canvas.style.setProperty('--chart-scale', nextScale);
       canvas.style.transform = `scale(${nextScale})`;
-      if (display) {
-        display.textContent = `${Math.round(nextScale * 100)}%`;
-      }
 
-      requestAnimationFrame(centerChart);
+      requestAnimationFrame(() => {
+        const widthAfter = scaledWidth(nextScale);
+        const targetCenter = (options.centerRatio ?? centerRatio) * widthAfter;
+        viewport.scrollLeft = Math.max(0, targetCenter - viewport.clientWidth / 2);
+      });
+
+      if (display) {
+        display.textContent = options.label ?? `${Math.round(nextScale * 100)}%`;
+      }
     };
 
     const fitToViewport = () => {
       const baseWidth = canvas.offsetWidth;
       const available = viewport.clientWidth;
       if (!baseWidth || !available) return;
-      const fitScale = clamp(available / baseWidth);
-      applyScale(fitScale);
+      const fitScale = clamp(Math.min(1.05, available / baseWidth));
+      applyScale(fitScale, { centerRatio: 0.5, label: `Fit (${Math.round(fitScale * 100)}%)` });
     };
 
     fitToViewport();
@@ -348,7 +353,7 @@ function setupOrgChartInteractions(scope = document) {
         }
 
         if (action === 'reset') {
-          applyScale(1);
+          applyScale(1, { centerRatio: 0.5 });
           return;
         }
 
