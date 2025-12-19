@@ -1,14 +1,26 @@
 (function () {
-    const cards = document.querySelectorAll('.news-card[data-link]');
-    cards.forEach((card) => {
-        card.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                const target = card.getAttribute('data-link');
-                if (target) {
-                    window.location.href = target;
-                }
-            }
-        });
+  function enableCardInteractions() {
+    document.querySelectorAll('[data-link]').forEach((card) => {
+      const target = card.getAttribute('data-link');
+      if (!target) return;
+
+      const go = () => {
+        window.location.href = target;
+      };
+
+      card.addEventListener('click', go);
+      card.addEventListener('keydown', (evt) => {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          go();
+        }
+      });
     });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enableCardInteractions);
+  } else {
+    enableCardInteractions();
+  }
 })();
