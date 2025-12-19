@@ -81,15 +81,14 @@
   padding: var(--spacing-lg);
   background: #fff;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  /* Ensure it handles large content properly */
+  min-width: 0;
 }
 
 .tree-scroller {
-  overflow-x: auto;
-  overflow-y: hidden;
+  /* This class wraps the canvas in the markup but logic is handled by viewport */
   width: 100%;
-  max-width: 100%;
   padding-bottom: var(--spacing-sm);
-  -webkit-overflow-scrolling: touch;
 }
 
 .org-tree {
@@ -269,12 +268,13 @@
   }
 }
 
+/* Org Chart Scroll Container Refactor */
 .org-chart-wrap {
   display: grid;
   gap: var(--spacing-xs);
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  /* Removed overflow-x: auto from here to prevent controls from scrolling */
+  overflow: visible;
   padding-bottom: var(--spacing-xs);
 }
 
@@ -317,14 +317,18 @@
 }
 
 .org-chart__viewport {
+  width: 100%;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Visual cue that it is a scroll container */
+  border: 1px dashed transparent;
 }
 
 .org-chart__scroller {
   min-width: max-content;
-  overflow: auto;
+  /* Allow expansion */
 }
 
 .org-chart__canvas {

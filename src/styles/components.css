@@ -183,6 +183,7 @@
   display: inline-flex;
   margin-left: 0.4rem;
   transition: transform 0.2s ease;
+  color: var(--color-muted);
 }
 
 .nav-item.expanded .nav-trigger__chevron {
@@ -280,6 +281,7 @@
 .dropdown__chevron {
   display: inline-flex;
   transition: transform 0.2s ease;
+  color: var(--color-muted);
 }
 
 .dropdown__item--toggle[aria-expanded='true'] .dropdown__chevron {
