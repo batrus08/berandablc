@@ -66,6 +66,9 @@ export function t(key) {
   if (fallbackValue !== undefined && fallbackValue !== null) return fallbackValue;
   // If value is null/undefined, return a human-friendly fallback instead of the raw key.
   const readableFallback = HUMAN_FALLBACK[currentLang] || HUMAN_FALLBACK[defaultLanguage];
+  if (!readableFallback) {
+    console.warn(`Translation missing for key: "${key}" in language: "${currentLang}"`);
+  }
   return readableFallback || 'Text unavailable';
 }
 
