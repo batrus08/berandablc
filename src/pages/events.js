@@ -1,6 +1,7 @@
 import { setupPage } from '../utils/page.js';
 import { loadJSON, formatDate, sortByDateDesc } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
+import { t } from '../utils/i18n.js';
 import { renderCalendar } from '../components/Calendar.js';
 
 const search = new URLSearchParams(window.location.search);
@@ -39,15 +40,16 @@ function renderList(events) {
     </div>
     <div class="card filter-card">
       <div class="stacked-gaps flex-between">
-        <label>Jenis kegiatan
+        <label>${t('events.filterType')}
           <select id="type-filter" ${datasetType ? 'disabled' : ''}>
-            <option ${selectedType === 'Semua' ? 'selected' : ''}>Semua</option>
+            <option value="Semua" ${selectedType === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
             ${types.map((t) => `<option ${selectedType === t ? 'selected' : ''}>${t}</option>`).join('')}
           </select>
         </label>
-        <label>Jenis program
+        <label>${t('events.filterProgram')}
           <select id="taxonomy-filter" ${datasetTaxonomy ? 'disabled' : ''}>
-            ${taxonomies.map((t) => `<option ${selectedTaxonomy === t ? 'selected' : ''}>${t}</option>`).join('')}
+            <option value="Semua" ${selectedTaxonomy === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
+            ${taxonomies.filter(t => t !== 'Semua').map((t) => `<option ${selectedTaxonomy === t ? 'selected' : ''}>${t}</option>`).join('')}
           </select>
         </label>
       </div>
@@ -98,7 +100,7 @@ function renderDetail(events, slugValue) {
   const target = qs('#event-root');
   const event = events.find((e) => e.slug === slugValue);
   if (!event) {
-    setHTML(target, '<p>Agenda tidak ditemukan.</p>');
+    setHTML(target, `<p>${t('events.notFound')}</p>`);
     return;
   }
   setHTML(
@@ -113,9 +115,9 @@ function renderDetail(events, slugValue) {
       </div>
       ${event.poster ? `<img src="${event.poster}" alt="Poster ${event.title}" />` : ''}
       <div>${event.description}</div>
-      ${event.minutesPdf ? `<p><a class="btn secondary" href="${event.minutesPdf}">Notulensi</a></p>` : ''}
-      ${event.reportPdf ? `<p><a class="btn secondary" href="${event.reportPdf}">Laporan Kegiatan</a></p>` : ''}
-      <a class="btn primary" href="./events.html">Kembali ke daftar</a>
+      ${event.minutesPdf ? `<p><a class="btn secondary" href="${event.minutesPdf}">${t('events.minutes')}</a></p>` : ''}
+      ${event.reportPdf ? `<p><a class="btn secondary" href="${event.reportPdf}">${t('events.report')}</a></p>` : ''}
+      <a class="btn primary" href="./events.html">${t('events.backToList')}</a>
     </article>
   `
   );

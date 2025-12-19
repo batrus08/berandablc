@@ -54,12 +54,22 @@
   },
   "articles": {
     "title": "Articles & News",
-    "empty": "No updates available yet."
+    "empty": "No updates available yet.",
+    "filterCategory": "Category",
+    "filterTopic": "Topic",
+    "notFound": "Article not found.",
+    "backToList": "Back to list"
   },
   "events": {
     "title": "Upcoming Agenda",
     "ongoing": "Ongoing activities",
-    "empty": "No activities are currently in progress."
+    "empty": "No activities are currently in progress.",
+    "filterType": "Activity Type",
+    "filterProgram": "Program Type",
+    "notFound": "Agenda not found.",
+    "backToList": "Back to list",
+    "minutes": "Minutes",
+    "report": "Activity Report"
   },
   "profile": {
     "title": "Profile Overview",
@@ -80,5 +90,7 @@
     "address": "Faculty of Law Universitas Gadjah Mada, Bulaksumur, Sleman, DI Yogyakarta, Indonesia",
     "phone": "+62 811-0000-0000",
     "copyright": "© 2026 Business Law Community FH UGM. All rights reserved."
+  },
+  "common": {
+    "all": "All"
   }
-}

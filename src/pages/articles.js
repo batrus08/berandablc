@@ -1,6 +1,7 @@
 import { setupPage } from '../utils/page.js';
 import { loadJSON, sortByDateDesc, formatDate, groupByMonthYear } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
+import { t } from '../utils/i18n.js';
 import { renderArticleCard } from '../components/ArticleCard.js';
 import { renderPDFViewer } from '../components/PDFViewer.js';
 
@@ -39,15 +40,15 @@ function renderList(articles) {
     </div>
     <div class="card filter-card">
       <div class="stacked-gaps flex-between">
-        <label>Kategori:
+        <label>${t('articles.filterCategory')}
           <select id="category-filter" ${pageCategory ? 'disabled' : ''}>
-            <option ${selectedCategory === 'Semua' ? 'selected' : ''}>Semua</option>
+            <option value="Semua" ${selectedCategory === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
             ${categories.map((c) => `<option ${selectedCategory === c ? 'selected' : ''}>${c}</option>`).join('')}
           </select>
         </label>
-        <label>Topik:
+        <label>${t('articles.filterTopic')}
           <select id="topic-filter">
-            <option value="Semua">Semua</option>
+            <option value="Semua">${t('common.all')}</option>
             ${topics.map((t) => `<option>${t}</option>`).join('')}
           </select>
         </label>
@@ -81,7 +82,7 @@ function renderDetail(articles, slugValue) {
   const target = qs('#article-root');
   const article = articles.find((a) => a.slug === slugValue);
   if (!article) {
-    setHTML(target, '<p>Artikel tidak ditemukan.</p>');
+    setHTML(target, `<p>${t('articles.notFound')}</p>`);
     return;
   }
   setHTML(
@@ -99,7 +100,7 @@ function renderDetail(articles, slugValue) {
       ${article.doi ? `<p><strong>DOI:</strong> ${article.doi}</p>` : ''}
       ${article.issn ? `<p><strong>ISSN:</strong> ${article.issn}</p>` : ''}
       ${renderPDFViewer(article.pdfUrl)}
-      <a class="btn secondary" href="./articles.html">Kembali ke daftar</a>
+      <a class="btn secondary" href="./articles.html">${t('articles.backToList')}</a>
     </article>
   `
   );
