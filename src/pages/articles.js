@@ -12,6 +12,14 @@ const pageCategory = document.body.dataset.category || null;
 const pageTitle = document.body.dataset.title || 'Artikel & Publikasi';
 const pageSubtitle = document.body.dataset.subtitle || 'Filter berdasarkan kategori dan topik';
 const viewMode = document.body.dataset.view || 'list';
+const TOPIC_OPTIONS = [
+  'Pasar Modal',
+  'Energi & Sumberdaya',
+  'Perusahaan & Anti Monopoli',
+  'Hak kekayaan intelektual',
+  'Pembiayaan & Perbankan',
+  'Perdagangan internasional',
+];
 
 async function renderPage() {
   const articles = await loadJSON('../data/articles.json');
@@ -30,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderList(articles) {
   const container = qs('#article-root');
   const categories = [...new Set(articles.map((a) => a.categoryType))];
-  const topics = [...new Set(articles.flatMap((a) => a.topics))];
   const selectedCategory = filterCategory || pageCategory || 'Semua';
 
   const markup = `
@@ -39,37 +46,99 @@ function renderList(articles) {
       <p class="section__subtitle">${pageSubtitle}</p>
     </div>
     <div class="card filter-card">
-      <div class="stacked-gaps flex-between">
-        <label>${t('articles.filterCategory')}
-          <select id="category-filter" ${pageCategory ? 'disabled' : ''}>
-            <option value="Semua" ${selectedCategory === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
-            ${categories.map((c) => `<option ${selectedCategory === c ? 'selected' : ''}>${c}</option>`).join('')}
-          </select>
+      <div class="filter-card__header">
+        <div>
+          <p class="eyebrow">Kueri yang lebih terarah</p>
+          <h3 class="filter-card__title">Temukan artikel pilihan</h3>
+          <p class="muted">Pilih kategori, topik, atau ketik kata kunci untuk mempersempit daftar bacaan.</p>
+        </div>
+        <div class="filter-card__badge">
+          <span id="result-count">${articles.length}</span>
+          <small>artikel tersedia</small>
+        </div>
+      </div>
+      <div class="filter-card__controls">
+        <label class="filter-field">
+          <span class="filter-field__label">Cari judul atau ringkasan</span>
+          <div class="input-with-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <input type="search" id="article-search" placeholder="Cari artikel..." aria-label="Cari artikel" />
+          </div>
         </label>
-        <label>${t('articles.filterTopic')}
-          <select id="topic-filter">
-            <option value="Semua">${t('common.all')}</option>
-            ${topics.map((t) => `<option>${t}</option>`).join('')}
-          </select>
+        <label class="filter-field">
+          <span class="filter-field__label">${t('articles.filterCategory')}</span>
+          <div class="select-wrapper">
+            <select id="category-filter" ${pageCategory ? 'disabled' : ''}>
+              <option value="Semua" ${selectedCategory === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
+              ${categories.map((c) => `<option ${selectedCategory === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
+          </div>
+        </label>
+        <label class="filter-field">
+          <span class="filter-field__label">${t('articles.filterTopic')}</span>
+          <div class="select-wrapper">
+            <select id="topic-filter">
+              <option value="Semua">${t('common.all')}</option>
+              ${TOPIC_OPTIONS.map((topic) => `<option>${topic}</option>`).join('')}
+            </select>
+          </div>
         </label>
       </div>
     </div>
     <div id="article-list" class="grid grid-3"></div>
+    <div id="article-empty" class="empty-state hidden">
+      <div class="empty-state__icon" aria-hidden="true">🗂️</div>
+      <div>
+        <h3>Tidak ada hasil</h3>
+        <p class="muted">Coba ubah kategori, pilih topik lain, atau gunakan kata kunci berbeda.</p>
+      </div>
+    </div>
   `;
 
   setHTML(container, markup);
-  const filtered = selectedCategory === 'Semua' ? articles : articles.filter((a) => a.categoryType === selectedCategory);
-  renderListItems(filtered);
+  const state = {
+    category: selectedCategory,
+    topic: 'Semua',
+    query: '',
+  };
+
+  const filteredByCategory = () =>
+    state.category === 'Semua' ? articles : articles.filter((a) => a.categoryType === state.category);
+
+  const applyFilters = () => {
+    const query = state.query.trim().toLowerCase();
+    const base = filteredByCategory();
+    const byTopic = state.topic === 'Semua' ? base : base.filter((a) => a.topics.some((tpc) => tpc.toLowerCase().includes(state.topic.toLowerCase())));
+    const scoped = query ? byTopic.filter((a) => `${a.title} ${a.excerpt}`.toLowerCase().includes(query)) : byTopic;
+    renderListItems(scoped);
+    const empty = qs('#article-empty');
+    if (scoped.length === 0) {
+      empty.classList.remove('hidden');
+    } else {
+      empty.classList.add('hidden');
+    }
+    const counter = qs('#result-count');
+    if (counter) counter.textContent = scoped.length;
+  };
+
+  applyFilters();
 
   qs('#category-filter').addEventListener('change', (e) => {
     const val = e.target.value;
     if (pageCategory) return;
-    window.location.href = val === 'Semua' ? './articles.html' : `./articles.html?category=${encodeURIComponent(val)}`;
+    state.category = val;
+    window.history.replaceState({}, '', val === 'Semua' ? './articles.html' : `./articles.html?category=${encodeURIComponent(val)}`);
+    applyFilters();
   });
+
   qs('#topic-filter').addEventListener('change', (e) => {
-    const topic = e.target.value;
-    const scoped = topic === 'Semua' ? filtered : filtered.filter((a) => a.topics.includes(topic));
-    renderListItems(scoped);
+    state.topic = e.target.value;
+    applyFilters();
+  });
+
+  qs('#article-search').addEventListener('input', (e) => {
+    state.query = e.target.value;
+    applyFilters();
   });
 }
 
