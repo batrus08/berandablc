@@ -149,7 +149,10 @@ export function bindNavigation(scope = document) {
       trigger.setAttribute('aria-expanded', 'false');
       trigger.closest('.nav-item')?.classList.remove('expanded');
       const menuEl = trigger.nextElementSibling;
-      if (menuEl) menuEl.classList.remove('open');
+      if (menuEl) {
+        menuEl.classList.remove('open');
+        menuEl.setAttribute('hidden', '');
+      }
     });
     closeAllSubmenus();
   }
@@ -203,6 +206,7 @@ export function bindNavigation(scope = document) {
       trigger.setAttribute('aria-expanded', String(willOpen));
       trigger.closest('.nav-item')?.classList.toggle('expanded', willOpen);
       menuEl?.classList.toggle('open', willOpen);
+      menuEl?.toggleAttribute('hidden', !willOpen);
       if (!willOpen) {
         closeDescendants(menuEl);
       }

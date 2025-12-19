@@ -307,6 +307,15 @@ function setupOrgChartInteractions(scope = document) {
 
     const clamp = (value, min = 0.6, max = 2) => Math.min(max, Math.max(min, value));
 
+    const currentScale = () => Number(canvas.style.getPropertyValue('--chart-scale')) || 1;
+
+    const centerChart = () => {
+      const scaledWidth = canvas.offsetWidth * currentScale();
+      const available = viewport.clientWidth;
+      if (!scaledWidth || !available) return;
+      viewport.scrollLeft = Math.max(0, (scaledWidth - available) / 2);
+    };
+
     const applyScale = (value) => {
       const nextScale = clamp(value);
       canvas.style.setProperty('--chart-scale', nextScale);
@@ -314,6 +323,8 @@ function setupOrgChartInteractions(scope = document) {
       if (display) {
         display.textContent = `${Math.round(nextScale * 100)}%`;
       }
+
+      requestAnimationFrame(centerChart);
     };
 
     const fitToViewport = () => {
@@ -328,7 +339,7 @@ function setupOrgChartInteractions(scope = document) {
 
     chart.querySelectorAll('[data-zoom]').forEach((button) => {
       button.addEventListener('click', () => {
-        const currentScale = Number(canvas.style.getPropertyValue('--chart-scale')) || 1;
+        const scaleBefore = currentScale();
         const action = button.dataset.zoom;
 
         if (action === 'fit') {
@@ -342,12 +353,12 @@ function setupOrgChartInteractions(scope = document) {
         }
 
         if (action === 'in') {
-          applyScale(currentScale + 0.1);
+          applyScale(scaleBefore + 0.1);
           return;
         }
 
         if (action === 'out') {
-          applyScale(currentScale - 0.1);
+          applyScale(scaleBefore - 0.1);
         }
       });
     });
