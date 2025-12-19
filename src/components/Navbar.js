@@ -101,7 +101,7 @@ export function renderNavbar() {
     <nav class="navbar" aria-label="Navigasi utama">
       <div class="container navbar__inner">
         <a class="brand" href="${p('../pages/index.html')}">
-          <span class="src/assets/images/logo.png">LC</span>
+          <span class="brand__mark">LC</span>
           <span class="brand__text">
             <span class="brand__name">${t('brand.name')}</span>
             <span class="brand__subtitle">${t('brand.university')}</span>
