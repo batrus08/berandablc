@@ -1,11 +1,17 @@
 export function renderFooter() {
   const logoSrc = new URL('../assets/images/logoblc.png', import.meta.url).href;
+  const homeHref = new URL('../pages/index.html', import.meta.url).href;
   return `
     <footer class="footer" id="site-footer">
       <div class="container footer__grid">
         <div class="footer__brand">
-          <img class="brand__mark" src="${logoSrc}" alt="Law Community logo" />
-          <p class="brand__name" data-i18n="brand.name"></p>
+          <a class="brand brand--footer" href="${homeHref}">
+            <img class="brand__mark" src="${logoSrc}" alt="Law Community logo" />
+            <span class="brand__text">
+              <span class="brand__name" data-i18n="brand.name"></span>
+              <span class="brand__subtitle" data-i18n="brand.university"></span>
+            </span>
+          </a>
         </div>
         <div class="footer__info">
           <h4 data-i18n="navbar.kontak"></h4>
