@@ -11,6 +11,7 @@ function resolveLabel(key, fallback) {
 }
 
 const p = (path) => new URL(path, import.meta.url).href;
+const logoSrc = p('../assets/images/logoblc.png');
 
 const menuConfig = () => [
   { label: t('navbar.beranda'), href: p('../pages/index.html') },
@@ -101,7 +102,7 @@ export function renderNavbar() {
     <nav class="navbar" aria-label="Navigasi utama">
       <div class="container navbar__inner">
         <a class="brand" href="${p('../pages/index.html')}">
-          <span class="brand__mark">LC</span>
+          <img class="brand__mark" src="${logoSrc}" alt="${t('brand.name')} logo" />
           <span class="brand__text">
             <span class="brand__name">${t('brand.name')}</span>
             <span class="brand__subtitle">${t('brand.university')}</span>
