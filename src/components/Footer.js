@@ -3,7 +3,7 @@ export function renderFooter() {
     <footer class="footer" id="site-footer">
       <div class="container footer__grid">
         <div class="footer__brand">
-          <div class="brand__mark">LC</div>
+          <div class="src/assets/images/logo.png">LC</div>
           <p class="brand__name" data-i18n="brand.name"></p>
         </div>
         <div class="footer__info">
