@@ -1,60 +1,90 @@
-# berandablc
+# Beranda BLC – panduan pengelolaan konten
 
-Refactored static structure for the Beranda (homepage) of Business Law Community. The code is modular, data-driven, mobile-first, and ready for static hosting (GitHub Pages, Netlify) or embedding inside a WordPress site.
+Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driven, dan siap di-host di layanan statis (GitHub Pages/Netlify) atau di-embed ke WordPress tanpa build step. Seluruh konten dikendalikan lewat JSON dan aset statis sehingga tim non-teknis dapat memperbarui materi hanya dengan menyunting berkas.
 
-## Folder overview
-- `src/assets/` – placeholders for images, icons, and fonts used across pages.
-- `src/components/` – reusable UI components (header, footer, navbar, cards, section title).
-- `src/pages/` – entry points (`index.html` and supporting pages) that assemble components and data.
-- `src/styles/` – global, component-level, and page-specific styles (no inline CSS).
-- `src/data/` – JSON sources for news, articles, events, divisions, gallery, etc. Content is decoupled from markup.
-- `src/utils/` – helpers for DOM, data loading, i18n, and a shared page bootstrapper.
+## Ringkasan struktur
+- `src/assets/` – semua aset visual: logo, foto kegiatan, poster, video thumbnail, PDF lampiran.
+- `src/components/` – komponen UI (navbar, footer, kartu, slider, judul seksi) berbasis HTML + JS modular.
+- `src/data/` – sumber kebenaran konten (artikel, berita, kegiatan, galeri, divisi, staf, testimoni, dsb.).
+- `src/pages/` – halaman siap pakai (`index.html`, `articles.html`, `events.html`, dll.) yang merangkai komponen dan data.
+- `src/styles/` – token desain dan stylesheet global/komponen/halaman.
+- `src/utils/` – helper DOM, i18n, dan bootstrap halaman.
 
-## Running locally
-1. Serve the `src/` folder with any static server to avoid CORS issues when fetching JSON files. Example: `npx serve src` then open `http://localhost:3000/pages/index.html`.
-2. All pages import ES modules directly—no build step is required.
+## Menjalankan secara lokal
+1. Pastikan Node.js hanya untuk menjalankan server statis (tidak ada build). Install `serve` bila belum ada: `npm install -g serve`.
+2. Dari root repo jalankan `serve src` atau `npx serve src`.
+3. Buka `http://localhost:3000/pages/index.html` (atau `http://localhost:3000/pages/articles.html`, dll.).
 
-## Mobile & responsiveness
-- Navigation, topbar, and grids collapse automatically under 960px; additional spacing tweaks are applied below 720px.
-- Hero sliders, cards, and embeds use fluid units (`clamp`, `minmax`) to stay legible on phones.
-- Test quickly by resizing the browser or using devtools device emulation; no platform-specific code is required.
+## Panduan pemutakhiran konten (lengkap)
+Semua konten publik tersimpan di `src/data/` sebagai JSON. Alur umum setiap jenis konten:
+- Unggah aset terkait (gambar, PDF, video thumbnail) ke `src/assets/`.
+- Tambah/ubah entri pada JSON sesuai skema yang berlaku.
+- Jalankan server statis dan verifikasi di halaman terkait.
+- Commit & deploy.
 
-## Updating content (articles, news, events, gallery)
-All public content is stored in JSON files under `src/data/`. Uploading new material only requires editing these files and dropping related assets into `src/assets/`.
+### Artikel – `src/data/articles.json`
+- **Bidang wajib**: `slug`, `title`, `categoryType`, `topics` (array string), `date` (`YYYY-MM-DD`), `excerpt`, `content`, `author` (`name`, `affiliation`).
+- **Opsional**: `doi`, `issn`, `pdfUrl` (tautan PDF di `src/assets/`), atau `coverImage` untuk hero artikel.
+- **Langkah unggah**:
+  1. Simpan PDF atau gambar cover ke `src/assets/articles/` (buat folder bila belum ada).
+  2. Tambahkan objek baru ke JSON dengan path aset relatif, mis. `"pdfUrl": "../assets/articles/pedoman.pdf"`.
+  3. Artikel otomatis muncul di `articles.html`; halaman detail dipanggil via query `?slug=`.
 
-- **Articles** (`src/data/articles.json`)
-  - Fields: `slug`, `title`, `categoryType`, `topics` (array), `date` (`YYYY-MM-DD`), `excerpt`, `content`, optional `doi`, `issn`, `pdfUrl`, and `author` object (`name`, `affiliation`).
-  - After adding an item, it appears in `articles.html`; detail pages use the `slug` query parameter.
-- **News** (`src/data/news.json`)
-  - Fields: `slug`, `title`, `category`, `date`, `excerpt`, `image`, `link` (external) or `content` for internal rendering.
-  - Latest news are merged with articles on the homepage.
-- **Events** (`src/data/events.json`)
-  - Fields: `slug`, `title`, `type`, `taxonomy`, `dateStart`, optional `dateEnd`, `location`, `poster`, `excerpt`, `description`, optional `minutesPdf`/`reportPdf`.
-  - Filters on `events.html` are driven by `type` and `taxonomy` values.
-- **Gallery** (`src/data/gallery.json`)
-  - Contains `photos`, `videos`, and `coverage` arrays. Each photo item has `title` and `url`; videos use an embeddable URL in `embed`; coverage links use `title`, `source`, and `link`.
+### Berita – `src/data/news.json`
+- Bidang: `slug`, `title`, `category`, `date`, `excerpt`, `image`, `link` (eksternal) **atau** `content` (internal).
+- Unggah gambar ke `src/assets/news/`, rujuk dengan path relatif, lalu cek di beranda dan daftar berita.
 
-### Upload workflow
-1. Place new media (images, PDFs) in `src/assets/` and reference them with relative paths in the JSON files.
-2. Edit the relevant JSON entry to include metadata (title, dates, taxonomy, etc.).
-3. Run a static server (`npx serve src`) and open the corresponding page to confirm rendering.
-4. Commit and deploy the updated `src/` folder to your static host or WordPress (see below).
+### Kegiatan/Agenda – `src/data/events.json`
+- Bidang: `slug`, `title`, `type`, `taxonomy`, `dateStart`, opsional `dateEnd`, `location`, `poster`, `excerpt`, `description`, opsional `minutesPdf`/`reportPdf`.
+- Unggah poster dan materi ke `src/assets/events/`.
+- Filter di `events.html` digerakkan oleh `type` dan `taxonomy`, jadi gunakan nilai konsisten (mis. `Webinar`, `Workshop`, `Internal`).
 
-## Using inside WordPress
-The site stays framework-free, so it can be dropped into WordPress without a build step:
+### Galeri foto & video – `src/data/gallery.json`
+- **Foto**: objek dengan `title` dan `url` (path gambar di `src/assets/gallery/`).
+- **Video**: `title`, `embed` (URL YouTube/Vimeo embeddable), opsional `thumbnail`.
+- **Liputan/coverage**: `title`, `source`, `link`.
+- Tambahkan aset ke `src/assets/gallery/` lalu masukkan entri baru ke array yang sesuai.
 
-- **Static embed on a page/post**
-  1. Upload the `src/` folder to `/wp-content/uploads/berandablc/` or a custom plugin directory.
-  2. Create a WordPress page and add a *Custom HTML* block with an `<iframe>` pointing to `/wp-content/uploads/berandablc/pages/index.html` (or another page). Set the iframe to `width="100%"` and `height="100vh"` for a full view.
+### Manajemen & struktur organisasi – `src/data/divisions.json` dan konten manajemen
+- Detail divisi, direktorat, dan BPH berada di `src/data/divisions.json` serta konten halaman `src/pages/tentang-kami/manajemen/`.
+- Untuk memperbarui daftar divisi atau staf:
+  1. Perbarui entri `divisions` (nama, deskripsi, daftar anggota) di JSON.
+  2. Jika ada file statis (mis. foto tim), unggah ke `src/assets/management/` dan rujuk di HTML/JSON.
+  3. Cek tampilan di `pages/tentang-kami/manajemen/index.html`, `bph.html`, dan `divisi.html`.
 
-- **Theme or child-theme include**
-  1. Copy the `src/` folder into your theme (e.g., `/wp-content/themes/your-theme/berandablc/`).
-  2. Add a template that echoes the desired HTML file via `readfile` or `include`, and enqueue the CSS files (`styles/*.css`).
+### Logo & elemen identitas
+- Simpan logo utama, variasi horizontal, dan favicon di `src/assets/logo/`.
+- Navbar mengambil logo/mark dari komponen `src/components/Navbar.js`; ganti teks atau gambar di sana bila perlu.
+- Perbarui favicon/link ikon di setiap halaman melalui tag `<link rel="icon">` di berkas `src/pages/` jika mengganti file.
 
-- **Dynamic content from WordPress**
-  - If you want WordPress to own the content, expose posts via the WP REST API and update `loadJSON` calls in `src/utils/helpers.js` (or the individual page scripts) to point to those endpoints instead of local JSON files.
-  - Keep JSON shapes identical to the fields listed above so the existing renderers continue to work.
+### Teks statis lain
+- **Program/hero/CTA**: disusun lewat `src/data/pages-content.json` dan markup pada setiap berkas di `src/pages/`.
+- **Footer & kontak**: alamat dan tautan sosial berada di `src/data/site.json`.
+- **Testimoni/tim**: cek `src/data/teams.json` atau berkas khusus lain di folder `data`.
 
-## Internationalization
-- Language files live in `src/i18n/`. The helper `setupPage` ensures translations load before rendering and re-render when the language switcher is used.
-- Add new keys to both `id.json` and `en.json` to keep the navbar, hero, and section labels in sync.
+## Alur kerja unggah (contoh lengkap)
+1. Taruh aset baru di subfolder `src/assets/` yang relevan (buat folder baru bila diperlukan).
+2. Tambahkan entri JSON dengan path relatif dari file yang akan membaca data (biasanya `../assets/...`).
+3. Jalankan `npx serve src` dan buka halaman tujuan untuk memverifikasi render, tautan, dan preview gambar.
+4. Lakukan pemeriksaan cepat di tampilan mobile (<=960px) untuk memastikan grid/menu tetap rapi.
+5. Commit perubahan (`git commit`) lalu deploy ke host statis atau unggah folder `src/` ke WordPress (lihat bawah).
+
+## Integrasi dengan WordPress
+Karena tanpa build, seluruh folder `src/` bisa langsung di-embed:
+- **Iframe pada halaman/post**
+  1. Unggah `src/` ke `/wp-content/uploads/berandablc/` atau plugin kustom.
+  2. Tambah blok *Custom HTML* dengan `<iframe src="/wp-content/uploads/berandablc/pages/index.html" width="100%" height="100vh"></iframe>`.
+- **Tema/child theme**
+  1. Salin `src/` ke `/wp-content/themes/<tema-anda>/berandablc/`.
+  2. Buat template PHP yang memanggil berkas HTML yang diinginkan dan enqueue CSS di `src/styles/`.
+- **Konten dinamis dari WP**
+  - Ekspos data lewat REST API lalu ubah helper `loadJSON` di `src/utils/helpers.js` (atau di script halaman) agar mengambil dari endpoint tersebut dengan bentuk data yang sama.
+
+## Internasionalisasi
+- Terjemahan berada di `src/i18n/en.json` dan `src/i18n/id.json`. Gunakan helper `t()` dari `src/utils/i18n.js` saat menambah label baru.
+- Tambahkan kunci bahasa di kedua berkas untuk menjaga sinkronisasi navbar, hero, dan konten dinamis.
+
+## Tips pemeliharaan
+- **Konsistensi font**: variabel font berada di `src/styles/tokens.css`; menu dan dropdown memakai `--nav-font-family` dlsb.
+- **Aksesibilitas**: komponen navbar/dropdown memakai aria-attributes; pastikan teks tautan deskriptif dan gambar memiliki `alt`.
+- **Versi sumber**: simpan perubahan data (JSON) dan aset di repo ini agar histori perubahan terjaga.
