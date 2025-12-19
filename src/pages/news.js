@@ -18,7 +18,7 @@ async function renderNewsList() {
   });
 
   try {
-    const news = await loadJSON('../data/news.json');
+    const news = await loadJSON(new URL('../data/news.json', import.meta.url).href);
     if (!news.length) {
       grid.innerHTML = '<p class="empty-state">Belum ada berita untuk ditampilkan.</p>';
       return;

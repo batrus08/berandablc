@@ -4,7 +4,7 @@ import { qs, setHTML } from '../utils/dom.js';
 import { renderPDFViewer } from '../components/PDFViewer.js';
 
 async function renderPartnership() {
-  const data = await loadJSON('../data/partners.json');
+  const data = await loadJSON(new URL('../data/partners.json', import.meta.url).href);
   const target = qs('#partnership-root');
   setHTML(
     target,

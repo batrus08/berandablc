@@ -7,7 +7,7 @@ export function renderArticleCard(item) {
       <h3 class="card__title"><a class="article-card__link" href="./articles.html?slug=${item.slug}">${item.title}</a></h3>
       <div class="card__meta">
         <span>${formatDate(item.date)}</span>
-        <span>• ${item.author.name} (${item.author.affiliation})</span>
+        <span>• ${item.author?.name || ''} (${item.author?.affiliation || ''})</span>
       </div>
       <p class="muted card__excerpt">${item.excerpt}</p>
       <div class="article-card__footer">

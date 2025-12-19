@@ -3,7 +3,7 @@ import { loadJSON } from '../utils/helpers.js';
 import { qs, setHTML } from '../utils/dom.js';
 
 async function renderGallery() {
-  const data = await loadJSON('../data/gallery.json');
+  const data = await loadJSON(new URL('../data/gallery.json', import.meta.url).href);
   renderPhotos(data.photos);
   renderVideos(data.videos);
   renderCoverage(data.coverage);

@@ -22,13 +22,21 @@ const TOPIC_OPTIONS = [
 ];
 
 async function renderPage() {
-  const articles = await loadJSON('../data/articles.json');
-  if (slug) {
-    renderDetail(articles, slug);
-  } else {
-    renderList(articles);
+  try {
+    const articles = await loadJSON(new URL('../data/articles.json', import.meta.url).href);
+    if (slug) {
+      renderDetail(articles, slug);
+    } else if (viewMode !== 'archive') {
+      renderList(articles);
+    }
+    renderArchive(articles);
+  } catch (error) {
+    console.error('Failed to load articles:', error);
+    const container = qs('#article-root');
+    if (container) {
+      setHTML(container, `<p class="error-message">${t('common.errorLoading') || 'Gagal memuat data. Silakan coba lagi.'}</p>`);
+    }
   }
-  renderArchive(articles);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderList(articles) {
   const container = qs('#article-root');
+  if (!container) return;
+
   const categories = [...new Set(articles.map((a) => a.categoryType))];
   const selectedCategory = filterCategory || pageCategory || 'Semua';
 
@@ -120,7 +130,7 @@ function renderList(articles) {
     const query = state.query.trim().toLowerCase();
     const base = filteredByCategory();
     const byTopic = state.topic === 'Semua' ? base : base.filter((a) => a.topics.some((tpc) => tpc.toLowerCase().includes(state.topic.toLowerCase())));
-    const scoped = query ? byTopic.filter((a) => `${a.title} ${a.excerpt}`.toLowerCase().includes(query)) : byTopic;
+    const scoped = query ? byTopic.filter((a) => `${a.title || ''} ${a.excerpt || ''}`.toLowerCase().includes(query)) : byTopic;
     renderListItems(scoped);
     const empty = qs('#article-empty');
     if (scoped.length === 0) {
@@ -200,9 +210,9 @@ function renderDetail(articles, slugValue) {
       <h1>${article.title}</h1>
       <div class="card__meta">
         <span>${formatDate(article.date)}</span>
-        <span>• ${article.author.name} (${article.author.affiliation})</span>
+        <span>• ${article.author?.name || ''} (${article.author?.affiliation || ''})</span>
       </div>
-      <div class="list-inline topic-list">${article.topics.map((t) => `<span class="tag">${t}</span>`).join('')}</div>
+      <div class="list-inline topic-list">${(article.topics || []).map((t) => `<span class="tag">${t}</span>`).join('')}</div>
       <div>${article.content}</div>
       ${article.doi ? `<p><strong>DOI:</strong> ${article.doi}</p>` : ''}
       ${article.issn ? `<p><strong>ISSN:</strong> ${article.issn}</p>` : ''}
