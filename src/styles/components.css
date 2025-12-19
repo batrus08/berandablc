@@ -211,6 +211,9 @@
   min-width: 240px;
   display: none;
   z-index: 40;
+  font-family: var(--nav-font-family);
+  font-size: var(--nav-font-size);
+  line-height: var(--nav-line-height);
 }
 
 .dropdown.open {
@@ -244,6 +247,10 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  font-family: var(--nav-font-family);
+  font-size: var(--nav-font-size);
+  line-height: var(--nav-line-height);
+  font-weight: 600;
 }
 
 .dropdown__item--parent {
