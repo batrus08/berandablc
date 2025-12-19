@@ -124,12 +124,25 @@ export function bindNavigation(scope = document) {
   }
 
   const triggers = qsa('[data-dropdown]', scope);
+  const submenuTriggers = qsa('[data-submenu-trigger]', scope);
   const navbar = scope.querySelector('.navbar');
   const toggle = navbar?.querySelector('.navbar__toggle');
   const menu = navbar?.querySelector('.navbar__menu');
   const backdrop = navbar?.querySelector('[data-nav-backdrop]');
   const navLinks = qsa('.nav-link', navbar);
   const dropdownLinks = qsa('.dropdown__item', navbar);
+
+  function closeAllSubmenus() {
+    submenuTriggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.closest('.dropdown__group')?.classList.remove('expanded');
+      const submenuEl = scope.querySelector(`#${trigger.getAttribute('aria-controls')}`);
+      if (submenuEl) {
+        submenuEl.classList.remove('open');
+        submenuEl.setAttribute('hidden', '');
+      }
+    });
+  }
 
   function closeAllDropdowns() {
     triggers.forEach((trigger) => {
@@ -138,6 +151,7 @@ export function bindNavigation(scope = document) {
       const menuEl = trigger.nextElementSibling;
       if (menuEl) menuEl.classList.remove('open');
     });
+    closeAllSubmenus();
   }
 
   function closeMenu() {
@@ -149,19 +163,48 @@ export function bindNavigation(scope = document) {
     }
   }
 
+  const closeSiblingSubmenus = (currentTrigger) => {
+    const currentGroup = currentTrigger.closest('.dropdown__group');
+    if (!currentGroup) return;
+    const container = currentGroup.parentElement;
+    if (!container) return;
+    qsa('[data-submenu-trigger]', container).forEach((trigger) => {
+      if (trigger === currentTrigger) return;
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.closest('.dropdown__group')?.classList.remove('expanded');
+      const submenu = scope.querySelector(`#${trigger.getAttribute('aria-controls')}`);
+      if (submenu) {
+        submenu.classList.remove('open');
+        submenu.setAttribute('hidden', '');
+      }
+    });
+  };
+
+  const closeDescendants = (group) => {
+    qsa('[data-submenu-trigger]', group).forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.closest('.dropdown__group')?.classList.remove('expanded');
+      const submenu = scope.querySelector(`#${trigger.getAttribute('aria-controls')}`);
+      if (submenu) {
+        submenu.classList.remove('open');
+        submenu.setAttribute('hidden', '');
+      }
+    });
+  };
+
   triggers.forEach((trigger) => {
     const menuEl = trigger.nextElementSibling;
     trigger.addEventListener('click', (event) => {
       event.preventDefault();
       const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      const isMobile = window.matchMedia('(max-width: 960px)').matches;
 
       closeAllDropdowns();
       const willOpen = !isOpen;
       trigger.setAttribute('aria-expanded', String(willOpen));
       trigger.closest('.nav-item')?.classList.toggle('expanded', willOpen);
-      if (!isMobile) {
-        menuEl?.classList.toggle('open', willOpen);
+      menuEl?.classList.toggle('open', willOpen);
+      if (!willOpen) {
+        closeDescendants(menuEl);
       }
     });
 
@@ -224,6 +267,39 @@ export function bindNavigation(scope = document) {
     }
   };
   window.addEventListener('resize', handleResize);
+
+  submenuTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      const submenu = scope.querySelector(`#${trigger.getAttribute('aria-controls')}`);
+      if (!submenu) return;
+
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      const willOpen = !isOpen;
+
+      closeSiblingSubmenus(trigger);
+
+      trigger.setAttribute('aria-expanded', String(willOpen));
+      trigger.closest('.dropdown__group')?.classList.toggle('expanded', willOpen);
+      submenu.classList.toggle('open', willOpen);
+      submenu.toggleAttribute('hidden', !willOpen);
+
+      if (!willOpen) {
+        closeDescendants(submenu);
+      }
+    });
+
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        trigger.setAttribute('aria-expanded', 'false');
+        const submenu = scope.querySelector(`#${trigger.getAttribute('aria-controls')}`);
+        trigger.closest('.dropdown__group')?.classList.remove('expanded');
+        submenu?.classList.remove('open');
+        submenu?.setAttribute('hidden', '');
+        trigger.focus();
+      }
+    });
+  });
 
   markActiveNav(navbar);
 
