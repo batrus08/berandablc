@@ -56,8 +56,11 @@ function blc_get_latest_news_posts($blog_id = BLC_NEWS_BLOG_ID, $limit = 6) {
     }
 
     $posts_data = [];
+    $should_switch = function_exists('switch_to_blog') && is_multisite() && (int) $blog_id !== get_current_blog_id();
 
-    switch_to_blog($blog_id);
+    if ($should_switch) {
+        switch_to_blog($blog_id);
+    }
 
     $news_query = new WP_Query([
         'post_type'           => 'post',
@@ -87,7 +90,10 @@ function blc_get_latest_news_posts($blog_id = BLC_NEWS_BLOG_ID, $limit = 6) {
     }
 
     wp_reset_postdata();
-    restore_current_blog();
+
+    if ($should_switch) {
+        restore_current_blog();
+    }
 
     set_transient($transient_key, $posts_data, MINUTE_IN_SECONDS * 10);
 

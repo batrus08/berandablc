@@ -15,6 +15,36 @@ Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driv
 2. Dari root repo jalankan `serve src` atau `npx serve src`.
 3. Buka `http://localhost:3000/pages/index.html` (atau `http://localhost:3000/pages/articles.html`, dll.).
 
+## Instalasi WordPress (tema bawaan)
+Tema ringan sudah disertakan di `wp-content/themes/blc-theme` agar beranda BLC bisa langsung dijalankan di WordPress tanpa proses build. Langkah pemasangan lengkap:
+
+1. **Siapkan berkas tema**
+   - Kompres folder `wp-content/themes/blc-theme` menjadi ZIP, atau salin langsung ke server WordPress di path `wp-content/themes/`.
+   - Tema memerlukan WordPress 6+ dan PHP 8+ agar fungsi-fungsi baru (caching transient, multisite) berjalan baik.
+2. **Unggah & aktifkan**
+   - Masuk ke **Appearance → Themes → Add New → Upload Theme** lalu unggah ZIP, atau pilih **Theme Details → Activate** jika sudah disalin manual.
+3. **Atur halaman statis** agar `front-page.php` digunakan:
+   - Buat halaman kosong berjudul “Beranda”.
+   - Buka **Settings → Reading**, pilih **Static Page** dan set **Homepage** ke halaman “Beranda”.
+4. **Konfigurasi sumber berita (multisite optional)**
+   - Secara default tema menarik 6 pos terbaru dari blog ID `2` (konstanta `BLC_NEWS_BLOG_ID` di `wp-content/themes/blc-theme/functions.php`).
+   - Jika subsite berita memiliki ID lain, ubah konstanta tersebut lalu simpan.
+5. **Periksa aset**
+   - CSS dan JS beranda sudah dienqueue otomatis (`assets/css/home.css` dan `assets/js/home.js`). Pastikan izin file server mengizinkan pembacaan berkas-berkas ini.
+6. **Uji coba**
+   - Kunjungi halaman depan situs. Bila kartu publikasi atau CTA tidak muncul, cek apakah subsite berita aktif dan memiliki pos berstatus publik.
+
+## Integrasi dengan WordPress
+Karena tanpa build, seluruh folder `src/` bisa langsung di-embed:
+- **Iframe pada halaman/post**
+  1. Unggah `src/` ke `/wp-content/uploads/berandablc/` atau plugin kustom.
+  2. Tambah blok *Custom HTML* dengan `<iframe src="/wp-content/uploads/berandablc/pages/index.html" width="100%" height="100vh"></iframe>`.
+- **Tema/child theme**
+  1. Salin `src/` ke `/wp-content/themes/<tema-anda>/berandablc/`.
+  2. Buat template PHP yang memanggil berkas HTML yang diinginkan dan enqueue CSS di `src/styles/`.
+- **Konten dinamis dari WP**
+  - Ekspos data lewat REST API lalu ubah helper `loadJSON` di `src/utils/helpers.js` (atau di script halaman) agar mengambil dari endpoint tersebut dengan bentuk data yang sama.
+
 ## Panduan pemutakhiran konten (lengkap)
 Semua konten publik tersimpan di `src/data/` sebagai JSON. Alur umum setiap jenis konten:
 - Unggah aset terkait (gambar, PDF, video thumbnail) ke `src/assets/`.
@@ -68,17 +98,6 @@ Semua konten publik tersimpan di `src/data/` sebagai JSON. Alur umum setiap jeni
 3. Jalankan `npx serve src` dan buka halaman tujuan untuk memverifikasi render, tautan, dan preview gambar.
 4. Lakukan pemeriksaan cepat di tampilan mobile (<=960px) untuk memastikan grid/menu tetap rapi.
 5. Commit perubahan (`git commit`) lalu deploy ke host statis atau unggah folder `src/` ke WordPress (lihat bawah).
-
-## Integrasi dengan WordPress
-Karena tanpa build, seluruh folder `src/` bisa langsung di-embed:
-- **Iframe pada halaman/post**
-  1. Unggah `src/` ke `/wp-content/uploads/berandablc/` atau plugin kustom.
-  2. Tambah blok *Custom HTML* dengan `<iframe src="/wp-content/uploads/berandablc/pages/index.html" width="100%" height="100vh"></iframe>`.
-- **Tema/child theme**
-  1. Salin `src/` ke `/wp-content/themes/<tema-anda>/berandablc/`.
-  2. Buat template PHP yang memanggil berkas HTML yang diinginkan dan enqueue CSS di `src/styles/`.
-- **Konten dinamis dari WP**
-  - Ekspos data lewat REST API lalu ubah helper `loadJSON` di `src/utils/helpers.js` (atau di script halaman) agar mengambil dari endpoint tersebut dengan bentuk data yang sama.
 
 ## Internasionalisasi
 - Terjemahan berada di `src/i18n/en.json` dan `src/i18n/id.json`. Gunakan helper `t()` dari `src/utils/i18n.js` saat menambah label baru.
