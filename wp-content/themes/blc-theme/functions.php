@@ -9,6 +9,399 @@ if (!defined('BLC_NEWS_BLOG_ID')) {
 }
 
 /**
+ * Default konten beranda agar dapat dikelola melalui WP Admin.
+ *
+ * @return array<string, mixed>
+ */
+function blc_get_default_home_settings() {
+    return [
+        'news_blog_id'       => BLC_NEWS_BLOG_ID,
+        'hero_eyebrow'       => 'Kampus Fakultas Hukum',
+        'hero_title'         => 'Business Law Community Fakultas Hukum',
+        'hero_lead'          => 'Kolaborasi akademisi dan praktisi dalam kajian hukum bisnis, publikasi berkualitas, serta advokasi kebijakan.',
+        'hero_primary_label' => 'Baca Publikasi Terbaru',
+        'hero_primary_url'   => 'https://news.meoww.my.id/',
+        'hero_secondary_label' => 'Kerja Sama',
+        'hero_secondary_url'   => '/kerja-sama/',
+        'highlights'           => [
+            ['label' => 'Fokus', 'text' => 'Regulasi bisnis, digital economy, dan governance korporasi.'],
+            ['label' => 'Kolaborasi', 'text' => 'Menghubungkan riset kampus dengan kebutuhan industri.'],
+            ['label' => 'Insight', 'text' => 'Publikasi rutin dari dosen, mahasiswa, dan mitra profesional.'],
+        ],
+        'quick_access' => [
+            ['title' => 'Publikasi Bulanan', 'description' => 'Ringkasan isu hukum bisnis terkini setiap bulan.', 'url' => '/publikasi-bulanan/'],
+            ['title' => 'Opini &amp; Esai', 'description' => 'Pandangan kritis dosen dan mahasiswa tentang dinamika regulasi.', 'url' => '/opini-esai/'],
+            ['title' => 'Kajian Hukum', 'description' => 'Analisis mendalam regulasi, studi kasus, dan implikasi bisnis.', 'url' => '/kajian-hukum/'],
+            ['title' => 'Dokumen PDF', 'description' => 'Whitepaper, policy brief, dan materi seminar siap unduh.', 'url' => '/dokumen/'],
+        ],
+        'events' => [
+            [
+                'day'   => '12',
+                'month' => 'Mei',
+                'title' => 'Webinar: Kepatuhan Regulasi Startup',
+                'text'  => 'Diskusi praktis bersama praktisi hukum teknologi.',
+            ],
+            [
+                'day'   => '25',
+                'month' => 'Mei',
+                'title' => 'Lokakarya: Drafting Kontrak Bisnis',
+                'text'  => 'Pelatihan intensif untuk mahasiswa dan profesional muda.',
+            ],
+            [
+                'day'   => '8',
+                'month' => 'Jun',
+                'title' => 'Roundtable: ESG &amp; Tata Kelola',
+                'text'  => 'Berbagi perspektif lintas sektor untuk praktik keberlanjutan.',
+            ],
+        ],
+        'cta_eyebrow'          => 'Kolaborasi Strategis',
+        'cta_title'            => 'Mari wujudkan inisiatif hukum bisnis yang berdampak',
+        'cta_body'             => 'Terbuka untuk riset bersama, penyusunan policy brief, maupun pelatihan korporasi.',
+        'cta_primary_label'    => 'Ajukan Kerja Sama',
+        'cta_primary_url'      => '/kerja-sama/',
+        'cta_secondary_label'  => 'Hubungi Kami',
+        'cta_secondary_url'    => '/kontak/',
+    ];
+}
+
+/**
+ * Ambil konfigurasi beranda yang sudah digabung dengan default.
+ *
+ * @return array<string, mixed>
+ */
+function blc_home_settings() {
+    $defaults = blc_get_default_home_settings();
+    $options  = get_option('blc_home_settings', []);
+
+    if (!is_array($options)) {
+        $options = [];
+    }
+
+    return wp_parse_args($options, $defaults);
+}
+
+/**
+ * Sanitize JSON list fields.
+ *
+ * @param string                $value    JSON string from textarea.
+ * @param array<int, string>    $allowed  Allowed keys per item.
+ * @param array<int, array>     $default  Default fallback.
+ * @return array<int, array<string, string>>
+ */
+function blc_sanitize_json_list($value, $allowed, $default) {
+    if (empty($value)) {
+        return $default;
+    }
+
+    $decoded = json_decode(wp_unslash($value), true);
+
+    if (!is_array($decoded)) {
+        return $default;
+    }
+
+    $sanitized = [];
+
+    foreach ($decoded as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $clean_item = [];
+
+        foreach ($allowed as $key) {
+            if (!isset($item[$key])) {
+                continue;
+            }
+
+            $value = is_string($item[$key]) ? $item[$key] : wp_json_encode($item[$key]);
+            $clean_item[$key] = ('url' === $key) ? esc_url_raw($value) : sanitize_text_field($value);
+        }
+
+        if (!empty($clean_item)) {
+            $sanitized[] = $clean_item;
+        }
+    }
+
+    return !empty($sanitized) ? $sanitized : $default;
+}
+
+/**
+ * Sanitize option input.
+ *
+ * @param array<string, mixed> $input Raw input from settings form.
+ * @return array<string, mixed>
+ */
+function blc_sanitize_home_settings($input) {
+    $defaults  = blc_get_default_home_settings();
+    $sanitized = [];
+
+    $sanitized['news_blog_id'] = isset($input['news_blog_id']) ? absint($input['news_blog_id']) : $defaults['news_blog_id'];
+
+    $sanitized['hero_eyebrow']       = isset($input['hero_eyebrow']) ? sanitize_text_field($input['hero_eyebrow']) : $defaults['hero_eyebrow'];
+    $sanitized['hero_title']         = isset($input['hero_title']) ? sanitize_text_field($input['hero_title']) : $defaults['hero_title'];
+    $sanitized['hero_lead']          = isset($input['hero_lead']) ? wp_kses_post($input['hero_lead']) : $defaults['hero_lead'];
+    $sanitized['hero_primary_label'] = isset($input['hero_primary_label']) ? sanitize_text_field($input['hero_primary_label']) : $defaults['hero_primary_label'];
+    $sanitized['hero_primary_url']   = isset($input['hero_primary_url']) ? esc_url_raw($input['hero_primary_url']) : $defaults['hero_primary_url'];
+    $sanitized['hero_secondary_label'] = isset($input['hero_secondary_label']) ? sanitize_text_field($input['hero_secondary_label']) : $defaults['hero_secondary_label'];
+    $sanitized['hero_secondary_url']   = isset($input['hero_secondary_url']) ? esc_url_raw($input['hero_secondary_url']) : $defaults['hero_secondary_url'];
+
+    $sanitized['highlights'] = blc_sanitize_json_list(
+        isset($input['highlights']) ? $input['highlights'] : '',
+        ['label', 'text'],
+        $defaults['highlights']
+    );
+
+    $sanitized['quick_access'] = blc_sanitize_json_list(
+        isset($input['quick_access']) ? $input['quick_access'] : '',
+        ['title', 'description', 'url'],
+        $defaults['quick_access']
+    );
+
+    $sanitized['events'] = blc_sanitize_json_list(
+        isset($input['events']) ? $input['events'] : '',
+        ['day', 'month', 'title', 'text'],
+        $defaults['events']
+    );
+
+    $sanitized['cta_eyebrow']         = isset($input['cta_eyebrow']) ? sanitize_text_field($input['cta_eyebrow']) : $defaults['cta_eyebrow'];
+    $sanitized['cta_title']           = isset($input['cta_title']) ? sanitize_text_field($input['cta_title']) : $defaults['cta_title'];
+    $sanitized['cta_body']            = isset($input['cta_body']) ? wp_kses_post($input['cta_body']) : $defaults['cta_body'];
+    $sanitized['cta_primary_label']   = isset($input['cta_primary_label']) ? sanitize_text_field($input['cta_primary_label']) : $defaults['cta_primary_label'];
+    $sanitized['cta_primary_url']     = isset($input['cta_primary_url']) ? esc_url_raw($input['cta_primary_url']) : $defaults['cta_primary_url'];
+    $sanitized['cta_secondary_label'] = isset($input['cta_secondary_label']) ? sanitize_text_field($input['cta_secondary_label']) : $defaults['cta_secondary_label'];
+    $sanitized['cta_secondary_url']   = isset($input['cta_secondary_url']) ? esc_url_raw($input['cta_secondary_url']) : $defaults['cta_secondary_url'];
+
+    return $sanitized;
+}
+
+/**
+ * Tambahkan menu admin untuk mengelola konten beranda.
+ */
+function blc_add_home_settings_page() {
+    add_menu_page(
+        __('Beranda BLC', 'blc'),
+        __('Beranda BLC', 'blc'),
+        'manage_options',
+        'blc-home-settings',
+        'blc_render_home_settings_page',
+        'dashicons-admin-home',
+        58
+    );
+}
+add_action('admin_menu', 'blc_add_home_settings_page');
+
+/**
+ * Registrasi setting dan field.
+ */
+function blc_register_home_settings() {
+    register_setting('blc_home', 'blc_home_settings', 'blc_sanitize_home_settings');
+
+    add_settings_section(
+        'blc_home_content',
+        __('Konten Beranda', 'blc'),
+        '__return_false',
+        'blc-home-settings'
+    );
+
+    add_settings_field(
+        'blc_news_blog_id',
+        __('ID Subsite Berita', 'blc'),
+        'blc_render_text_field',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'news_blog_id',
+            'type'        => 'number',
+            'description' => __('Isi 0 bila ingin memakai blog utama; default 2 untuk subsite news.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_hero_texts',
+        __('Hero', 'blc'),
+        'blc_render_hero_fields',
+        'blc-home-settings',
+        'blc_home_content'
+    );
+
+    add_settings_field(
+        'blc_highlights',
+        __('Highlight (JSON)', 'blc'),
+        'blc_render_json_textarea',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'highlights',
+            'placeholder' => wp_json_encode(blc_get_default_home_settings()['highlights'], JSON_PRETTY_PRINT),
+            'description' => __('Format array objek dengan kunci label dan text.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_quick_access',
+        __('Akses Cepat (JSON)', 'blc'),
+        'blc_render_json_textarea',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'quick_access',
+            'placeholder' => wp_json_encode(blc_get_default_home_settings()['quick_access'], JSON_PRETTY_PRINT),
+            'description' => __('Array objek dengan title, description, dan url.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_events',
+        __('Agenda (JSON)', 'blc'),
+        'blc_render_json_textarea',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'events',
+            'placeholder' => wp_json_encode(blc_get_default_home_settings()['events'], JSON_PRETTY_PRINT),
+            'description' => __('Gunakan kunci day, month, title, dan text.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_cta',
+        __('CTA Band', 'blc'),
+        'blc_render_cta_fields',
+        'blc-home-settings',
+        'blc_home_content'
+    );
+}
+add_action('admin_init', 'blc_register_home_settings');
+
+/**
+ * Render text field helper.
+ *
+ * @param array<string, mixed> $args Field attributes.
+ */
+function blc_render_text_field($args) {
+    $settings = blc_home_settings();
+    $id       = $args['id'];
+    $type     = isset($args['type']) ? $args['type'] : 'text';
+    $value    = isset($settings[$id]) ? $settings[$id] : '';
+    ?>
+    <input type="<?php echo esc_attr($type); ?>" name="blc_home_settings[<?php echo esc_attr($id); ?>]" id="blc_home_settings_<?php echo esc_attr($id); ?>" value="<?php echo esc_attr($value); ?>" class="regular-text" />
+    <?php if (!empty($args['description'])) : ?>
+        <p class="description"><?php echo esc_html($args['description']); ?></p>
+    <?php endif; ?>
+    <?php
+}
+
+/**
+ * Render textarea JSON helper.
+ *
+ * @param array<string, mixed> $args Field attributes.
+ */
+function blc_render_json_textarea($args) {
+    $settings = blc_home_settings();
+    $id       = $args['id'];
+    $value    = isset($settings[$id]) ? wp_json_encode($settings[$id], JSON_PRETTY_PRINT) : '';
+    ?>
+    <textarea name="blc_home_settings[<?php echo esc_attr($id); ?>]" id="blc_home_settings_<?php echo esc_attr($id); ?>" rows="6" class="large-text code" placeholder="<?php echo esc_attr($args['placeholder']); ?>"><?php echo esc_textarea($value); ?></textarea>
+    <?php if (!empty($args['description'])) : ?>
+        <p class="description"><?php echo esc_html($args['description']); ?></p>
+    <?php endif; ?>
+    <?php
+}
+
+/**
+ * Render field untuk hero section.
+ */
+function blc_render_hero_fields() {
+    $settings = blc_home_settings();
+    ?>
+    <p>
+        <label for="blc_home_settings_hero_eyebrow"><?php esc_html_e('Eyebrow', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[hero_eyebrow]" id="blc_home_settings_hero_eyebrow" value="<?php echo esc_attr($settings['hero_eyebrow']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_title"><?php esc_html_e('Judul', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[hero_title]" id="blc_home_settings_hero_title" value="<?php echo esc_attr($settings['hero_title']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_lead"><?php esc_html_e('Deskripsi', 'blc'); ?></label><br />
+        <textarea name="blc_home_settings[hero_lead]" id="blc_home_settings_hero_lead" rows="3" class="large-text"><?php echo esc_textarea($settings['hero_lead']); ?></textarea>
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_primary_label"><?php esc_html_e('Teks tombol utama', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[hero_primary_label]" id="blc_home_settings_hero_primary_label" value="<?php echo esc_attr($settings['hero_primary_label']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_primary_url"><?php esc_html_e('Link tombol utama', 'blc'); ?></label><br />
+        <input type="url" class="regular-text" name="blc_home_settings[hero_primary_url]" id="blc_home_settings_hero_primary_url" value="<?php echo esc_attr($settings['hero_primary_url']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_secondary_label"><?php esc_html_e('Teks tombol sekunder', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[hero_secondary_label]" id="blc_home_settings_hero_secondary_label" value="<?php echo esc_attr($settings['hero_secondary_label']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_hero_secondary_url"><?php esc_html_e('Link tombol sekunder', 'blc'); ?></label><br />
+        <input type="url" class="regular-text" name="blc_home_settings[hero_secondary_url]" id="blc_home_settings_hero_secondary_url" value="<?php echo esc_attr($settings['hero_secondary_url']); ?>" />
+    </p>
+    <?php
+}
+
+/**
+ * Render field untuk CTA band.
+ */
+function blc_render_cta_fields() {
+    $settings = blc_home_settings();
+    ?>
+    <p>
+        <label for="blc_home_settings_cta_eyebrow"><?php esc_html_e('Eyebrow', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[cta_eyebrow]" id="blc_home_settings_cta_eyebrow" value="<?php echo esc_attr($settings['cta_eyebrow']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_title"><?php esc_html_e('Judul CTA', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[cta_title]" id="blc_home_settings_cta_title" value="<?php echo esc_attr($settings['cta_title']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_body"><?php esc_html_e('Deskripsi', 'blc'); ?></label><br />
+        <textarea name="blc_home_settings[cta_body]" id="blc_home_settings_cta_body" rows="3" class="large-text"><?php echo esc_textarea($settings['cta_body']); ?></textarea>
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_primary_label"><?php esc_html_e('Teks tombol utama', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[cta_primary_label]" id="blc_home_settings_cta_primary_label" value="<?php echo esc_attr($settings['cta_primary_label']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_primary_url"><?php esc_html_e('Link tombol utama', 'blc'); ?></label><br />
+        <input type="url" class="regular-text" name="blc_home_settings[cta_primary_url]" id="blc_home_settings_cta_primary_url" value="<?php echo esc_attr($settings['cta_primary_url']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_secondary_label"><?php esc_html_e('Teks tombol sekunder', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[cta_secondary_label]" id="blc_home_settings_cta_secondary_label" value="<?php echo esc_attr($settings['cta_secondary_label']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_cta_secondary_url"><?php esc_html_e('Link tombol sekunder', 'blc'); ?></label><br />
+        <input type="url" class="regular-text" name="blc_home_settings[cta_secondary_url]" id="blc_home_settings_cta_secondary_url" value="<?php echo esc_attr($settings['cta_secondary_url']); ?>" />
+    </p>
+    <?php
+}
+
+/**
+ * Render halaman setting.
+ */
+function blc_render_home_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e('Pengaturan Beranda BLC', 'blc'); ?></h1>
+        <p><?php esc_html_e('Kelola teks hero, tautan, dan data grid dalam satu halaman tanpa perlu menyunting kode.', 'blc'); ?></p>
+        <form action="options.php" method="post">
+            <?php
+            settings_fields('blc_home');
+            do_settings_sections('blc-home-settings');
+            submit_button();
+            ?>
+        </form>
+    </div>
+    <?php
+}
+
+/**
  * Enqueue assets for the front page.
  */
 function blc_enqueue_home_assets() {
@@ -47,7 +440,10 @@ add_action('wp_enqueue_scripts', 'blc_enqueue_home_assets');
  * @param int $limit   Number of posts to return.
  * @return array<int, array<string, mixed>>
  */
-function blc_get_latest_news_posts($blog_id = BLC_NEWS_BLOG_ID, $limit = 6) {
+function blc_get_latest_news_posts($blog_id = null, $limit = 6) {
+    $settings = blc_home_settings();
+    $blog_id  = isset($blog_id) ? (int) $blog_id : (int) $settings['news_blog_id'];
+
     $transient_key = sprintf('blc_home_latest_news_%d_%d', $blog_id, $limit);
     $cached_posts  = get_transient($transient_key);
 

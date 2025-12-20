@@ -5,7 +5,11 @@
 
 get_header();
 
-$latest_news = function_exists('blc_get_latest_news_posts') ? blc_get_latest_news_posts() : [];
+$home_settings = function_exists('blc_home_settings') ? blc_home_settings() : [];
+$latest_news   = function_exists('blc_get_latest_news_posts') ? blc_get_latest_news_posts($home_settings['news_blog_id'] ?? null) : [];
+$highlights    = isset($home_settings['highlights']) && is_array($home_settings['highlights']) ? $home_settings['highlights'] : [];
+$quick_access  = isset($home_settings['quick_access']) && is_array($home_settings['quick_access']) ? $home_settings['quick_access'] : [];
+$events        = isset($home_settings['events']) && is_array($home_settings['events']) ? $home_settings['events'] : [];
 ?>
 
 <main class="blc-home" id="main-content">
@@ -13,27 +17,43 @@ $latest_news = function_exists('blc_get_latest_news_posts') ? blc_get_latest_new
         <div class="hero__background" aria-hidden="true"></div>
         <div class="container hero__content">
             <div class="hero__text">
-                <p class="eyebrow">Kampus Fakultas Hukum</p>
-                <h1 id="hero-title">Business Law Community Fakultas Hukum</h1>
-                <p class="lead">Kolaborasi akademisi dan praktisi dalam kajian hukum bisnis, publikasi berkualitas, serta advokasi kebijakan.</p>
+                <?php if (!empty($home_settings['hero_eyebrow'])) : ?>
+                    <p class="eyebrow"><?php echo esc_html($home_settings['hero_eyebrow']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['hero_title'])) : ?>
+                    <h1 id="hero-title"><?php echo esc_html($home_settings['hero_title']); ?></h1>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['hero_lead'])) : ?>
+                    <p class="lead"><?php echo wp_kses_post($home_settings['hero_lead']); ?></p>
+                <?php endif; ?>
                 <div class="hero__actions">
-                    <a class="btn btn--accent" href="https://news.meoww.my.id/" aria-label="Baca publikasi terbaru di news.meoww.my.id">Baca Publikasi Terbaru</a>
-                    <a class="btn btn--outline" href="/kerja-sama/" aria-label="Hubungi kami untuk kerja sama">Kerja Sama</a>
+                    <?php if (!empty($home_settings['hero_primary_label']) && !empty($home_settings['hero_primary_url'])) : ?>
+                        <a class="btn btn--accent" href="<?php echo esc_url($home_settings['hero_primary_url']); ?>" aria-label="<?php echo esc_attr($home_settings['hero_primary_label']); ?>">
+                            <?php echo esc_html($home_settings['hero_primary_label']); ?>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($home_settings['hero_secondary_label']) && !empty($home_settings['hero_secondary_url'])) : ?>
+                        <a class="btn btn--outline" href="<?php echo esc_url($home_settings['hero_secondary_url']); ?>" aria-label="<?php echo esc_attr($home_settings['hero_secondary_label']); ?>">
+                            <?php echo esc_html($home_settings['hero_secondary_label']); ?>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="hero__highlights">
-                <div class="highlight-card">
-                    <span class="highlight-label">Fokus</span>
-                    <p>Regulasi bisnis, digital economy, dan governance korporasi.</p>
-                </div>
-                <div class="highlight-card">
-                    <span class="highlight-label">Kolaborasi</span>
-                    <p>Menghubungkan riset kampus dengan kebutuhan industri.</p>
-                </div>
-                <div class="highlight-card">
-                    <span class="highlight-label">Insight</span>
-                    <p>Publikasi rutin dari dosen, mahasiswa, dan mitra profesional.</p>
-                </div>
+                <?php if (!empty($highlights)) : ?>
+                    <?php foreach ($highlights as $highlight) : ?>
+                        <div class="highlight-card">
+                            <?php if (!empty($highlight['label'])) : ?>
+                                <span class="highlight-label"><?php echo esc_html($highlight['label']); ?></span>
+                            <?php endif; ?>
+                            <?php if (!empty($highlight['text'])) : ?>
+                                <p><?php echo esc_html($highlight['text']); ?></p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p class="news-empty">Belum ada highlight diatur.</p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -47,22 +67,18 @@ $latest_news = function_exists('blc_get_latest_news_posts') ? blc_get_latest_new
                 </div>
             </div>
             <div class="quick-access__grid">
-                <a class="access-card" href="/publikasi-bulanan/">
-                    <h3>Publikasi Bulanan</h3>
-                    <p>Ringkasan isu hukum bisnis terkini setiap bulan.</p>
-                </a>
-                <a class="access-card" href="/opini-esai/">
-                    <h3>Opini &amp; Esai</h3>
-                    <p>Pandangan kritis dosen dan mahasiswa tentang dinamika regulasi.</p>
-                </a>
-                <a class="access-card" href="/kajian-hukum/">
-                    <h3>Kajian Hukum</h3>
-                    <p>Analisis mendalam regulasi, studi kasus, dan implikasi bisnis.</p>
-                </a>
-                <a class="access-card" href="/dokumen/">
-                    <h3>Dokumen PDF</h3>
-                    <p>Whitepaper, policy brief, dan materi seminar siap unduh.</p>
-                </a>
+                <?php if (!empty($quick_access)) : ?>
+                    <?php foreach ($quick_access as $item) : ?>
+                        <a class="access-card" href="<?php echo esc_url($item['url']); ?>">
+                            <h3><?php echo esc_html($item['title']); ?></h3>
+                            <?php if (!empty($item['description'])) : ?>
+                                <p><?php echo esc_html($item['description']); ?></p>
+                            <?php endif; ?>
+                        </a>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p class="news-empty">Belum ada tautan akses cepat.</p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -149,36 +165,30 @@ $latest_news = function_exists('blc_get_latest_news_posts') ? blc_get_latest_new
                 <a class="btn btn--ghost" href="/kegiatan/">Lihat Semua Kegiatan</a>
             </div>
             <ul class="events__list">
-                <li class="event-item">
-                    <div class="event-date">
-                        <span class="event-day">12</span>
-                        <span class="event-month">Mei</span>
-                    </div>
-                    <div class="event-info">
-                        <h3>Webinar: Kepatuhan Regulasi Startup</h3>
-                        <p>Diskusi praktis bersama praktisi hukum teknologi.</p>
-                    </div>
-                </li>
-                <li class="event-item">
-                    <div class="event-date">
-                        <span class="event-day">25</span>
-                        <span class="event-month">Mei</span>
-                    </div>
-                    <div class="event-info">
-                        <h3>Lokakarya: Drafting Kontrak Bisnis</h3>
-                        <p>Pelatihan intensif untuk mahasiswa dan profesional muda.</p>
-                    </div>
-                </li>
-                <li class="event-item">
-                    <div class="event-date">
-                        <span class="event-day">8</span>
-                        <span class="event-month">Jun</span>
-                    </div>
-                    <div class="event-info">
-                        <h3>Roundtable: ESG &amp; Tata Kelola</h3>
-                        <p>Berbagi perspektif lintas sektor untuk praktik keberlanjutan.</p>
-                    </div>
-                </li>
+                <?php if (!empty($events)) : ?>
+                    <?php foreach ($events as $event) : ?>
+                        <li class="event-item">
+                            <div class="event-date">
+                                <?php if (!empty($event['day'])) : ?>
+                                    <span class="event-day"><?php echo esc_html($event['day']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($event['month'])) : ?>
+                                    <span class="event-month"><?php echo esc_html($event['month']); ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="event-info">
+                                <?php if (!empty($event['title'])) : ?>
+                                    <h3><?php echo esc_html($event['title']); ?></h3>
+                                <?php endif; ?>
+                                <?php if (!empty($event['text'])) : ?>
+                                    <p><?php echo esc_html($event['text']); ?></p>
+                                <?php endif; ?>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <li class="event-item"><p class="news-empty">Belum ada agenda ditampilkan.</p></li>
+                <?php endif; ?>
             </ul>
         </div>
     </section>
@@ -186,13 +196,27 @@ $latest_news = function_exists('blc_get_latest_news_posts') ? blc_get_latest_new
     <section class="cta-band" aria-labelledby="cta-band-title">
         <div class="container cta-band__content">
             <div>
-                <p class="eyebrow">Kolaborasi Strategis</p>
-                <h2 id="cta-band-title">Mari wujudkan inisiatif hukum bisnis yang berdampak</h2>
-                <p>Terbuka untuk riset bersama, penyusunan policy brief, maupun pelatihan korporasi.</p>
+                <?php if (!empty($home_settings['cta_eyebrow'])) : ?>
+                    <p class="eyebrow"><?php echo esc_html($home_settings['cta_eyebrow']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['cta_title'])) : ?>
+                    <h2 id="cta-band-title"><?php echo esc_html($home_settings['cta_title']); ?></h2>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['cta_body'])) : ?>
+                    <p><?php echo wp_kses_post($home_settings['cta_body']); ?></p>
+                <?php endif; ?>
             </div>
             <div class="cta-band__actions">
-                <a class="btn btn--accent" href="/kerja-sama/" aria-label="Ajukan kerja sama dengan BLC">Ajukan Kerja Sama</a>
-                <a class="btn btn--outline btn--light" href="/kontak/">Hubungi Kami</a>
+                <?php if (!empty($home_settings['cta_primary_label']) && !empty($home_settings['cta_primary_url'])) : ?>
+                    <a class="btn btn--accent" href="<?php echo esc_url($home_settings['cta_primary_url']); ?>" aria-label="<?php echo esc_attr($home_settings['cta_primary_label']); ?>">
+                        <?php echo esc_html($home_settings['cta_primary_label']); ?>
+                    </a>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['cta_secondary_label']) && !empty($home_settings['cta_secondary_url'])) : ?>
+                    <a class="btn btn--outline btn--light" href="<?php echo esc_url($home_settings['cta_secondary_url']); ?>">
+                        <?php echo esc_html($home_settings['cta_secondary_label']); ?>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </section>
