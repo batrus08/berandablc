@@ -12,14 +12,6 @@ const pageCategory = document.body.dataset.category || null;
 const pageTitle = document.body.dataset.title || 'Artikel & Publikasi';
 const pageSubtitle = document.body.dataset.subtitle || 'Filter berdasarkan kategori dan topik';
 const viewMode = document.body.dataset.view || 'list';
-const TOPIC_OPTIONS = [
-  'Pasar Modal',
-  'Energi & Sumberdaya',
-  'Perusahaan & Anti Monopoli',
-  'Hak kekayaan intelektual',
-  'Pembiayaan & Perbankan',
-  'Perdagangan internasional',
-];
 
 async function renderPage() {
   try {
@@ -48,6 +40,8 @@ function renderList(articles) {
   if (!container) return;
 
   const categories = [...new Set(articles.map((a) => a.categoryType))];
+  const allTopics = articles.flatMap((a) => a.topics || []).filter(Boolean);
+  const uniqueTopics = [...new Set(allTopics)].sort();
   const selectedCategory = filterCategory || pageCategory || 'Semua';
 
   const headerMarkup = qs('.page-hero') ? '' : `
@@ -100,7 +94,7 @@ function renderList(articles) {
           <div class="select-wrapper">
             <select id="topic-filter">
               <option value="Semua">${t('common.all')}</option>
-              ${TOPIC_OPTIONS.map((topic) => `<option>${topic}</option>`).join('')}
+              ${uniqueTopics.map((topic) => `<option>${topic}</option>`).join('')}
             </select>
           </div>
         </label>
