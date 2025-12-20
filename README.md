@@ -2,6 +2,13 @@
 
 Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driven, dan siap di-host di layanan statis (GitHub Pages/Netlify) atau di-embed ke WordPress tanpa build step. Seluruh konten dikendalikan lewat JSON dan aset statis sehingga tim non-teknis dapat memperbarui materi hanya dengan menyunting berkas.
 
+## Fitur utama
+- **Tanpa build**: langsung jalankan dari folder `src/` sehingga mudah ditempel di WordPress atau layanan hosting statis.
+- **Data-driven**: semua konten hidup di `src/data/*.json`; komponen HTML/JS merender berdasarkan data tersebut.
+- **Kaya aset**: gambar, PDF, video thumbnail, dan ikon tersimpan di `src/assets/` sehingga mudah dilacak dalam version control.
+- **Tema WordPress ringan**: tersedia di `wp-content/themes/blc-theme` untuk instalasi cepat sebagai front page WordPress.
+- **I18n**: label utama tersedia dalam `src/i18n/` dan di-load lewat helper `t()`.
+
 ## Ringkasan struktur
 - `src/assets/` – semua aset visual: logo, foto kegiatan, poster, video thumbnail, PDF lampiran.
 - `src/components/` – komponen UI (navbar, footer, kartu, slider, judul seksi) berbasis HTML + JS modular.
@@ -9,11 +16,19 @@ Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driv
 - `src/pages/` – halaman siap pakai (`index.html`, `articles.html`, `events.html`, dll.) yang merangkai komponen dan data.
 - `src/styles/` – token desain dan stylesheet global/komponen/halaman.
 - `src/utils/` – helper DOM, i18n, dan bootstrap halaman.
+- `wp-content/` – tema WordPress (`themes/blc-theme`) plus placeholder untuk unggahan bila repo ditempel di instalasi WP.
+- `verification/` – berkas verifikasi statis (mis. Google/Bing) bila dibutuhkan hosting publik.
 
 ## Menjalankan secara lokal
 1. Pastikan Node.js hanya untuk menjalankan server statis (tidak ada build). Install `serve` bila belum ada: `npm install -g serve`.
 2. Dari root repo jalankan `serve src` atau `npx serve src`.
 3. Buka `http://localhost:3000/pages/index.html` (atau `http://localhost:3000/pages/articles.html`, dll.).
+4. Untuk melihat tema WordPress tanpa server WP, gunakan langkah 2–3 dan buka `wp-content/themes/blc-theme/` sebagai referensi struktur.
+
+## Deploy
+- **GitHub Pages/Netlify/Cloudflare Pages**: arahkan root deploy ke folder `src/` sehingga URL publik merujuk langsung ke `pages/*.html` dan `assets/`.
+- **WordPress**: sertakan folder `src/` dalam unggahan (mis. `/wp-content/uploads/berandablc/`) lalu embed via iframe atau template tema (lihat bagian integrasi di bawah).
+- **Kustom domain**: pastikan pengaturan caching mengizinkan file JSON di `src/data/` tidak diubah-ubah oleh minifier atau CDN yang agresif.
 
 ## Instalasi WordPress (tema bawaan)
 Tema ringan sudah disertakan di `wp-content/themes/blc-theme` agar beranda BLC bisa langsung dijalankan di WordPress tanpa proses build. Langkah pemasangan lengkap:
@@ -107,3 +122,12 @@ Semua konten publik tersimpan di `src/data/` sebagai JSON. Alur umum setiap jeni
 - **Konsistensi font**: variabel font berada di `src/styles/tokens.css`; menu dan dropdown memakai `--nav-font-family` dlsb.
 - **Aksesibilitas**: komponen navbar/dropdown memakai aria-attributes; pastikan teks tautan deskriptif dan gambar memiliki `alt`.
 - **Versi sumber**: simpan perubahan data (JSON) dan aset di repo ini agar histori perubahan terjaga.
+- **Validasi tautan**: jalankan pemeriksaan manual pada tautan eksternal di `pages/` dan `data` setiap kali menambah konten besar.
+- **Linting HTML/CSS opsional**: gunakan ekstensi VS Code (mis. HTMLHint/Stylelint) untuk menjaga konsistensi; proyek ini sengaja tanpa tooling build.
+
+## Kontribusi
+1. Fork repo ini atau buat branch baru.
+2. Perbarui konten atau komponen sesuai panduan di atas.
+3. Jalankan server lokal (`npx serve src`) untuk memverifikasi tampilan.
+4. Pastikan perubahan JSON/HTML valid (tidak ada koma hilang/atribut salah) sebelum commit.
+5. Buka PR dengan deskripsi perubahan dan lampirkan langkah uji manual yang dilakukan.
