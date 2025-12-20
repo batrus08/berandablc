@@ -1,0 +1,14 @@
+/*
+Theme Name: BLC Static Shell
+Theme URI: https://businesslawcommunity.example.com
+Description: Tema ringan untuk menayangkan halaman depan BLC dan mengembedkan situs statis tanpa build.
+Version: 1.0.0
+Author: Business Law Community
+Text Domain: blc
+License: MIT
+*/
+
+/*
+ * CSS utama berada di assets/css/home.css dan dienqueue dari functions.php.
+ * Berkas ini hanya menyertakan header tema agar kompatibel dengan penginstalan WordPress standar.
+ */
