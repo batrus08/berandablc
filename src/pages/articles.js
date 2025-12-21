@@ -22,6 +22,19 @@ const TOPIC_OPTIONS = [
 ];
 
 async function renderPage() {
+  const container = qs('#article-root');
+  if (container) {
+    setHTML(
+      container,
+      `<div class="card filter-card filter-card--skeleton" aria-hidden="true">
+        <div class="skeleton skeleton__eyebrow"></div>
+        <div class="skeleton skeleton__title"></div>
+        <div class="skeleton skeleton__text"></div>
+        <div class="skeleton skeleton__toolbar"></div>
+      </div>`
+    );
+  }
+
   try {
     const articles = await loadJSON(new URL('../data/articles.json', import.meta.url).href);
     if (slug) {
@@ -32,7 +45,6 @@ async function renderPage() {
     renderArchive(articles);
   } catch (error) {
     console.error('Failed to load articles:', error);
-    const container = qs('#article-root');
     if (container) {
       setHTML(container, `<p class="error-message">${t('common.errorLoading') || 'Gagal memuat data. Silakan coba lagi.'}</p>`);
     }
@@ -58,36 +70,43 @@ function renderList(articles) {
 
   const markup = `
     ${headerMarkup}
-    <div class="card filter-card filter-card--compact">
-      <div class="filter-card__top">
-        <div class="filter-card__intro">
+    <div class="card filter-card filter-card--elevated">
+      <div class="filter-card__header">
+        <div class="filter-card__heading">
           <span class="filter-chip">Koleksi BLC</span>
-          <div>
+          <div class="filter-card__titles">
             <h3 class="filter-card__title">Telusuri artikel terkurasi</h3>
             <p class="filter-card__hint muted">Gunakan pencarian, kategori, atau topik untuk hasil paling relevan.</p>
           </div>
         </div>
-        <div class="filter-card__meta">
-          <div class="meta-stat">
-            <span class="meta-stat__value" id="result-count">${articles.length}</span>
-            <span class="meta-stat__label">artikel tersedia</span>
-          </div>
-          <button class="btn tertiary" type="button" id="reset-filters">
-            <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-            Reset
+        <div class="filter-card__actions">
+          <span class="result-pill" id="result-pill">
+            <span id="result-count">${articles.length}</span> artikel
+          </span>
+          <button class="btn ghost reset-btn" type="button" id="reset-filters" aria-label="Reset filter artikel">
+            <svg class="btn__icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 6v2.79c0 .45-.54.67-.85.35l-3.5-3.5a.5.5 0 0 1 0-.71l3.5-3.5c.31-.31.85-.09.85.36V5c3.86 0 7 3.14 7 7 0 1.12-.26 2.18-.72 3.12a.75.75 0 1 1-1.36-.64c.35-.74.54-1.57.54-2.48A5.5 5.5 0 0 0 12 6Z" fill="currentColor" />
+              <path d="M12 18a5.5 5.5 0 0 1-4.46-8.68.75.75 0 0 0-1.2-.9A7 7 0 1 0 19 12.5c0-.17 0-.34-.02-.5a.75.75 0 0 0-1.5.12c.02.13.02.26.02.38A5.5 5.5 0 0 1 12 18Z" fill="currentColor" />
+            </svg>
+            <span class="reset-btn__label">Reset</span>
           </button>
         </div>
       </div>
-      <div class="filter-card__controls filter-card__controls--condensed">
-        <label class="filter-field">
-          <span class="filter-field__label">Cari judul atau ringkasan</span>
-          <div class="input-with-icon">
-            <span class="material-symbols-outlined" aria-hidden="true">search</span>
-            <input type="search" id="article-search" placeholder="Cari artikel..." aria-label="Cari artikel" />
+      <div class="filter-toolbar">
+        <label class="toolbar-field toolbar-field--search">
+          <span class="toolbar-field__label">Cari</span>
+          <div class="toolbar-input">
+            <span class="toolbar-input__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input type="search" id="article-search" placeholder="Cari judul atau ringkasan…" aria-label="Cari artikel" />
           </div>
         </label>
-        <label class="filter-field">
-          <span class="filter-field__label">${t('articles.filterCategory')}</span>
+        <label class="toolbar-field">
+          <span class="toolbar-field__label">${t('articles.filterCategory')}</span>
           <div class="select-wrapper">
             <select id="category-filter" ${pageCategory ? 'disabled' : ''}>
               <option value="Semua" ${selectedCategory === 'Semua' ? 'selected' : ''}>${t('common.all')}</option>
@@ -95,8 +114,8 @@ function renderList(articles) {
             </select>
           </div>
         </label>
-        <label class="filter-field">
-          <span class="filter-field__label">${t('articles.filterTopic')}</span>
+        <label class="toolbar-field">
+          <span class="toolbar-field__label">${t('articles.filterTopic')}</span>
           <div class="select-wrapper">
             <select id="topic-filter">
               <option value="Semua">${t('common.all')}</option>
@@ -110,7 +129,7 @@ function renderList(articles) {
     <div id="article-empty" class="empty-state hidden">
       <div class="empty-state__icon" aria-hidden="true">🗂️</div>
       <div>
-        <h3>Tidak ada hasil</h3>
+        <h3>Tidak ada artikel yang cocok…</h3>
         <p class="muted">Coba ubah kategori, pilih topik lain, atau gunakan kata kunci berbeda.</p>
       </div>
     </div>
@@ -140,6 +159,11 @@ function renderList(articles) {
     }
     const counter = qs('#result-count');
     if (counter) counter.textContent = scoped.length;
+    const pill = qs('#result-pill');
+    if (pill) {
+      pill.setAttribute('data-count', scoped.length);
+      pill.innerHTML = `<span>${scoped.length}</span> artikel`;
+    }
   };
 
   applyFilters();
