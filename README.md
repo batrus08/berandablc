@@ -2,6 +2,18 @@
 
 Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driven, dan siap di-host di layanan statis (GitHub Pages/Netlify) atau di-embed ke WordPress tanpa build step. Seluruh konten dikendalikan lewat JSON dan aset statis sehingga tim non-teknis dapat memperbarui materi hanya dengan menyunting berkas.
 
+## Headless WordPress + React (experimental)
+
+Folder React/Vite untuk mengonsumsi WordPress REST API berada di akar repo (lihat `src/` yang berisi berkas `.tsx`). Jalankan:
+
+```bash
+cp .env.example .env # set VITE_WP_BASE_URL ke instalasi WP
+npm install
+npm run dev
+```
+
+Router mencakup `/artikel`, `/artikel/:slug`, `/agenda`, dan `/agenda/:slug`. Detail integrasi ada di `WORDPRESS_SETUP.md`.
+
 ## Fitur utama
 - **Tanpa build**: langsung jalankan dari folder `src/` sehingga mudah ditempel di WordPress atau layanan hosting statis.
 - **Data-driven**: semua konten hidup di `src/data/*.json`; komponen HTML/JS merender berdasarkan data tersebut.

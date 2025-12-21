@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200" role="img" aria-labelledby="title desc">
+  <title id="title">Placeholder illustration</title>
+  <desc id="desc">Neutral placeholder used when an article or agenda item has no featured image.</desc>
+  <rect width="320" height="200" fill="#f3f4f6" rx="12" />
+  <path d="M40 146h240c6.6 0 12 5.4 12 12s-5.4 12-12 12H40c-6.6 0-12-5.4-12-12s5.4-12 12-12Z" fill="#e5e7eb" />
+  <path d="M69 63h182c7.2 0 13 5.8 13 13v78H56V76c0-7.2 5.8-13 13-13Z" fill="#d1d5db" />
+  <circle cx="106" cy="98" r="22" fill="#f9fafb" />
+  <path d="m134 144 38-50 43 56" stroke="#9ca3af" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+</svg>
