@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "UU Perseroan Terbatas: Pembaruan 2024",
+    "slug": "https://news.meoww.my.id/uu-perseroan-terbatas-pembaruan-2024",
+    "date": "2024-06-12",
+    "excerpt": "Ringkasan perubahan kunci dalam RUU PT dan dampaknya bagi korporasi skala menengah.",
+    "category": "Berita",
+    "author": "Tim Redaksi"
+  },
+  {
+    "id": 2,
+    "title": "Putusan Mahkamah: Perlindungan Data Nasabah",
+    "slug": "https://news.meoww.my.id/putusan-mahkamah-perlindungan-data",
+    "date": "2024-06-02",
+    "excerpt": "Analisis singkat atas putusan pengadilan terkait keamanan data perbankan digital.",
+    "category": "Analisis",
+    "author": "Rani Aulia"
+  },
+  {
+    "id": 3,
+    "title": "Update Kebijakan ESG di ASEAN",
+    "slug": "https://news.meoww.my.id/update-kebijakan-esg-asean",
+    "date": "2024-05-28",
+    "excerpt": "Tren penerapan ESG di kawasan dan peluang harmonisasi regulasi lintas negara.",
+    "category": "Edukasi Hukum",
+    "author": "Dimas Putra"
+  },
+  {
+    "id": 4,
+    "title": "Pendalaman Kasus Kartel Digital",
+    "slug": "https://news.meoww.my.id/pendalaman-kasus-kartel-digital",
+    "date": "2024-05-20",
+    "excerpt": "Pelajaran dari investigasi praktik kartel di sektor marketplace regional.",
+    "category": "Analisis",
+    "author": "Nina Pratiwi"
+  },
+  {
+    "id": 5,
+    "title": "Kajian Draft Peraturan Fintech 2024",
+    "slug": "https://news.meoww.my.id/kajian-draft-peraturan-fintech-2024",
+    "date": "2024-06-18",
+    "excerpt": "Sorotan poin penting rancangan regulasi fintech terkait lisensi dan perlindungan konsumen.",
+    "category": "Berita",
+    "author": "Tim Regulasi"
+  }
+]

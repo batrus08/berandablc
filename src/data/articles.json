@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "title": "Kebijakan ESG dan Implikasinya Terhadap Kontrak Bisnis",
+    "slug": "kebijakan-esg-dan-kontrak-bisnis",
+    "date": "2024-05-05",
+    "categoryType": "Artikel Bulanan",
+    "topics": ["ESG", "Kontrak", "Kepatuhan"],
+    "author": {"name": "Alya Rachman", "affiliation": "Law Community FH"},
+    "excerpt": "Analisis perkembangan kebijakan ESG di Indonesia dan bagaimana klausul kontrak bisnis perlu menyesuaikan diri.",
+    "content": "<p>Environmental, Social, and Governance (ESG) telah menjadi standar baru dalam transaksi bisnis. Artikel ini membahas perubahan yang perlu dilakukan pelaku usaha pada klausul kontrak, tanggung jawab due diligence, serta risiko hukum apabila standar ESG diabaikan.</p>",
+    "pdfUrl": "https://example.com/paper-esg.pdf",
+    "doi": "10.1234/esg-2024",
+    "issn": "1978-1234"
+  },
+  {
+    "id": 2,
+    "title": "Penerapan Klausul Force Majeure Pasca Pandemi",
+    "slug": "klausul-force-majeure-pasca-pandemi",
+    "date": "2024-04-22",
+    "categoryType": "Kajian Hukum",
+    "topics": ["Force majeure", "Kontrak Dagang"],
+    "author": {"name": "Dimas Wicaksono", "affiliation": "Associate Researcher"},
+    "excerpt": "Ulasan kasus terbaru terkait force majeure di sektor logistik dan panduan penyusunan klausul yang proporsional.",
+    "content": "<p>Diskusi tentang penggunaan klausul force majeure pasca pandemi menunjukkan perlunya penyesuaian definisi dan mekanisme mitigasi. Studi kasus ini melihat putusan pengadilan dan praktik negosiasi ulang.</p>",
+    "pdfUrl": "https://example.com/force-majeure.pdf"
+  },
+  {
+    "id": 3,
+    "title": "Resensi Buku: Bisnis Digital & Tata Kelola Data",
+    "slug": "resensi-buku-bisnis-digital",
+    "date": "2024-05-12",
+    "categoryType": "Resensi Buku Hukum",
+    "topics": ["Bisnis Digital", "Data Governance"],
+    "author": {"name": "Nabila Sari", "affiliation": "Divisi Media"},
+    "excerpt": "Resensi kritis buku yang membahas tata kelola data personal dalam model bisnis digital di Asia Tenggara.",
+    "content": "<p>Buku ini menyajikan kerangka hukum lintas negara terkait pemrosesan data personal. Resensi menyoroti implikasi bagi startup Indonesia dan pentingnya kebijakan privasi yang adaptif.</p>",
+    "pdfUrl": "https://example.com/resensi.pdf"
+  },
+  {
+    "id": 4,
+    "title": "Opini: Transformasi Klinik Bisnis Kampus",
+    "slug": "opini-transformasi-klinik-bisnis",
+    "date": "2024-03-30",
+    "categoryType": "Opini & Esai Hukum",
+    "topics": ["Klinik Bisnis", "Startup"],
+    "author": {"name": "Reno Pratama", "affiliation": "Koordinator Klinik Hukum"},
+    "excerpt": "Mengajak perguruan tinggi memposisikan klinik hukum sebagai mitra bisnis dan pusat literasi hukum praktis.",
+    "content": "<p>Opini ini menekankan perlunya klinik hukum bergerak dari pendekatan pro-bono tradisional ke model layanan strategis bagi startup dan UMKM.</p>",
+    "pdfUrl": "https://example.com/opini-klinik.pdf"
+  },
+  {
+    "id": 5,
+    "title": "Studi Kasus: Negosiasi M&A di Sektor Teknologi",
+    "slug": "studi-kasus-negosiasi-ma",
+    "date": "2024-06-15",
+    "categoryType": "Studi Kasus",
+    "topics": ["M&A", "Teknologi", "Due diligence"],
+    "author": {"name": "Farhan Yusuf", "affiliation": "Divisi Riset"},
+    "excerpt": "Pembelajaran dari proses negosiasi akuisisi startup SaaS oleh korporasi telekomunikasi.",
+    "content": "<p>Artikel ini mengulas strategi negosiasi, struktur pembayaran bertahap, serta klausul earn-out yang disepakati kedua belah pihak. Disertai daftar risiko hukum yang perlu dipetakan sejak tahap term sheet.</p>",
+    "pdfUrl": "https://example.com/studi-kasus-ma.pdf",
+    "doi": "10.1234/ma-2024",
+    "issn": "1978-5678"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "year": 2024,
+    "items": [
+      {
+        "title": "Juara 1 Kompetisi Legal Opinion Nasional",
+        "category": "Akademik",
+        "description": "Tim BLC menyusun opini hukum tentang transaksi lintas negara berbasis teknologi finansial."
+      },
+      {
+        "title": "Best Paper Call for Paper ESG",
+        "category": "Riset",
+        "description": "Paper mengenai kewajiban pelaporan keberlanjutan untuk UKM."
+      }
+    ]
+  },
+  {
+    "year": 2023,
+    "items": [
+      {
+        "title": "Finalis Moot Court Hukum Bisnis",
+        "category": "Kompetisi",
+        "description": "Simulasi persidangan kontrak teknologi dengan panel juri praktisi."
+      },
+      {
+        "title": "Program Kemitraan Kampus-Startup",
+        "category": "Kemitraan",
+        "description": "Pilot drafting kontrak inkubasi bersama mitra industri digital."
+      }
+    ]
+  },
+  {
+    "year": 2022,
+    "items": [
+      {
+        "title": "Penghargaan Media Kampus",
+        "category": "Publikasi",
+        "description": "Seri artikel hukum bisnis dinobatkan sebagai liputan terbaik versi pers mahasiswa."
+      }
+    ]
+  },
+  {
+    "year": 2021,
+    "items": [
+      {
+        "title": "Pengabdian Masyarakat UMKM",
+        "category": "Sosial",
+        "description": "Pendampingan kontrak kerja sama 20 UMKM binaan kabupaten."
+      }
+    ]
+  }
+]
