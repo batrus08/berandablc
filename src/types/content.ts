@@ -16,8 +16,6 @@ export interface AgendaItem extends ContentItem {
   time: string;
   location: string;
   registerUrl: string;
-  minutesUrl?: string;
-  reportUrl?: string;
 }
 
 export interface PaginatedResult<T> {

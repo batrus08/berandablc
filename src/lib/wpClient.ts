@@ -1,7 +1,7 @@
-const baseUrl = (import.meta.env.VITE_CMS_BASE_URL || import.meta.env.VITE_WP_BASE_URL || '').replace(/\/$/, '');
+const baseUrl = import.meta.env.VITE_WP_BASE_URL?.replace(/\/$/, '') || '';
 
 if (!baseUrl) {
-  console.warn('VITE_CMS_BASE_URL belum diset. Permintaan ke WordPress akan gagal.');
+  console.warn('VITE_WP_BASE_URL belum diset. Permintaan ke WordPress akan gagal.');
 }
 
 export type Query = Record<string, string | number | boolean | undefined>;
@@ -18,10 +18,8 @@ export const buildUrl = (path: string, query?: Query) => {
   return url.toString();
 };
 
-export const fetchJson = async <T>(
-  path: string,
-  query?: Query
-): Promise<{ data: T; totalPages?: number }> => {
+export const fetchJson = async <T>(path: string, query?: Query): Promise<{ data: T; totalPages?: number }>
+=> {
   const url = buildUrl(path, query);
 
   let response: Response;
