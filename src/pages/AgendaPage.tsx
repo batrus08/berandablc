@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ContentCard from '../components/ContentCard';
+import ContentCard from '../components/ContentCard.tsx';
 import { getAgenda } from '../services/contentService';
 import { AgendaItem } from '../types/content';
 

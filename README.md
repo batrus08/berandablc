@@ -7,7 +7,7 @@ Refactor ini menyajikan ulang berandablc sebagai situs statis modular, data-driv
 Folder React/Vite untuk mengonsumsi WordPress REST API berada di akar repo (lihat `src/` yang berisi berkas `.tsx`). Jalankan:
 
 ```bash
-cp .env.example .env # set VITE_WP_BASE_URL ke instalasi WP
+cp .env.example .env # set VITE_CMS_BASE_URL ke instalasi WP
 npm install
 npm run dev
 ```
@@ -143,3 +143,45 @@ Semua konten publik tersimpan di `src/data/` sebagai JSON. Alur umum setiap jeni
 3. Jalankan server lokal (`npx serve src`) untuk memverifikasi tampilan.
 4. Pastikan perubahan JSON/HTML valid (tidak ada koma hilang/atribut salah) sebelum commit.
 5. Buka PR dengan deskripsi perubahan dan lampirkan langkah uji manual yang dilakukan.
+
+
+## Agenda headless (WordPress admin -> Vite publik)
+
+Prioritas integrasi saat ini adalah **Agenda/Kegiatan**.
+
+### 1) Jalankan WordPress lokal (contoh LocalWP)
+1. Aktifkan site WordPress lokal Anda.
+2. Install plugin `wordpress-plugin/blc-agenda-cpt` lalu aktifkan.
+3. Simpan ulang **Settings -> Permalinks** satu kali.
+
+### 2) Jalankan frontend Vite
+```bash
+cp .env.example .env
+# isi VITE_CMS_BASE_URL, contoh: http://blc-local.test
+npm install
+npm run dev
+```
+
+### 3) Buat agenda dari admin WordPress
+1. Buka **Agenda -> Tambah Baru**.
+2. Isi judul, excerpt, konten, featured image (poster).
+3. Isi metabox detail: `start_date` (wajib), `end_date`, `time`, `location`, `register_url`.
+4. Pilih PDF notulen/laporan via Media Library (opsional).
+5. Publish.
+
+### 4) Verifikasi tampil di Vite
+- Buka halaman `/agenda` di frontend Vite.
+- Data akan diambil dari REST API WordPress (`/wp-json/wp/v2/agenda`).
+- Jika API gagal/timeout, UI tetap render dengan fallback list kosong (tidak blank/error fatal).
+
+### Import awal dari `src/data/events.json` (opsional)
+Script ini membantu migrasi data statis lama ke WordPress:
+
+```bash
+WP_BASE_URL=http://blc-local.test \
+WP_USERNAME=admin \
+WP_APP_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx' \
+npm run import:agenda
+```
+
+Catatan: versi awal script belum upload poster otomatis, tetapi mencatat sumber path poster untuk memudahkan upload manual di admin.
