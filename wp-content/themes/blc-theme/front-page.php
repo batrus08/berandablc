@@ -9,7 +9,7 @@ $home_settings = function_exists('blc_home_settings') ? blc_home_settings() : []
 $latest_news   = function_exists('blc_get_latest_news_posts') ? blc_get_latest_news_posts($home_settings['news_blog_id'] ?? null) : [];
 $highlights    = isset($home_settings['highlights']) && is_array($home_settings['highlights']) ? $home_settings['highlights'] : [];
 $quick_access  = isset($home_settings['quick_access']) && is_array($home_settings['quick_access']) ? $home_settings['quick_access'] : [];
-$events        = isset($home_settings['events']) && is_array($home_settings['events']) ? $home_settings['events'] : [];
+$upcoming_agenda = function_exists('blc_get_upcoming_agenda_items') ? blc_get_upcoming_agenda_items(3) : [];
 ?>
 
 <main class="blc-home" id="main-content">
@@ -165,8 +165,8 @@ $events        = isset($home_settings['events']) && is_array($home_settings['eve
                 <a class="btn btn--ghost" href="/kegiatan/">Lihat Semua Kegiatan</a>
             </div>
             <ul class="events__list">
-                <?php if (!empty($events)) : ?>
-                    <?php foreach ($events as $event) : ?>
+                <?php if (!empty($upcoming_agenda)) : ?>
+                    <?php foreach ($upcoming_agenda as $event) : ?>
                         <li class="event-item">
                             <div class="event-date">
                                 <?php if (!empty($event['day'])) : ?>
@@ -178,10 +178,32 @@ $events        = isset($home_settings['events']) && is_array($home_settings['eve
                             </div>
                             <div class="event-info">
                                 <?php if (!empty($event['title'])) : ?>
-                                    <h3><?php echo esc_html($event['title']); ?></h3>
+                                    <h3>
+                                        <?php if (!empty($event['permalink'])) : ?>
+                                            <a href="<?php echo esc_url($event['permalink']); ?>"><?php echo esc_html($event['title']); ?></a>
+                                        <?php else : ?>
+                                            <?php echo esc_html($event['title']); ?>
+                                        <?php endif; ?>
+                                    </h3>
                                 <?php endif; ?>
                                 <?php if (!empty($event['text'])) : ?>
                                     <p><?php echo esc_html($event['text']); ?></p>
+                                <?php endif; ?>
+                                <?php if (!empty($event['time']) || !empty($event['location'])) : ?>
+                                    <p class="event-meta">
+                                        <?php if (!empty($event['time'])) : ?>
+                                            <span><?php echo esc_html($event['time']); ?></span>
+                                        <?php endif; ?>
+                                        <?php if (!empty($event['time']) && !empty($event['location'])) : ?>
+                                            <span> • </span>
+                                        <?php endif; ?>
+                                        <?php if (!empty($event['location'])) : ?>
+                                            <span><?php echo esc_html($event['location']); ?></span>
+                                        <?php endif; ?>
+                                    </p>
+                                <?php endif; ?>
+                                <?php if (!empty($event['register_url'])) : ?>
+                                    <a class="news-card__cta" href="<?php echo esc_url($event['register_url']); ?>" target="_blank" rel="noopener noreferrer">Daftar Kegiatan</a>
                                 <?php endif; ?>
                             </div>
                         </li>

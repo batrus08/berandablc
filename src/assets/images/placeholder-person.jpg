@@ -1,6 +1,0 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
-  <rect width='600' height='600' fill='#f3f4f6'/>
-  <circle cx='300' cy='210' r='110' fill='#e5e7eb'/>
-  <rect x='140' y='360' width='320' height='180' rx='32' fill='#e5e7eb'/>
-  <text x='50%' y='580' dominant-baseline='middle' text-anchor='middle' fill='#6b7280' font-size='32' font-family='Inter'>BLC 2025</text>
-</svg>
