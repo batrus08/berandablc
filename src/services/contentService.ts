@@ -1,3 +1,5 @@
+import { getAgendas, WpAgendaItem } from '../lib/wpApi';
+import { mapWpAgendaToAgendaItem } from '../lib/wpMappers';
 import { fetchJson } from '../lib/wpClient';
 import { AgendaItem, ContentItem, PaginatedResult } from '../types/content';
 
@@ -9,13 +11,14 @@ interface WPItem {
   excerpt: { rendered: string };
   content: { rendered: string };
   link?: string;
-  meta?: {
-    start_date?: string;
-    end_date?: string;
-    time?: string;
-    location?: string;
-    register_url?: string;
-  };
+  poster_url?: string;
+  start_date?: string;
+  end_date?: string;
+  time?: string;
+  location?: string;
+  register_url?: string;
+  minutes_url?: string;
+  report_url?: string;
   _embedded?: {
     'wp:featuredmedia'?: Array<{ source_url?: string }>;
   };
@@ -25,7 +28,7 @@ const DEFAULT_PER_PAGE = 10;
 const DBS_CATEGORY_SLUG = 'dbs';
 
 const extractFeaturedImage = (item: WPItem) => {
-  return item._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  return item.poster_url || item._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 };
 
 const normalizeArticle = (item: WPItem): ContentItem => ({
@@ -50,11 +53,13 @@ const normalizeAgenda = (item: WPItem): AgendaItem => ({
   featuredImageUrl: extractFeaturedImage(item),
   link: item.link,
   type: 'agenda',
-  startDate: item.meta?.start_date ?? '',
-  endDate: item.meta?.end_date ?? '',
-  time: item.meta?.time ?? '',
-  location: item.meta?.location ?? '',
-  registerUrl: item.meta?.register_url ?? ''
+  startDate: item.start_date ?? '',
+  endDate: item.end_date ?? '',
+  time: item.time ?? '',
+  location: item.location ?? '',
+  registerUrl: item.register_url ?? '',
+  minutesUrl: item.minutes_url ?? '',
+  reportUrl: item.report_url ?? ''
 });
 
 const resolveCategoryId = async (slug: string): Promise<number | undefined> => {
@@ -91,14 +96,11 @@ export const getAgenda = async (
   page = 1,
   perPage = DEFAULT_PER_PAGE
 ): Promise<PaginatedResult<AgendaItem>> => {
-  const { data, totalPages } = await fetchJson<WPItem[]>('/wp-json/wp/v2/agenda', {
-    page,
-    per_page: perPage,
-    _embed: 1
-  });
+  const { items, totalPages } = await getAgendas(page, perPage);
+
   return {
-    items: data.map((item) => normalizeAgenda(item)),
-    totalPages: totalPages ?? 1
+    items: items.map((item) => mapWpAgendaToAgendaItem(item as WpAgendaItem)),
+    totalPages
   };
 };
 
@@ -106,11 +108,23 @@ export const getBySlug = async (
   type: 'posts' | 'agenda',
   slug: string
 ): Promise<ContentItem | AgendaItem | null> => {
+  if (type === 'agenda') {
+    const { data } = await fetchJson<WPItem[]>(`/wp-json/wp/v2/${type}`, {
+      slug,
+      per_page: 1,
+      _embed: 1
+    });
+
+    if (!data || data.length === 0) return null;
+    return normalizeAgenda(data[0]);
+  }
+
   const { data } = await fetchJson<WPItem[]>(`/wp-json/wp/v2/${type}`, {
     slug,
     per_page: 1,
     _embed: 1
   });
+
   if (!data || data.length === 0) return null;
-  return type === 'posts' ? normalizeArticle(data[0]) : normalizeAgenda(data[0]);
+  return normalizeArticle(data[0]);
 };

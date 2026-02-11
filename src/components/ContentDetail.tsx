@@ -64,6 +64,26 @@ const ContentDetail = ({ item }: ContentDetailProps) => {
                 </dd>
               </div>
             )}
+            {agendaItem.minutesUrl && (
+              <div className="detail-row">
+                <dt>Notulen</dt>
+                <dd>
+                  <a href={agendaItem.minutesUrl} target="_blank" rel="noreferrer">
+                    Unduh PDF
+                  </a>
+                </dd>
+              </div>
+            )}
+            {agendaItem.reportUrl && (
+              <div className="detail-row">
+                <dt>Laporan</dt>
+                <dd>
+                  <a href={agendaItem.reportUrl} target="_blank" rel="noreferrer">
+                    Unduh PDF
+                  </a>
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
       )}

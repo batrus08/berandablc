@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import Layout from './components/Layout';
+import Layout from './components/Layout.tsx';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import AgendaPage from './pages/AgendaPage';
