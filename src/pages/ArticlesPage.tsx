@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ContentCard from '../components/ContentCard.tsx';
+import ContentCard from '../components/ContentCard';
 import { getArticles } from '../services/contentService';
 import { ContentItem } from '../types/content';
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ContentDetail from '../components/ContentDetail.tsx';
+import ContentDetail from '../components/ContentDetail';
 import { getBySlug } from '../services/contentService';
 import { ContentItem } from '../types/content';
 

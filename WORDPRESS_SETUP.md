@@ -37,7 +37,7 @@ Gunakan panduan ini untuk memastikan data WordPress dapat dikonsumsi stabil oleh
 Salin `.env.example` menjadi `.env` lalu set:
 
 ```bash
-VITE_CMS_BASE_URL=https://wp-anda.example
+VITE_WP_BASE_URL=https://wp-anda.example
 ```
 
 Pastikan domain tersebut mengizinkan permintaan dari origin front-end (CORS) atau letakkan front-end pada domain yang sama.
