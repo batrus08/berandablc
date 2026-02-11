@@ -34,6 +34,26 @@ function blc_get_default_home_settings() {
             ['title' => 'Kajian Hukum', 'description' => 'Analisis mendalam regulasi, studi kasus, dan implikasi bisnis.', 'url' => '/kajian-hukum/'],
             ['title' => 'Dokumen PDF', 'description' => 'Whitepaper, policy brief, dan materi seminar siap unduh.', 'url' => '/dokumen/'],
         ],
+        'events' => [
+            [
+                'day'   => '12',
+                'month' => 'Mei',
+                'title' => 'Webinar: Kepatuhan Regulasi Startup',
+                'text'  => 'Diskusi praktis bersama praktisi hukum teknologi.',
+            ],
+            [
+                'day'   => '25',
+                'month' => 'Mei',
+                'title' => 'Lokakarya: Drafting Kontrak Bisnis',
+                'text'  => 'Pelatihan intensif untuk mahasiswa dan profesional muda.',
+            ],
+            [
+                'day'   => '8',
+                'month' => 'Jun',
+                'title' => 'Roundtable: ESG &amp; Tata Kelola',
+                'text'  => 'Berbagi perspektif lintas sektor untuk praktik keberlanjutan.',
+            ],
+        ],
         'cta_eyebrow'          => 'Kolaborasi Strategis',
         'cta_title'            => 'Mari wujudkan inisiatif hukum bisnis yang berdampak',
         'cta_body'             => 'Terbuka untuk riset bersama, penyusunan policy brief, maupun pelatihan korporasi.',
@@ -137,6 +157,12 @@ function blc_sanitize_home_settings($input) {
         $defaults['quick_access']
     );
 
+    $sanitized['events'] = blc_sanitize_json_list(
+        isset($input['events']) ? $input['events'] : '',
+        ['day', 'month', 'title', 'text'],
+        $defaults['events']
+    );
+
     $sanitized['cta_eyebrow']         = isset($input['cta_eyebrow']) ? sanitize_text_field($input['cta_eyebrow']) : $defaults['cta_eyebrow'];
     $sanitized['cta_title']           = isset($input['cta_title']) ? sanitize_text_field($input['cta_title']) : $defaults['cta_title'];
     $sanitized['cta_body']            = isset($input['cta_body']) ? wp_kses_post($input['cta_body']) : $defaults['cta_body'];
@@ -221,6 +247,19 @@ function blc_register_home_settings() {
             'id'          => 'quick_access',
             'placeholder' => wp_json_encode(blc_get_default_home_settings()['quick_access'], JSON_PRETTY_PRINT),
             'description' => __('Array objek dengan title, description, dan url.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_events',
+        __('Agenda (JSON)', 'blc'),
+        'blc_render_json_textarea',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'events',
+            'placeholder' => wp_json_encode(blc_get_default_home_settings()['events'], JSON_PRETTY_PRINT),
+            'description' => __('Gunakan kunci day, month, title, dan text.', 'blc'),
         ]
     );
 
@@ -455,96 +494,4 @@ function blc_get_latest_news_posts($blog_id = null, $limit = 6) {
     set_transient($transient_key, $posts_data, MINUTE_IN_SECONDS * 10);
 
     return $posts_data;
-}
-
-/**
- * Format angka bulan menjadi nama bulan Indonesia.
- *
- * @param int $month Month number (1-12).
- * @return string
- */
-function blc_get_indonesian_month_name($month) {
-    $months = [
-        1  => 'Januari',
-        2  => 'Februari',
-        3  => 'Maret',
-        4  => 'April',
-        5  => 'Mei',
-        6  => 'Juni',
-        7  => 'Juli',
-        8  => 'Agustus',
-        9  => 'September',
-        10 => 'Oktober',
-        11 => 'November',
-        12 => 'Desember',
-    ];
-
-    return isset($months[(int) $month]) ? $months[(int) $month] : '';
-}
-
-/**
- * Ambil agenda mendatang dari CPT agenda.
- *
- * @param int $limit Jumlah item yang ditampilkan.
- * @return array<int, array<string, string>>
- */
-function blc_get_upcoming_agenda_items($limit = 3) {
-    if (!post_type_exists('agenda')) {
-        return [];
-    }
-
-    $limit = max(1, absint($limit));
-    $today = current_time('Y-m-d');
-
-    $agenda_query = new WP_Query([
-        'post_type'      => 'agenda',
-        'post_status'    => 'publish',
-        'posts_per_page' => $limit,
-        'meta_key'       => 'start_date',
-        'orderby'        => 'meta_value',
-        'order'          => 'ASC',
-        'meta_query'     => [
-            [
-                'key'     => 'start_date',
-                'value'   => $today,
-                'compare' => '>=',
-                'type'    => 'DATE',
-            ],
-        ],
-        'no_found_rows'  => true,
-    ]);
-
-    if (!$agenda_query->have_posts()) {
-        return [];
-    }
-
-    $agenda_items = [];
-
-    foreach ($agenda_query->posts as $agenda_post) {
-        $start_date = (string) get_post_meta($agenda_post->ID, 'start_date', true);
-        $timestamp  = strtotime($start_date);
-
-        if (empty($timestamp)) {
-            continue;
-        }
-
-        $excerpt = has_excerpt($agenda_post) ? get_the_excerpt($agenda_post) : wp_trim_words(wp_strip_all_tags($agenda_post->post_content), 24, '...');
-
-        $agenda_items[] = [
-            'day'          => wp_date('j', $timestamp),
-            'month'        => blc_get_indonesian_month_name((int) wp_date('n', $timestamp)),
-            'title'        => get_the_title($agenda_post),
-            'text'         => $excerpt,
-            'summary'      => $excerpt,
-            'permalink'    => get_permalink($agenda_post),
-            'location'     => (string) get_post_meta($agenda_post->ID, 'location', true),
-            'time'         => (string) get_post_meta($agenda_post->ID, 'time', true),
-            'image_url'    => (string) get_the_post_thumbnail_url($agenda_post, 'medium_large'),
-            'register_url' => (string) get_post_meta($agenda_post->ID, 'register_url', true),
-        ];
-    }
-
-    wp_reset_postdata();
-
-    return $agenda_items;
 }

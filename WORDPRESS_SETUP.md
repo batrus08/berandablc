@@ -1,45 +1,43 @@
-# WordPress Setup (Theme + Agenda CPT)
+# WordPress setup – Headless feed untuk React app
 
-Panduan singkat ini untuk menjalankan Beranda BLC secara penuh di WordPress.
+Gunakan panduan ini untuk memastikan data WordPress dapat dikonsumsi stabil oleh aplikasi React headless.
 
-## Komponen
-- Theme: `wp-content/themes/blc-theme`
-- Plugin: `wordpress-plugin/blc-agenda-cpt`
+## Endpoint yang dipakai
+- Artikel DBS: `GET /wp-json/wp/v2/posts?slug=<slug>&_embed=1` dan listing dengan `_embed=1` serta filter kategori slug `dbs`.
+- Agenda (Custom Post Type): `GET /wp-json/wp/v2/agenda?slug=<slug>&_embed=1` dan listing dengan `_embed=1`.
+- Kategori: `GET /wp-json/wp/v2/categories?slug=dbs` digunakan untuk mendapatkan ID kategori DBS sebelum menarik artikel.
 
-## Langkah setup
+## Instalasi plugin Agenda
+1. Buat arsip ZIP dari folder `wordpress-plugin/blc-agenda-cpt` atau salin folder tersebut ke instalasi WordPress Anda pada direktori `wp-content/plugins/`.
+2. Aktifkan plugin **BLC Agenda CPT** melalui menu **Plugins**.
+3. Buka **Settings → Permalinks** dan simpan kembali (Save/Regenerate) agar struktur `/agenda` aktif.
 
-1. **Install theme**
-   - Salin `wp-content/themes/blc-theme` ke direktori theme WordPress.
-   - Aktifkan theme di **Appearance → Themes**.
+## Konten Agenda
+- Pastikan Custom Post Type `agenda` aktif dan REST API diizinkan (`show_in_rest` = true).
+- Endpoint utama: `/wp-json/wp/v2/agenda` (otomatis menambahkan `_embed=1` untuk featured media).
+- Bidang penting:
+  - **Title**, **Content**, dan **Excerpt** digunakan langsung di UI.
+  - **Featured image** opsional; placeholder akan digunakan bila kosong.
+  - **Meta fields** (semua tersedia di REST API):
+    - `start_date` (contoh: `2024-05-12`)
+    - `end_date` (opsional, contoh: `2024-05-13`)
+    - `time` (contoh: `19:00 - 21:00`)
+    - `location` (contoh: `Auditorium FH UI`)
+    - `register_url` (contoh: `https://contoh.com/daftar`)
 
-2. **Install plugin agenda**
-   - Salin `wordpress-plugin/blc-agenda-cpt` ke direktori plugin WordPress.
-   - Aktifkan **BLC Agenda CPT** di **Plugins**.
-   - Simpan ulang **Settings → Permalinks**.
+## Konten Artikel DBS
+- Gunakan post type bawaan `post`.
+- Pastikan pos berada pada kategori dengan **slug `dbs`** agar muncul di daftar artikel.
+- Bidang penting:
+  - **Title** dan **Content** diisi lengkap.
+  - **Excerpt** diisi (jika kosong WordPress akan mengisi otomatis, tetapi lebih baik diset manual untuk ringkasan bersih).
+  - **Featured image** disarankan untuk memastikan thumbnail tidak jatuh ke placeholder.
 
-3. **Atur homepage statis**
-   - Buat halaman untuk beranda.
-   - Buka **Settings → Reading**.
-   - Pilih **A static page** lalu set halaman beranda tadi sebagai **Homepage**.
+## Environment
+Salin `.env.example` menjadi `.env` lalu set:
 
-## Input agenda dari admin
+```bash
+VITE_CMS_BASE_URL=https://wp-anda.example
+```
 
-Buka **Agenda → Add New**, lalu isi:
-- Judul, konten, excerpt
-- Featured image (opsional)
-- Meta box detail agenda:
-  - `start_date` (wajib, `YYYY-MM-DD`)
-  - `end_date` (opsional)
-  - `time` (opsional)
-  - `location` (opsional)
-  - `register_url` (opsional)
-  - `minutes_attachment_id` & `report_attachment_id` (opsional)
-
-## Perilaku section Kegiatan Mendatang
-
-Theme akan mengambil otomatis 3 agenda terdekat dari CPT dengan filter:
-- post status publish
-- `start_date >= hari ini`
-- urut naik berdasarkan `start_date`
-
-Jika plugin tidak aktif atau belum ada agenda upcoming, section tetap aman dan menampilkan fallback tanpa fatal error.
+Pastikan domain tersebut mengizinkan permintaan dari origin front-end (CORS) atau letakkan front-end pada domain yang sama.

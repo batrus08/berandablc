@@ -1,0 +1,67 @@
+import { setupPage } from '../utils/page.js';
+import { loadJSON } from '../utils/helpers.js';
+import { qs, setHTML } from '../utils/dom.js';
+
+async function renderGallery() {
+  const data = await loadJSON(new URL('../data/gallery.json', import.meta.url).href);
+  renderPhotos(data.photos);
+  renderVideos(data.videos);
+  renderCoverage(data.coverage);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupPage(renderGallery);
+});
+
+function renderPhotos(photos) {
+  const target = qs('#photo-grid');
+  setHTML(
+    target,
+    photos
+      .map((p) => `<img src="${p.url}" alt="${p.title}" data-full="${p.url}" />`)
+      .join('')
+  );
+  target.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      const lightbox = qs('#lightbox');
+      setHTML(lightbox, `<img src="${e.target.dataset.full}" alt="${e.target.alt}" />`);
+      lightbox.classList.remove('hidden');
+      lightbox.addEventListener(
+        'click',
+        () => {
+          lightbox.classList.add('hidden');
+        },
+        { once: true }
+      );
+    }
+  });
+}
+
+function renderVideos(videos) {
+  const target = qs('#video-grid');
+  setHTML(
+    target,
+    videos
+      .map(
+        (vid) => `
+        <article class="card">
+          <h3>${vid.title}</h3>
+          <div class="responsive-embed">
+            <iframe src="${vid.embed}" title="${vid.title}" allowfullscreen></iframe>
+          </div>
+        </article>
+      `
+      )
+      .join('')
+  );
+}
+
+function renderCoverage(items) {
+  const target = qs('#coverage');
+  setHTML(
+    target,
+    items
+      .map((item) => `<article class="card"><h3>${item.title}</h3><p class="muted">${item.source}</p><a class="btn secondary" href="${item.link}">Baca Liputan</a></article>`)
+      .join('')
+  );
+}

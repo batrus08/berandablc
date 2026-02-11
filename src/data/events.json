@@ -1,0 +1,78 @@
+[
+  {
+    "id": 1,
+    "title": "Seminar Strategi Kemitraan Startup",
+    "slug": "seminar-kemitraan-startup",
+    "dateStart": "2026-05-18",
+    "dateEnd": "2026-05-18",
+    "type": "Seminar & Webinar",
+    "taxonomy": "akademik",
+    "location": "Auditorium FH",
+    "excerpt": "Bahas model perjanjian investasi tahap awal bersama mitra venture capital.",
+    "description": "<p>Seminar menghadirkan praktisi VC dan konsultan hukum bisnis. Peserta memperoleh template term sheet serta tips negosiasi.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Poster+Seminar",
+    "minutesPdf": "https://example.com/notulensi-seminar.pdf",
+    "reportPdf": "https://example.com/laporan-seminar.pdf"
+  },
+  {
+    "id": 2,
+    "title": "Diskusi Hukum: Klausul ESG di Kontrak Vendor",
+    "slug": "diskusi-esg-vendor",
+    "dateStart": "2026-05-27",
+    "type": "Diskusi Hukum",
+    "taxonomy": "akademik",
+    "location": "Zoom Meeting",
+    "excerpt": "Forum roundtable mengenai integrasi ESG dalam supply chain.",
+    "description": "<p>Diskusi panel dengan studi kasus tender pemerintah dan standar audit vendor.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Diskusi+ESG"
+  },
+  {
+    "id": 3,
+    "title": "Pelatihan Legal Skill: Penyusunan Kontrak Teknologi",
+    "slug": "pelatihan-kontrak-teknologi",
+    "dateStart": "2026-06-10",
+    "type": "Pelatihan Legal Skill",
+    "taxonomy": "akademik",
+    "location": "Lab Komputer FH",
+    "excerpt": "Workshop penyusunan kontrak SaaS dan lisensi perangkat lunak.",
+    "description": "<p>Materi meliputi klausul SLA, hak kekayaan intelektual, dan mitigasi risiko data breach.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Pelatihan+Legal+Skill",
+    "reportPdf": "https://example.com/report-pelatihan.pdf"
+  },
+  {
+    "id": 4,
+    "title": "Call for Paper Bisnis & Hak Kekayaan Intelektual",
+    "slug": "call-for-paper-bisnis-hki",
+    "dateStart": "2026-07-01",
+    "type": "Kompetisi / Call for Paper",
+    "taxonomy": "lomba",
+    "location": "Online Submission",
+    "excerpt": "Menggali isu HKI pada platform digital dan lisensi teknologi.",
+    "description": "<p>Peserta mengirimkan paper maksimal 15 halaman. Finalis dipresentasikan pada mini symposium.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Call+for+Paper"
+  },
+  {
+    "id": 5,
+    "title": "Rapat Tahunan & Wisuda Anggota",
+    "slug": "rapat-tahunan-wisuda",
+    "dateStart": "2026-08-12",
+    "type": "Program & Aktivitas Lainnya",
+    "taxonomy": "internal",
+    "location": "Ruang Sidang FH",
+    "excerpt": "Seremoni apresiasi anggota, pelaporan program, dan penetapan roadmap.",
+    "description": "<p>Agenda internal untuk evaluasi kinerja divisi, apresiasi anggota lulus, dan perencanaan tahun berikutnya.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Rapat+Tahunan"
+  },
+  {
+    "id": 6,
+    "title": "Program Pengabdian Kontrak UMKM",
+    "slug": "program-pengabdian-umkm",
+    "dateStart": "2026-09-05",
+    "type": "Program & Aktivitas Lainnya",
+    "taxonomy": "sosial",
+    "location": "Kecamatan Binaan",
+    "excerpt": "Pendampingan kontrak kerja sama dan pelatihan mitigasi risiko dasar.",
+    "description": "<p>Kegiatan sosial bersama dinas koperasi untuk menyusun kontrak sederhana dan SOP pembayaran.</p>",
+    "poster": "https://via.placeholder.com/400x220.png?text=Program+UMKM"
+  }
+]
