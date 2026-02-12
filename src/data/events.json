@@ -75,4 +75,17 @@
     "description": "<p>Kegiatan sosial bersama dinas koperasi untuk menyusun kontrak sederhana dan SOP pembayaran.</p>",
     "poster": "https://via.placeholder.com/400x220.png?text=Program+UMKM"
   }
+  {
+  "id": 7,
+  "title": "Forum Evaluasi & Pelepasan Anggota",
+  "slug": "forum-evaluasi-pelepasan",
+  "dateStart": "2026-09-03",
+  "type": "Kegiatan Organisasi",
+  "taxonomy": "internal",
+  "location": "Aula Fakultas Hukum",
+  "excerpt": "Agenda tahunan untuk evaluasi kinerja, penghargaan anggota, dan penetapan arah kebijakan.",
+  "description": "<p>Kegiatan internal yang mencakup laporan tahunan divisi, prosesi pelepasan anggota purna tugas, serta penyusunan rencana strategis periode selanjutnya.</p>",
+  "poster": "https://via.placeholder.com/400x220.png?text=Forum+Tahunan"
+}
+
 ]
