@@ -43,35 +43,144 @@ Lihat detail setup di `WORDPRESS_SETUP.md`.
 - `wp-content/` – tema WordPress (`themes/blc-theme`) plus placeholder untuk unggahan bila repo ditempel di instalasi WP.
 - `verification/` – berkas verifikasi statis (mis. Google/Bing) bila dibutuhkan hosting publik.
 
-## Menjalankan secara lokal
-1. Pastikan Node.js hanya untuk menjalankan server statis (tidak ada build). Install `serve` bila belum ada: `npm install -g serve`.
-2. Dari root repo jalankan `serve src` atau `npx serve src`.
-3. Buka `http://localhost:3000/pages/index.html` (atau `http://localhost:3000/pages/articles.html`, dll.).
-4. Untuk melihat tema WordPress tanpa server WP, gunakan langkah 2–3 dan buka `wp-content/themes/blc-theme/` sebagai referensi struktur.
+## Instalasi & Menjalankan Proyek (Panduan Step-by-Step)
+
+Bagian ini disusun untuk 3 kebutuhan berbeda. Pilih salah satu jalur berikut:
+
+1. **Mode A — Preview cepat situs statis** (paling mudah, direkomendasikan untuk edit konten JSON/HTML).
+2. **Mode B — Menjalankan mode React + Headless WordPress** (untuk eksperimen API WordPress).
+3. **Mode C — Instalasi tema WordPress bawaan (`blc-theme`)** (untuk situs WordPress langsung).
+
+---
+
+### Prasyarat umum
+
+Sebelum mulai, pastikan:
+
+- **Git** terpasang (`git --version`) agar bisa clone repo.
+- **Node.js 18+** dan **npm 9+** tersedia (`node -v`, `npm -v`).
+- Koneksi internet aktif saat `npm install`.
+
+Clone repo:
+
+```bash
+git clone <url-repo-anda>
+cd berandablc
+```
+
+---
+
+### Mode A — Preview cepat situs statis (tanpa build)
+
+Mode ini cocok untuk mayoritas pengguna, terutama tim konten.
+
+1. **Masuk ke root proyek**
+   ```bash
+   cd /path/ke/berandablc
+   ```
+2. **Jalankan static server** (tanpa install global)
+   ```bash
+   npx serve src
+   ```
+   Alternatif jika ingin install global:
+   ```bash
+   npm install -g serve
+   serve src
+   ```
+3. **Buka di browser**
+   - Beranda: `http://localhost:3000/pages/index.html`
+   - Artikel: `http://localhost:3000/pages/articles.html`
+   - Agenda/Kegiatan: `http://localhost:3000/pages/events.html`
+4. **Jika port 3000 dipakai aplikasi lain**
+   ```bash
+   npx serve src -l 4173
+   ```
+   Lalu akses `http://localhost:4173/pages/index.html`.
+
+#### Checklist verifikasi Mode A
+- Navbar, hero, dan footer tampil normal.
+- Data artikel/kegiatan dari `src/data/*.json` muncul.
+- Gambar dari `src/assets/` tidak broken.
+
+#### Troubleshooting singkat Mode A
+- **Halaman putih / asset gagal load**: pastikan membuka lewat URL server (`http://localhost:...`), **bukan** klik file langsung (`file://`).
+- **`npx serve` gagal**: cek versi Node (`node -v`) lalu upgrade ke Node 18+.
+- **Perubahan tidak terlihat**: hard refresh browser (`Ctrl+F5`) atau restart server.
+
+---
+
+### Mode B — React + Headless WordPress (experimental)
+
+Gunakan mode ini bila ingin mengonsumsi WordPress REST API dari folder React (`src/*.tsx`).
+
+1. **Salin file environment**
+   ```bash
+   cp .env.example .env
+   ```
+2. **Atur endpoint WordPress** di `.env`:
+   ```env
+   VITE_WP_BASE_URL=https://domain-wordpress-anda.com
+   ```
+3. **Install dependency**
+   ```bash
+   npm install
+   ```
+4. **Jalankan development server**
+   ```bash
+   npm run dev
+   ```
+5. **Buka URL dari terminal** (umumnya `http://localhost:5173`).
+
+Route yang tersedia: `/artikel`, `/artikel/:slug`, `/agenda`, `/agenda/:slug`.
+
+Jika API tidak menampilkan data, cek:
+- WordPress dapat diakses publik.
+- Endpoint REST API aktif (`/wp-json/wp/v2/...`).
+- CORS mengizinkan origin lokal Anda.
+
+---
+
+### Mode C — Instalasi tema WordPress bawaan (`blc-theme`)
+
+Ikuti jalur ini jika situs dijalankan langsung dari WordPress.
+
+#### 1) Prasyarat WordPress
+- WordPress **6.0+**.
+- PHP **8.0+**.
+- Akses admin dashboard WordPress.
+
+#### 2) Siapkan tema
+- Opsi ZIP: kompres folder `wp-content/themes/blc-theme` menjadi `blc-theme.zip`.
+- Opsi manual: salin folder `blc-theme` langsung ke `wp-content/themes/` pada server.
+
+#### 3) Upload dan aktifkan tema
+- Buka **Appearance → Themes → Add New → Upload Theme**.
+- Upload `blc-theme.zip`, klik **Install Now**, lalu **Activate**.
+
+#### 4) Set beranda statis
+- Buat halaman baru bernama **Beranda**.
+- Masuk ke **Settings → Reading**.
+- Pilih **Your homepage displays → A static page**.
+- Set **Homepage = Beranda**.
+
+#### 5) (Opsional) Atur sumber berita multisite
+- Default tema menarik 6 pos terbaru dari blog ID `2`.
+- Ubah konstanta `BLC_NEWS_BLOG_ID` di `wp-content/themes/blc-theme/functions.php` bila ID subsite berbeda.
+
+#### 6) Verifikasi setelah instalasi
+- Halaman depan tampil tanpa error PHP.
+- File `assets/css/home.css` dan `assets/js/home.js` termuat.
+- Kartu publikasi/CTA muncul sesuai data post.
+
+#### Troubleshooting singkat Mode C
+- **Tema tidak bisa diaktifkan**: pastikan struktur ZIP benar (`blc-theme/style.css` berada di level pertama zip).
+- **Front page tidak berubah**: ulangi pengaturan **Settings → Reading** ke static page.
+- **Berita kosong**: cek ID blog sumber berita dan status post harus `publish`.
 
 ## Deploy
 - **GitHub Pages/Netlify/Cloudflare Pages**: arahkan root deploy ke folder `src/` sehingga URL publik merujuk langsung ke `pages/*.html` dan `assets/`.
 - **WordPress**: sertakan folder `src/` dalam unggahan (mis. `/wp-content/uploads/berandablc/`) lalu embed via iframe atau template tema (lihat bagian integrasi di bawah).
 - **Kustom domain**: pastikan pengaturan caching mengizinkan file JSON di `src/data/` tidak diubah-ubah oleh minifier atau CDN yang agresif.
-
-## Instalasi WordPress (tema bawaan)
-Tema ringan sudah disertakan di `wp-content/themes/blc-theme` agar beranda BLC bisa langsung dijalankan di WordPress tanpa proses build. Langkah pemasangan lengkap:
-
-1. **Siapkan berkas tema**
-   - Kompres folder `wp-content/themes/blc-theme` menjadi ZIP, atau salin langsung ke server WordPress di path `wp-content/themes/`.
-   - Tema memerlukan WordPress 6+ dan PHP 8+ agar fungsi-fungsi baru (caching transient, multisite) berjalan baik.
-2. **Unggah & aktifkan**
-   - Masuk ke **Appearance → Themes → Add New → Upload Theme** lalu unggah ZIP, atau pilih **Theme Details → Activate** jika sudah disalin manual.
-3. **Atur halaman statis** agar `front-page.php` digunakan:
-   - Buat halaman kosong berjudul “Beranda”.
-   - Buka **Settings → Reading**, pilih **Static Page** dan set **Homepage** ke halaman “Beranda”.
-4. **Konfigurasi sumber berita (multisite optional)**
-   - Secara default tema menarik 6 pos terbaru dari blog ID `2` (konstanta `BLC_NEWS_BLOG_ID` di `wp-content/themes/blc-theme/functions.php`).
-   - Jika subsite berita memiliki ID lain, ubah konstanta tersebut lalu simpan.
-5. **Periksa aset**
-   - CSS dan JS beranda sudah dienqueue otomatis (`assets/css/home.css` dan `assets/js/home.js`). Pastikan izin file server mengizinkan pembacaan berkas-berkas ini.
-6. **Uji coba**
-   - Kunjungi halaman depan situs. Bila kartu publikasi atau CTA tidak muncul, cek apakah subsite berita aktif dan memiliki pos berstatus publik.
 
 ## Integrasi dengan WordPress
 Karena tanpa build, seluruh folder `src/` bisa langsung di-embed:
