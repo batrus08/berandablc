@@ -10,19 +10,21 @@ Panduan ini memastikan website dapat dikendalikan **satu pintu dari CMS WordPres
 ## Struktur konten yang dipakai
 Agar bagian-bagian berikut mudah dikelola via CMS WordPress:
 
-1. **Tentang Kami**
+1. **Beranda**
+   - Gunakan `Pages` dengan slug default `beranda`.
+2. **Tentang Kami**
    - Gunakan `Pages` dengan slug default `tentang-kami`.
-2. **Kontak**
+3. **Kontak**
    - Gunakan `Pages` dengan slug default `kontak`.
-3. **Artikel**
-   - Gunakan `Posts` pada kategori slug `dbs`.
-4. **Kegiatan**
+4. **Artikel**
+   - Gunakan `Posts` pada kategori slug default `dbs`.
+5. **Kegiatan**
    - Gunakan `Posts` pada kategori slug default `kegiatan`.
-5. **Kerjasama**
+6. **Kerjasama**
    - Gunakan `Posts` pada kategori slug default `kerjasama`.
-6. **Galeri**
+7. **Galeri**
    - Gunakan `Posts` pada kategori slug default `galeri` (upload image/gallery lewat editor WordPress).
-7. **Agenda**
+8. **Agenda**
    - Gunakan CPT `agenda` (plugin BLC Agenda CPT) agar field tanggal/lokasi terstruktur.
 
 ## Endpoint REST yang digunakan
@@ -42,8 +44,10 @@ Salin `.env.example` menjadi `.env` lalu sesuaikan:
 
 ```bash
 VITE_WP_BASE_URL=https://wp-anda.example
+VITE_WP_PAGE_HOME_SLUG=beranda
 VITE_WP_PAGE_ABOUT_SLUG=tentang-kami
 VITE_WP_PAGE_CONTACT_SLUG=kontak
+VITE_WP_CATEGORY_ARTIKEL_SLUG=dbs
 VITE_WP_CATEGORY_KEGIATAN_SLUG=kegiatan
 VITE_WP_CATEGORY_KERJASAMA_SLUG=kerjasama
 VITE_WP_CATEGORY_GALERI_SLUG=galeri
