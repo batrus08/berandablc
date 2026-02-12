@@ -16,7 +16,6 @@ Router mencakup `/artikel`, `/artikel/:slug`, `/agenda`, dan `/agenda/:slug`. De
 
 ## Kontrol penuh via WordPress CMS (single gate)
 Konfigurasi terbaru memastikan section berikut dapat dikendalikan langsung dari dashboard WordPress (compatible shared hosting):
-- **Beranda**: WordPress Page (`slug: beranda`)
 - **Tentang Kami**: WordPress Page (`slug: tentang-kami`)
 - **Artikel**: WordPress Posts kategori `dbs`
 - **Kegiatan**: WordPress Posts kategori `kegiatan`

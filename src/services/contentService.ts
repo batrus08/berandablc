@@ -22,7 +22,7 @@ interface WPItem {
 }
 
 const DEFAULT_PER_PAGE = 10;
-const articleCategorySlug = import.meta.env.VITE_WP_CATEGORY_ARTIKEL_SLUG || 'dbs';
+const DBS_CATEGORY_SLUG = 'dbs';
 
 const sectionCategoryMap = {
   kegiatan: import.meta.env.VITE_WP_CATEGORY_KEGIATAN_SLUG || 'kegiatan',
@@ -94,9 +94,9 @@ export const getArticles = async (
 ): Promise<PaginatedResult<ContentItem>> => {
   let categoryId: number | undefined;
   try {
-    categoryId = await resolveCategoryId(articleCategorySlug);
+    categoryId = await resolveCategoryId(DBS_CATEGORY_SLUG);
   } catch (error) {
-    console.warn('Kategori artikel tidak ditemukan, mengambil semua artikel.', error);
+    console.warn('Kategori DBS tidak ditemukan, mengambil semua artikel.', error);
   }
 
   const { data, totalPages } = await fetchJson<WPItem[]>('/wp-json/wp/v2/posts', {
