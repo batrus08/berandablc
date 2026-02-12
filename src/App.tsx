@@ -10,6 +10,7 @@ import WpPage from './pages/WpPage';
 
 const aboutSlug = import.meta.env.VITE_WP_PAGE_ABOUT_SLUG || 'tentang-kami';
 const contactSlug = import.meta.env.VITE_WP_PAGE_CONTACT_SLUG || 'kontak';
+const homeSlug = import.meta.env.VITE_WP_PAGE_HOME_SLUG || 'beranda';
 
 const App = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const App = () => {
   return (
     <Layout currentPath={location.pathname}>
       <Routes>
-        <Route path="/" element={<Navigate to="/tentang-kami" replace />} />
+        <Route path="/" element={<WpPage titleFallback="Beranda" slug={homeSlug} />} />
         <Route path="/tentang-kami" element={<WpPage titleFallback="Tentang Kami" slug={aboutSlug} />} />
 
         <Route path="/artikel" element={<ArticlesPage />} />
