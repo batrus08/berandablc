@@ -16,7 +16,7 @@ const formatAgendaDate = (startDate?: string) => {
 };
 
 const ContentCard = ({ item }: ContentCardProps) => {
-  const href = item.type === 'article' ? `/artikel/${item.slug}` : `/agenda/${item.slug}`;
+  const href = item.detailPath || (item.type === 'agenda' ? `/agenda/${item.slug}` : `/artikel/${item.slug}`);
   const isAgenda = item.type === 'agenda';
   const agendaDate = isAgenda ? formatAgendaDate((item as AgendaItem).startDate) : '';
   const agendaLocation = isAgenda ? (item as AgendaItem).location : '';
@@ -28,7 +28,7 @@ const ContentCard = ({ item }: ContentCardProps) => {
         <div className="meta">
           <span>{isAgenda ? agendaDate || 'Tanggal belum ditentukan' : new Date(item.date).toLocaleDateString('id-ID')}</span>
           <span>•</span>
-          <span>{item.type === 'article' ? 'Artikel' : 'Agenda'}</span>
+          <span>{item.sectionLabel || (item.type === 'agenda' ? 'Agenda' : 'Artikel')}</span>
           {isAgenda && agendaLocation && (
             <>
               <span>•</span>

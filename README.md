@@ -14,6 +14,18 @@ npm run dev
 
 Router mencakup `/artikel`, `/artikel/:slug`, `/agenda`, dan `/agenda/:slug`. Detail integrasi ada di `WORDPRESS_SETUP.md`.
 
+## Kontrol penuh via WordPress CMS (single gate)
+Konfigurasi terbaru memastikan section berikut dapat dikendalikan langsung dari dashboard WordPress (compatible shared hosting):
+- **Tentang Kami**: WordPress Page (`slug: tentang-kami`)
+- **Artikel**: WordPress Posts kategori `dbs`
+- **Kegiatan**: WordPress Posts kategori `kegiatan`
+- **Kerjasama**: WordPress Posts kategori `kerjasama`
+- **Galeri**: WordPress Posts kategori `galeri`
+- **Kontak**: WordPress Page (`slug: kontak`)
+- **Agenda**: CPT `agenda` (plugin BLC Agenda CPT)
+
+Lihat detail setup di `WORDPRESS_SETUP.md`.
+
 ## Fitur utama
 - **Tanpa build**: langsung jalankan dari folder `src/` sehingga mudah ditempel di WordPress atau layanan hosting statis.
 - **Data-driven**: semua konten hidup di `src/data/*.json`; komponen HTML/JS merender berdasarkan data tersebut.

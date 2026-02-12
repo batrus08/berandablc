@@ -1,43 +1,61 @@
-# WordPress setup – Headless feed untuk React app
+# WordPress setup – Headless feed untuk React app (compatible shared hosting)
 
-Gunakan panduan ini untuk memastikan data WordPress dapat dikonsumsi stabil oleh aplikasi React headless.
+Panduan ini memastikan website dapat dikendalikan **satu pintu dari CMS WordPress**, berjalan di instalasi WordPress biasa, dan cocok untuk environment shared hosting.
 
-## Endpoint yang dipakai
-- Artikel DBS: `GET /wp-json/wp/v2/posts?slug=<slug>&_embed=1` dan listing dengan `_embed=1` serta filter kategori slug `dbs`.
-- Agenda (Custom Post Type): `GET /wp-json/wp/v2/agenda?slug=<slug>&_embed=1` dan listing dengan `_embed=1`.
-- Kategori: `GET /wp-json/wp/v2/categories?slug=dbs` digunakan untuk mendapatkan ID kategori DBS sebelum menarik artikel.
+## Arsitektur yang direkomendasikan (single CMS)
+- WordPress menjadi sumber konten utama (single source of truth).
+- Front-end React hanya membaca data lewat REST API WordPress.
+- Tidak ada kebutuhan server Node di shared hosting saat production: cukup upload hasil `npm run build` ke folder publik (mis. `public_html/app/`) atau embed dari tema.
 
-## Instalasi plugin Agenda
-1. Buat arsip ZIP dari folder `wordpress-plugin/blc-agenda-cpt` atau salin folder tersebut ke instalasi WordPress Anda pada direktori `wp-content/plugins/`.
-2. Aktifkan plugin **BLC Agenda CPT** melalui menu **Plugins**.
-3. Buka **Settings → Permalinks** dan simpan kembali (Save/Regenerate) agar struktur `/agenda` aktif.
+## Struktur konten yang dipakai
+Agar bagian-bagian berikut mudah dikelola via CMS WordPress:
 
-## Konten Agenda
-- Pastikan Custom Post Type `agenda` aktif dan REST API diizinkan (`show_in_rest` = true).
-- Endpoint utama: `/wp-json/wp/v2/agenda` (otomatis menambahkan `_embed=1` untuk featured media).
-- Bidang penting:
-  - **Title**, **Content**, dan **Excerpt** digunakan langsung di UI.
-  - **Featured image** opsional; placeholder akan digunakan bila kosong.
-  - **Meta fields** (semua tersedia di REST API):
-    - `start_date` (contoh: `2024-05-12`)
-    - `end_date` (opsional, contoh: `2024-05-13`)
-    - `time` (contoh: `19:00 - 21:00`)
-    - `location` (contoh: `Auditorium FH UI`)
-    - `register_url` (contoh: `https://contoh.com/daftar`)
+1. **Tentang Kami**
+   - Gunakan `Pages` dengan slug default `tentang-kami`.
+2. **Kontak**
+   - Gunakan `Pages` dengan slug default `kontak`.
+3. **Artikel**
+   - Gunakan `Posts` pada kategori slug `dbs`.
+4. **Kegiatan**
+   - Gunakan `Posts` pada kategori slug default `kegiatan`.
+5. **Kerjasama**
+   - Gunakan `Posts` pada kategori slug default `kerjasama`.
+6. **Galeri**
+   - Gunakan `Posts` pada kategori slug default `galeri` (upload image/gallery lewat editor WordPress).
+7. **Agenda**
+   - Gunakan CPT `agenda` (plugin BLC Agenda CPT) agar field tanggal/lokasi terstruktur.
 
-## Konten Artikel DBS
-- Gunakan post type bawaan `post`.
-- Pastikan pos berada pada kategori dengan **slug `dbs`** agar muncul di daftar artikel.
-- Bidang penting:
-  - **Title** dan **Content** diisi lengkap.
-  - **Excerpt** diisi (jika kosong WordPress akan mengisi otomatis, tetapi lebih baik diset manual untuk ringkasan bersih).
-  - **Featured image** disarankan untuk memastikan thumbnail tidak jatuh ke placeholder.
+## Endpoint REST yang digunakan
+- Halaman statis:
+  - `GET /wp-json/wp/v2/pages?slug=<slug>`
+- Post listing per kategori:
+  - `GET /wp-json/wp/v2/posts?_embed=1&categories=<category_id>`
+- Detail post:
+  - `GET /wp-json/wp/v2/posts?slug=<slug>&_embed=1`
+- Agenda listing/detail:
+  - `GET /wp-json/wp/v2/agenda?...&_embed=1`
+- Kategori resolver:
+  - `GET /wp-json/wp/v2/categories?slug=<slug>`
 
 ## Environment
-Salin `.env.example` menjadi `.env` lalu set:
+Salin `.env.example` menjadi `.env` lalu sesuaikan:
 
 ```bash
 VITE_WP_BASE_URL=https://wp-anda.example
+VITE_WP_PAGE_ABOUT_SLUG=tentang-kami
+VITE_WP_PAGE_CONTACT_SLUG=kontak
+VITE_WP_CATEGORY_KEGIATAN_SLUG=kegiatan
+VITE_WP_CATEGORY_KERJASAMA_SLUG=kerjasama
+VITE_WP_CATEGORY_GALERI_SLUG=galeri
 ```
 
-Pastikan domain tersebut mengizinkan permintaan dari origin front-end (CORS) atau letakkan front-end pada domain yang sama.
+## Instalasi plugin Agenda
+1. Buat ZIP dari `wordpress-plugin/blc-agenda-cpt` atau salin ke `wp-content/plugins/`.
+2. Aktifkan plugin **BLC Agenda CPT** di menu Plugins.
+3. Buka **Settings → Permalinks** lalu klik Save agar endpoint `/agenda` aktif.
+
+## Catatan kompatibilitas shared hosting
+- Pastikan WordPress versi 6+ dan PHP 8+ (minimum direkomendasikan).
+- Pastikan permalink menggunakan `Post name`.
+- Jika front-end beda domain/subdomain, aktifkan CORS yang sesuai.
+- Bila tidak ada akses shell di hosting, build front-end dilakukan lokal lalu upload folder `dist/` via File Manager/FTP.
