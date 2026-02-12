@@ -10,6 +10,14 @@ $latest_news   = function_exists('blc_get_latest_news_posts') ? blc_get_latest_n
 $highlights    = isset($home_settings['highlights']) && is_array($home_settings['highlights']) ? $home_settings['highlights'] : [];
 $quick_access  = isset($home_settings['quick_access']) && is_array($home_settings['quick_access']) ? $home_settings['quick_access'] : [];
 $events        = isset($home_settings['events']) && is_array($home_settings['events']) ? $home_settings['events'] : [];
+$about_slug    = !empty($home_settings['about_page_slug']) ? $home_settings['about_page_slug'] : 'tentang-kami';
+$about_page    = get_page_by_path($about_slug);
+$about_url     = $about_page ? get_permalink($about_page) : '/tentang-kami/';
+$about_body    = $about_page ? wp_strip_all_tags($about_page->post_content) : '';
+
+if (!empty($home_settings['events_use_agenda_cpt']) && function_exists('blc_get_agenda_items')) {
+    $events = blc_get_agenda_items($home_settings['events_count'] ?? 3);
+}
 ?>
 
 <main class="blc-home" id="main-content">
@@ -86,26 +94,42 @@ $events        = isset($home_settings['events']) && is_array($home_settings['eve
     <section class="about-impact" aria-labelledby="about-title">
         <div class="container about-impact__grid">
             <div class="about-impact__text">
-                <p class="eyebrow">Tentang BLC</p>
-                <h2 id="about-title">Mendorong literasi hukum bisnis yang relevan</h2>
-                <p>Business Law Community (BLC) menjadi ruang kolaborasi untuk mengakselerasi pemahaman hukum bisnis melalui riset, publikasi, dan pengabdian. Kami percaya karya ilmiah yang aplikatif mampu menjawab tantangan industri.</p>
+                <?php if (!empty($home_settings['about_eyebrow'])) : ?>
+                    <p class="eyebrow"><?php echo esc_html($home_settings['about_eyebrow']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($home_settings['about_title'])) : ?>
+                    <h2 id="about-title"><?php echo esc_html($home_settings['about_title']); ?></h2>
+                <?php endif; ?>
+                <p>
+                    <?php
+                    if (!empty($about_body)) {
+                        echo esc_html(wp_trim_words($about_body, 40, '...'));
+                    } else {
+                        esc_html_e('Silakan isi konten halaman Tentang Kami dari WordPress CMS untuk menampilkan ringkasan di beranda.', 'blc');
+                    }
+                    ?>
+                </p>
                 <div class="about-impact__cta">
-                    <a class="btn btn--ghost" href="/tentang-kami/">Pelajari Tentang Kami</a>
+                    <?php if (!empty($home_settings['about_button_label']) && !empty($about_url)) : ?>
+                        <a class="btn btn--ghost" href="<?php echo esc_url($about_url); ?>"><?php echo esc_html($home_settings['about_button_label']); ?></a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="about-impact__stats" aria-label="Statistik singkat BLC">
-                <div class="stat-card">
-                    <p class="stat-number">120+</p>
-                    <p class="stat-label">Publikasi</p>
-                </div>
-                <div class="stat-card">
-                    <p class="stat-number">45</p>
-                    <p class="stat-label">Kegiatan</p>
-                </div>
-                <div class="stat-card">
-                    <p class="stat-number">30</p>
-                    <p class="stat-label">Mitra</p>
-                </div>
+                <?php if (!empty($home_settings['about_stats']) && is_array($home_settings['about_stats'])) : ?>
+                    <?php foreach ($home_settings['about_stats'] as $stat) : ?>
+                        <div class="stat-card">
+                            <?php if (!empty($stat['number'])) : ?>
+                                <p class="stat-number"><?php echo esc_html($stat['number']); ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($stat['label'])) : ?>
+                                <p class="stat-label"><?php echo esc_html($stat['label']); ?></p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div class="stat-card"><p class="news-empty">Belum ada statistik.</p></div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -162,7 +186,7 @@ $events        = isset($home_settings['events']) && is_array($home_settings['eve
                     <h2 id="events-title">Kolaborasi &amp; Agenda BLC</h2>
                     <p class="section-subtitle">Pantau seminar, diskusi panel, dan lokakarya terbaru.</p>
                 </div>
-                <a class="btn btn--ghost" href="/kegiatan/">Lihat Semua Kegiatan</a>
+                <a class="btn btn--ghost" href="<?php echo esc_url($home_settings['events_button_url'] ?? '/kegiatan/'); ?>"><?php echo esc_html($home_settings['events_button_label'] ?? 'Lihat Semua Kegiatan'); ?></a>
             </div>
             <ul class="events__list">
                 <?php if (!empty($events)) : ?>
