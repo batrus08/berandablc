@@ -63,4 +63,18 @@
     "doi": "10.1234/ma-2024",
     "issn": "1978-5678"
   }
+   {
+    "id": 6,
+    "title": "MAKRABB",
+    "slug": "studi-kasus-negosiasi-ma",
+    "date": "2026-01-11",
+    "categoryType": "Studi Kasus",
+    "topics": ["M&A", "Teknologi", "Due diligence"],
+    "author": {"name": "NEO", "affiliation": "Divisi Riset"},
+    "excerpt": "Pembelajaran dari proses negosiasi akuisisi startup SaaS oleh korporasi telekomunikasi.",
+    "content": "<p>Artikel ini mengulas strategi negosiasi, struktur pembayaran bertahap, serta klausul earn-out yang disepakati kedua belah pihak. Disertai daftar risiko hukum yang perlu dipetakan sejak tahap term sheet.</p>",
+    "pdfUrl": "https://example.com/studi-kasus-ma.pdf",
+    "doi": "10.1234/ma-2024",
+    "issn": "1978-5678"
+  }
 ]
