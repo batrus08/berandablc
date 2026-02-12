@@ -28,7 +28,7 @@ const ContentDetail = ({ item }: ContentDetailProps) => {
   return (
     <article className="detail">
       <div className="meta">
-        <span>{item.type === 'article' ? 'Artikel' : 'Agenda'}</span>
+        <span>{item.sectionLabel || (item.type === 'agenda' ? 'Agenda' : 'Artikel')}</span>
         <span>•</span>
         <span>{new Date(item.date).toLocaleDateString('id-ID')}</span>
       </div>

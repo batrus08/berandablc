@@ -4,7 +4,12 @@ import ContentDetail from '../components/ContentDetail.tsx';
 import { getBySlug } from '../services/contentService';
 import { ContentItem } from '../types/content';
 
-const ArticleDetailPage = () => {
+interface SectionDetailPageProps {
+  title: string;
+  basePath: string;
+}
+
+const SectionDetailPage = ({ title, basePath }: SectionDetailPageProps) => {
   const { slug } = useParams<{ slug: string }>();
   const [item, setItem] = useState<ContentItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +21,11 @@ const ArticleDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const result = await getBySlug('posts', slug);
+        const result = await getBySlug('posts', slug, title, basePath);
         if (!result) {
-          setError('Artikel tidak ditemukan.');
+          setError(`${title} tidak ditemukan.`);
         }
-        setItem(result);
+        setItem(result as ContentItem);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -29,13 +34,13 @@ const ArticleDetailPage = () => {
     };
 
     fetchData();
-  }, [slug]);
+  }, [basePath, slug, title]);
 
-  if (loading) return <div className="status">Memuat artikel...</div>;
+  if (loading) return <div className="status">Memuat {title.toLowerCase()}...</div>;
   if (error) return <div className="status">{error}</div>;
-  if (!item) return <div className="status">Artikel tidak tersedia.</div>;
+  if (!item) return <div className="status">{title} tidak tersedia.</div>;
 
   return <ContentDetail item={item} />;
 };
 
-export default ArticleDetailPage;
+export default SectionDetailPage;

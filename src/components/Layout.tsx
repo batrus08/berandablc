@@ -6,8 +6,13 @@ interface LayoutProps {
 }
 
 const navItems = [
+  { path: '/tentang-kami', label: 'Tentang Kami' },
   { path: '/artikel', label: 'Artikel' },
-  { path: '/agenda', label: 'Agenda' }
+  { path: '/kegiatan', label: 'Kegiatan' },
+  { path: '/kerjasama', label: 'Kerjasama' },
+  { path: '/galeri', label: 'Galeri' },
+  { path: '/agenda', label: 'Agenda' },
+  { path: '/kontak', label: 'Kontak' }
 ];
 
 const Layout = ({ currentPath, children }: LayoutProps) => {
@@ -17,7 +22,7 @@ const Layout = ({ currentPath, children }: LayoutProps) => {
         <div>
           <h1 style={{ margin: 0 }}>Beranda BLC</h1>
           <p style={{ margin: '4px 0 0', color: '#475569' }}>
-            Konten diambil secara langsung dari WordPress (headless).
+            Semua konten dikontrol dari WordPress CMS (single source of truth).
           </p>
         </div>
         <nav aria-label="Navigasi utama">

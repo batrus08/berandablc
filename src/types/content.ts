@@ -1,3 +1,5 @@
+export type ContentType = 'article' | 'agenda' | 'section';
+
 export interface ContentItem {
   id: number;
   slug: string;
@@ -7,7 +9,9 @@ export interface ContentItem {
   date: string;
   featuredImageUrl?: string;
   link?: string;
-  type: 'article' | 'agenda';
+  type: ContentType;
+  sectionLabel?: string;
+  detailPath?: string;
 }
 
 export interface AgendaItem extends ContentItem {
@@ -16,6 +20,13 @@ export interface AgendaItem extends ContentItem {
   time: string;
   location: string;
   registerUrl: string;
+}
+
+export interface PageItem {
+  id: number;
+  slug: string;
+  title: string;
+  content: string;
 }
 
 export interface PaginatedResult<T> {

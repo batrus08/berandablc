@@ -18,8 +18,10 @@ export const buildUrl = (path: string, query?: Query) => {
   return url.toString();
 };
 
-export const fetchJson = async <T>(path: string, query?: Query): Promise<{ data: T; totalPages?: number }>
-=> {
+export const fetchJson = async <T>(
+  path: string,
+  query?: Query
+): Promise<{ data: T; totalPages?: number }> => {
   const url = buildUrl(path, query);
 
   let response: Response;
