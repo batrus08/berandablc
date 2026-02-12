@@ -49,6 +49,29 @@ VITE_WP_CATEGORY_KERJASAMA_SLUG=kerjasama
 VITE_WP_CATEGORY_GALERI_SLUG=galeri
 ```
 
+
+## Workflow Admin Friendly (Upload / Edit / Update / Hapus)
+Semua konten operasional kini dipusatkan di CMS WordPress, sehingga admin tidak perlu menyunting kode tema.
+
+### 1) Upload konten
+- **Artikel/Kegiatan/Kerjasama/Galeri**: masuk ke **Posts** lalu pilih kategori yang sesuai (`dbs`, `kegiatan`, `kerjasama`, `galeri`).
+- **Tentang Kami/Kontak**: kelola di **Pages** dengan slug yang dikonfigurasi.
+- **Agenda**: kelola di menu **Agenda** (CPT) agar tanggal/lokasi terstruktur.
+- Gunakan **Featured Image** dan media uploader WordPress untuk gambar/file.
+
+### 2) Edit & Update konten
+- Perubahan judul, isi, gambar, kategori, dan metadata agenda dilakukan dari editor WordPress.
+- Front-end menarik data dari REST API/CPT, jadi perubahan otomatis tersinkron tanpa deploy ulang kode.
+- Section beranda (hero, highlights, quick access, statistik, sumber agenda, CTA) diatur dari menu **Beranda BLC** di admin.
+
+### 3) Hapus konten
+- Hapus dari Posts/Pages/Agenda sesuai jenis konten.
+- Konten yang dihapus otomatis tidak tampil lagi di front-end karena sumber tunggal dari CMS.
+
+### 4) Antisipasi tumpang tindih data
+- Gunakan 1 kategori utama per konten agar tidak dobel muncul lintas section.
+- Untuk section kegiatan beranda, aktifkan sumber **Agenda CPT** dari pengaturan Beranda BLC agar daftar agenda konsisten dan tidak bentrok dengan data manual.
+
 ## Instalasi plugin Agenda
 1. Buat ZIP dari `wordpress-plugin/blc-agenda-cpt` atau salin ke `wp-content/plugins/`.
 2. Aktifkan plugin **BLC Agenda CPT** di menu Plugins.

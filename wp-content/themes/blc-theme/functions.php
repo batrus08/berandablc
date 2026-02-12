@@ -34,6 +34,19 @@ function blc_get_default_home_settings() {
             ['title' => 'Kajian Hukum', 'description' => 'Analisis mendalam regulasi, studi kasus, dan implikasi bisnis.', 'url' => '/kajian-hukum/'],
             ['title' => 'Dokumen PDF', 'description' => 'Whitepaper, policy brief, dan materi seminar siap unduh.', 'url' => '/dokumen/'],
         ],
+        'about_page_slug'       => 'tentang-kami',
+        'about_eyebrow'         => 'Tentang BLC',
+        'about_title'           => 'Mendorong literasi hukum bisnis yang relevan',
+        'about_button_label'    => 'Pelajari Tentang Kami',
+        'about_stats'           => [
+            ['number' => '120+', 'label' => 'Publikasi'],
+            ['number' => '45', 'label' => 'Kegiatan'],
+            ['number' => '30', 'label' => 'Mitra'],
+        ],
+        'events_use_agenda_cpt' => 1,
+        'events_count'          => 3,
+        'events_button_label'   => 'Lihat Semua Kegiatan',
+        'events_button_url'     => '/kegiatan/',
         'events' => [
             [
                 'day'   => '12',
@@ -157,6 +170,21 @@ function blc_sanitize_home_settings($input) {
         $defaults['quick_access']
     );
 
+    $sanitized['about_page_slug']    = isset($input['about_page_slug']) ? sanitize_title($input['about_page_slug']) : $defaults['about_page_slug'];
+    $sanitized['about_eyebrow']      = isset($input['about_eyebrow']) ? sanitize_text_field($input['about_eyebrow']) : $defaults['about_eyebrow'];
+    $sanitized['about_title']        = isset($input['about_title']) ? sanitize_text_field($input['about_title']) : $defaults['about_title'];
+    $sanitized['about_button_label'] = isset($input['about_button_label']) ? sanitize_text_field($input['about_button_label']) : $defaults['about_button_label'];
+    $sanitized['about_stats'] = blc_sanitize_json_list(
+        isset($input['about_stats']) ? $input['about_stats'] : '',
+        ['number', 'label'],
+        $defaults['about_stats']
+    );
+
+    $sanitized['events_use_agenda_cpt'] = !empty($input['events_use_agenda_cpt']) ? 1 : 0;
+    $sanitized['events_count']          = isset($input['events_count']) ? max(1, absint($input['events_count'])) : $defaults['events_count'];
+    $sanitized['events_button_label']   = isset($input['events_button_label']) ? sanitize_text_field($input['events_button_label']) : $defaults['events_button_label'];
+    $sanitized['events_button_url']     = isset($input['events_button_url']) ? esc_url_raw($input['events_button_url']) : $defaults['events_button_url'];
+
     $sanitized['events'] = blc_sanitize_json_list(
         isset($input['events']) ? $input['events'] : '',
         ['day', 'month', 'title', 'text'],
@@ -248,6 +276,35 @@ function blc_register_home_settings() {
             'placeholder' => wp_json_encode(blc_get_default_home_settings()['quick_access'], JSON_PRETTY_PRINT),
             'description' => __('Array objek dengan title, description, dan url.', 'blc'),
         ]
+    );
+
+    add_settings_field(
+        'blc_about',
+        __('Tentang BLC', 'blc'),
+        'blc_render_about_fields',
+        'blc-home-settings',
+        'blc_home_content'
+    );
+
+    add_settings_field(
+        'blc_about_stats',
+        __('Statistik Tentang (JSON)', 'blc'),
+        'blc_render_json_textarea',
+        'blc-home-settings',
+        'blc_home_content',
+        [
+            'id'          => 'about_stats',
+            'placeholder' => wp_json_encode(blc_get_default_home_settings()['about_stats'], JSON_PRETTY_PRINT),
+            'description' => __('Array objek dengan number dan label.', 'blc'),
+        ]
+    );
+
+    add_settings_field(
+        'blc_events_source',
+        __('Sumber Agenda', 'blc'),
+        'blc_render_events_source_fields',
+        'blc-home-settings',
+        'blc_home_content'
     );
 
     add_settings_field(
@@ -380,6 +437,112 @@ function blc_render_cta_fields() {
         <input type="url" class="regular-text" name="blc_home_settings[cta_secondary_url]" id="blc_home_settings_cta_secondary_url" value="<?php echo esc_attr($settings['cta_secondary_url']); ?>" />
     </p>
     <?php
+}
+
+
+/**
+ * Render field untuk section Tentang BLC.
+ */
+function blc_render_about_fields() {
+    $settings = blc_home_settings();
+    ?>
+    <p>
+        <label for="blc_home_settings_about_page_slug"><?php esc_html_e('Slug halaman Tentang', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[about_page_slug]" id="blc_home_settings_about_page_slug" value="<?php echo esc_attr($settings['about_page_slug']); ?>" />
+        <span class="description"><?php esc_html_e('Contoh: tentang-kami. Konten deskripsi diambil dari isi halaman ini.', 'blc'); ?></span>
+    </p>
+    <p>
+        <label for="blc_home_settings_about_eyebrow"><?php esc_html_e('Eyebrow', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[about_eyebrow]" id="blc_home_settings_about_eyebrow" value="<?php echo esc_attr($settings['about_eyebrow']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_about_title"><?php esc_html_e('Judul', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[about_title]" id="blc_home_settings_about_title" value="<?php echo esc_attr($settings['about_title']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_about_button_label"><?php esc_html_e('Teks tombol', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[about_button_label]" id="blc_home_settings_about_button_label" value="<?php echo esc_attr($settings['about_button_label']); ?>" />
+    </p>
+    <?php
+}
+
+/**
+ * Render field untuk sumber agenda.
+ */
+function blc_render_events_source_fields() {
+    $settings = blc_home_settings();
+    ?>
+    <p>
+        <label>
+            <input type="checkbox" name="blc_home_settings[events_use_agenda_cpt]" value="1" <?php checked(!empty($settings['events_use_agenda_cpt'])); ?> />
+            <?php esc_html_e('Gunakan data otomatis dari Agenda CPT (disarankan).', 'blc'); ?>
+        </label>
+    </p>
+    <p>
+        <label for="blc_home_settings_events_count"><?php esc_html_e('Jumlah agenda tampil', 'blc'); ?></label><br />
+        <input type="number" min="1" max="12" class="small-text" name="blc_home_settings[events_count]" id="blc_home_settings_events_count" value="<?php echo esc_attr($settings['events_count']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_events_button_label"><?php esc_html_e('Teks tombol agenda', 'blc'); ?></label><br />
+        <input type="text" class="regular-text" name="blc_home_settings[events_button_label]" id="blc_home_settings_events_button_label" value="<?php echo esc_attr($settings['events_button_label']); ?>" />
+    </p>
+    <p>
+        <label for="blc_home_settings_events_button_url"><?php esc_html_e('Link tombol agenda', 'blc'); ?></label><br />
+        <input type="url" class="regular-text" name="blc_home_settings[events_button_url]" id="blc_home_settings_events_button_url" value="<?php echo esc_attr($settings['events_button_url']); ?>" />
+    </p>
+    <?php
+}
+
+/**
+ * Ambil ringkasan agenda dari CPT agar section kegiatan sepenuhnya dari CMS.
+ *
+ * @param int $limit Jumlah agenda.
+ * @return array<int, array<string, string>>
+ */
+function blc_get_agenda_items($limit = 3) {
+    $limit = max(1, (int) $limit);
+
+    $agenda_query = new WP_Query([
+        'post_type'           => 'agenda',
+        'posts_per_page'      => $limit,
+        'post_status'         => 'publish',
+        'orderby'             => 'meta_value',
+        'meta_key'            => 'start_date',
+        'order'               => 'ASC',
+        'meta_type'           => 'DATE',
+        'no_found_rows'       => true,
+        'ignore_sticky_posts' => true,
+    ]);
+
+    $items = [];
+
+    if ($agenda_query->have_posts()) {
+        foreach ($agenda_query->posts as $post) {
+            $start_date = get_post_meta($post->ID, 'start_date', true);
+            if (empty($start_date)) {
+                $start_date = get_the_date('Y-m-d', $post);
+            }
+
+            $timestamp = strtotime($start_date);
+            $day = $timestamp ? gmdate('d', $timestamp) : '';
+            $month = $timestamp ? gmdate('M', $timestamp) : '';
+
+            $location = get_post_meta($post->ID, 'location', true);
+            $excerpt  = wp_trim_words(wp_strip_all_tags(get_the_excerpt($post)), 16, '...');
+            $text     = trim(implode(' • ', array_filter([$location, $excerpt])));
+
+            $items[] = [
+                'day'   => $day,
+                'month' => $month,
+                'title' => get_the_title($post),
+                'text'  => $text,
+            ];
+        }
+    }
+
+    wp_reset_postdata();
+
+    return $items;
 }
 
 /**
